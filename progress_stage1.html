@@ -137,7 +137,8 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#interpreting-the-metrics" id="toc-interpreting-the-metrics" class="nav-link" data-scroll-target="#interpreting-the-metrics"><span class="header-section-number">4.1</span> Interpreting the Metrics</a></li>
   <li><a href="#learning-curve" id="toc-learning-curve" class="nav-link" data-scroll-target="#learning-curve"><span class="header-section-number">4.2</span> Learning Curve</a></li>
-  <li><a href="#pre-training-quality-checks" id="toc-pre-training-quality-checks" class="nav-link" data-scroll-target="#pre-training-quality-checks"><span class="header-section-number">4.3</span> Pre-Training Quality Checks</a></li>
+  <li><a href="#what-the-model-sees-example-patch-kigali" id="toc-what-the-model-sees-example-patch-kigali" class="nav-link" data-scroll-target="#what-the-model-sees-example-patch-kigali"><span class="header-section-number">4.3</span> What the Model Sees — Example Patch (Kigali)</a></li>
+  <li><a href="#pre-training-quality-checks" id="toc-pre-training-quality-checks" class="nav-link" data-scroll-target="#pre-training-quality-checks"><span class="header-section-number">4.4</span> Pre-Training Quality Checks</a></li>
   </ul></li>
   <li><a href="#stage-2-district-level-validation-planned" id="toc-stage-2-district-level-validation-planned" class="nav-link" data-scroll-target="#stage-2-district-level-validation-planned"><span class="header-section-number">5</span> Stage 2: District-Level Validation (Planned)</a>
   <ul class="collapse">
@@ -268,6 +269,17 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Format:</strong> Binary raster, 10m, EPSG:4326 — value 1 = building footprint pixel</li>
 <li><strong>Known quality:</strong> ~85% recall in urban Rwanda, ~60% in rural areas (Sirko et al.&nbsp;2021)</li>
 </ul>
+<p>The map below shows building pixel density per 0.5° training tile. The spatial heterogeneity is large: Kigali (col 2, row 1) has 694k building pixels vs.&nbsp;12k in the sparse south-west corner — a 58× range. The model must generalize across this variation.</p>
+<div id="fig-density" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/rwanda_building_density.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Building pixel counts per 0.5° tile. Blue borders = validation set (held out during training). Numbers show building pixels × 10³.
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="census-data-for-stage-2-validation" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="census-data-for-stage-2-validation"><span class="header-section-number">2.3</span> Census Data (for Stage 2 validation)</h3>
@@ -354,7 +366,7 @@ row 0 ├──────────────┼────────�
 </section>
 <section id="stage-1-results" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</h2>
-<div id="54075ac9" class="cell" data-execution_count="2">
+<div id="6160a8d0" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p>Training ran for <strong>26 epochs</strong> before early stopping triggered (best model at epoch 6).</p>
 <table class="caption-top table table-sm table-striped small">
@@ -407,7 +419,7 @@ row 0 ├──────────────┼────────�
 <img src="figures/training_progress.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-training-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Training and validation metrics over epochs
+Figure&nbsp;2: Training and validation metrics over epochs
 </figcaption>
 </figure>
 </div>
@@ -419,7 +431,7 @@ Figure&nbsp;1: Training and validation metrics over epochs
 <img src="figures/roc_curve.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: ROC curve — final model on validation set
+Figure&nbsp;3: ROC curve — final model on validation set
 </figcaption>
 </figure>
 </div>
@@ -432,14 +444,38 @@ Figure&nbsp;2: ROC curve — final model on validation set
 <img src="figures/patience_curve.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-patience-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Early stopping trace — patience counter vs validation AUC
+Figure&nbsp;4: Early stopping trace — patience counter vs validation AUC
+</figcaption>
+</figure>
+</div>
+<div id="fig-auc-curve" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-auc-curve-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/train_val_auc.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-auc-curve-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Train AUC vs Val AUC over all 26 epochs. The gap after epoch 6 is distribution shift (Kigali-heavy train vs northern Rwanda val), not capacity overfitting — unet_tiny has only 6,849 parameters.
 </figcaption>
 </figure>
 </div>
 <p>The model learned quickly (AUC = 0.89 after epoch 1, 0.93 by epoch 6) and then degraded. This is most likely <strong>train/val distribution shift</strong>: the training set is dominated by dense urban Rwanda (Kigali: 694k building pixels in one tile), while the validation set is northern Rwanda with lower and more dispersed building density. After epoch 6, the model increasingly specializes for urban patterns and loses generalization to the northern landscape. Early stopping correctly captures the epoch-6 snapshot.</p>
 </section>
-<section id="pre-training-quality-checks" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="pre-training-quality-checks"><span class="header-section-number">4.3</span> Pre-Training Quality Checks</h3>
+<section id="what-the-model-sees-example-patch-kigali" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="what-the-model-sees-example-patch-kigali"><span class="header-section-number">4.3</span> What the Model Sees — Example Patch (Kigali)</h3>
+<p>The model ingests 128×128 patches (1.28 km × 1.28 km at 10m resolution) in three bands: NIR, Blue, and SWIR2. Below is a representative patch from the densest training tile (chunk_2_1, Kigali area).</p>
+<div id="fig-patch" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-patch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/sample_patch.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-patch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Left to right: NIR band (vegetation bright, built-up dark), SWIR2 band (built-up bright), false-color composite (NIR→R, Blue→G, SWIR2→B — built-up areas appear magenta/purple), Open Buildings v3 label (red = building pixel). The spectral contrast between built-up and non-built-up is strong in NIR and SWIR2 — the primary signal the model learns.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="pre-training-quality-checks" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="pre-training-quality-checks"><span class="header-section-number">4.4</span> Pre-Training Quality Checks</h3>
 <p>Four issues were identified and corrected before full training:</p>
 <table class="caption-top table">
 <colgroup>
