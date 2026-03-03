@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Microspatial GDP Mapping from Satellite Imagery",
+    "section": "",
+    "text": "This site tracks progress on two research projects that use free Sentinel-2 satellite imagery to measure economic activity at 10-meter resolution in Africa and globally."
+  },
+  {
+    "objectID": "index.html#project-a-microspatial-gdp-mapping",
+    "href": "index.html#project-a-microspatial-gdp-mapping",
+    "title": "Microspatial GDP Mapping from Satellite Imagery",
+    "section": "1 Project A — Microspatial GDP Mapping",
+    "text": "1 Project A — Microspatial GDP Mapping\nGoal: Produce a global pixel-level (10m) economic density map, beating Rossi-Hansberg et al. (2025) at 2,500× finer resolution.\nStrategy: Train a U-Net on Rwanda (establishment census) + Peru (fine GDP data) → apply globally via free Sentinel-2.\n\n1.1 Progress\n\n\n\nStage\nStatus\nReport\n\n\n\n\nStage 1: Binary building detection, Rwanda\n✅ Complete — AUC = 0.93\nView →\n\n\nStage 2: District-level validation\n🔲 In progress\n—\n\n\nStage 3: GDP regression head (Peru)\n🔲 Pending data\n—\n\n\nStage 4: Global application\n🔲 Future\n—"
+  },
+  {
+    "objectID": "index.html#project-b-dark-shipping-validation",
+    "href": "index.html#project-b-dark-shipping-validation",
+    "title": "Microspatial GDP Mapping from Satellite Imagery",
+    "section": "2 Project B — Dark Shipping Validation",
+    "text": "2 Project B — Dark Shipping Validation\nGoal: Use Sentinel-1 SAR to validate AIS gap episodes near West Africa.\nStatus: Scoping.\n\nLast updated: 2026-03-03"
+  },
+  {
+    "objectID": "progress_stage1.html",
+    "href": "progress_stage1.html",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "",
+    "text": "The goal of this project is to produce a pixel-level (10 m) economic density map for Africa and eventually the world, using free Sentinel-2 satellite imagery. The resolution target is 25× to 2,500× finer than the best existing global estimates.\n\n\nThree papers bracket the space this project aims to fill:\n\n\n\n\n\n\n\n\n\nPaper\nGeography\nResolution\nMethod\n\n\n\n\nKhachiyan et al. (2022)\nUnited States\n~1.2 km\nDaytime imagery → GDP\n\n\nRossi-Hansberg et al. (2025)\nGlobal\n25 km\nRandom forest, OECD extrapolation\n\n\nThis project\nAfrica → Global\n10 m\nU-Net + Sentinel-2, trained on censuses\n\n\n\nRossi-Hansberg (2025) is the current benchmark for a global microspatial GDP map. This project’s target is the same outcome at 2,500× finer resolution, trained on actual establishment censuses rather than OECD extrapolation.\n\n\n\n\nRwanda — NISR Establishment Census 2020 + 2023 (232k–269k firms). No GPS coordinates → used for district-level validation only. Google Open Buildings v3 provides pixel-level training labels.\nPeru — Fine-resolution sales/GDP data (via Michigan PhD student, through Sebastian Sardon). GPS-coded → will be the primary regression training country. Pending data access.\n\nThe plan: train on Rwanda + Peru → apply globally via free Sentinel-2 → global 10m economic density map.\n\n\n\nRwanda’s census records district (province/district) but not GPS location per firm. The workaround is Google Open Buildings v3, a machine-learning derived building footprint dataset covering sub-Saharan Africa at 10m resolution with confidence ≥ 0.75.\nBuildings are a strong proxy for economic activity: firms need physical space, and building density at 10m captures the spatial concentration of economic activity far better than nighttime lights (which saturate in cities and are zero in rural areas). Stage 2 (below) will validate this claim empirically at the district level."
+  },
+  {
+    "objectID": "progress_stage1.html#project-overview",
+    "href": "progress_stage1.html#project-overview",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "",
+    "text": "The goal of this project is to produce a pixel-level (10 m) economic density map for Africa and eventually the world, using free Sentinel-2 satellite imagery. The resolution target is 25× to 2,500× finer than the best existing global estimates.\n\n\nThree papers bracket the space this project aims to fill:\n\n\n\n\n\n\n\n\n\nPaper\nGeography\nResolution\nMethod\n\n\n\n\nKhachiyan et al. (2022)\nUnited States\n~1.2 km\nDaytime imagery → GDP\n\n\nRossi-Hansberg et al. (2025)\nGlobal\n25 km\nRandom forest, OECD extrapolation\n\n\nThis project\nAfrica → Global\n10 m\nU-Net + Sentinel-2, trained on censuses\n\n\n\nRossi-Hansberg (2025) is the current benchmark for a global microspatial GDP map. This project’s target is the same outcome at 2,500× finer resolution, trained on actual establishment censuses rather than OECD extrapolation.\n\n\n\n\nRwanda — NISR Establishment Census 2020 + 2023 (232k–269k firms). No GPS coordinates → used for district-level validation only. Google Open Buildings v3 provides pixel-level training labels.\nPeru — Fine-resolution sales/GDP data (via Michigan PhD student, through Sebastian Sardon). GPS-coded → will be the primary regression training country. Pending data access.\n\nThe plan: train on Rwanda + Peru → apply globally via free Sentinel-2 → global 10m economic density map.\n\n\n\nRwanda’s census records district (province/district) but not GPS location per firm. The workaround is Google Open Buildings v3, a machine-learning derived building footprint dataset covering sub-Saharan Africa at 10m resolution with confidence ≥ 0.75.\nBuildings are a strong proxy for economic activity: firms need physical space, and building density at 10m captures the spatial concentration of economic activity far better than nighttime lights (which saturate in cities and are zero in rural areas). Stage 2 (below) will validate this claim empirically at the district level."
+  },
+  {
+    "objectID": "progress_stage1.html#data",
+    "href": "progress_stage1.html#data",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "2 Data",
+    "text": "2 Data\n\n2.1 Sentinel-2 Imagery\n\nSource: Google Earth Engine — COPERNICUS/S2_SR_HARMONIZED\nCoverage: All of Rwanda (~26,000 km²)\nYear: 2022 annual median composite (bridges 2020 and 2023 census vintages)\nCloud masking: SCL band + s2cloudless probability &lt; 20%\nBands: 10 Sentinel-2 bands (Blue, Green, Red, Red Edge 1–3, NIR, NIR2, SWIR1, SWIR2) + 2 derived indices (NDVI, MNDWI)\nResolution: 10 m native; resampled to 10 m grid\nStorage: 20 tiles of 0.5° × 0.5° each (~500 MB/tile), ~10 GB processed\n\nThe imagery was downloaded via GEE batch export to Google Drive, then transferred locally with rclone. No cloud costs incurred (GEE free tier).\n\n\n2.2 Building Labels\n\nSource: Google Open Buildings v3 — GOOGLE/Research/open-buildings/v3/polygons\nConfidence threshold: ≥ 0.75\nFormat: Binary raster, 10m, EPSG:4326 — value 1 = building footprint pixel\nKnown quality: ~85% recall in urban Rwanda, ~60% in rural areas (Sirko et al. 2021)\n\n\n\n2.3 Census Data (for Stage 2 validation)\n\nrwanda_ec_2020.dta — 232,338 establishments, district-level\nrwanda_ec_2023.dta — 269,411 establishments, district-level\nrwanda_districts.gpkg — 30 district polygons (GADM)"
+  },
+  {
+    "objectID": "progress_stage1.html#stage-1-binary-building-detection",
+    "href": "progress_stage1.html#stage-1-binary-building-detection",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "3 Stage 1: Binary Building Detection",
+    "text": "3 Stage 1: Binary Building Detection\n\n3.1 What Was Trained\nA U-Net (encoder–decoder convolutional neural network) was trained to perform binary pixel classification: given a 128×128 patch of Sentinel-2 imagery, predict which 10m pixels contain building footprints.\nArchitecture: unet_tiny — 6,849 parameters, 2-level encoder, 4 base filters. Deliberately small: the goal at this stage is to verify that the spectral signal is recoverable from Sentinel-2, not to achieve maximum capacity.\nInput bands: NIR (B08), Blue (B02), SWIR2 (B12) — the three bands most discriminative for built-up surfaces. NIR &gt; Green at built-up is a well-established spectral rule.\nLoss function: Focal Tversky loss with α=0.7, β=0.3, γ=4/3. This upweights false negatives (missed buildings) relative to false positives — appropriate for spatially sparse targets (only ~1.4% of all pixels are buildings).\n\n\n3.2 Train/Validation Split\nThe split is spatial (not random), which is the correct choice for geospatial models. A random split would allow patches from the same geographic area in both train and val, causing optimistic estimates of generalization.\nRwanda chunk grid (0.5° tiles, col = west→east, row = south→north):\n\n          col 0          col 1          col 2          col 3\n          28.9–29.4°E    29.4–29.9°E    29.9–30.4°E    30.4–30.9°E\n\nrow 3 ┌──────────────┬──────────────┬──────────────┬──────────────┐  ← VAL\n      │  NODATA      │  NODATA      │  41k bldg px │  34k bldg px │\n      │  (outside    │  (tapers     │  Musanze     │  NE Rwanda   │\n      │   Rwanda)    │   off)       │  area        │              │\nrow 2 ├──────────────┼──────────────┼──────────────┼──────────────┤  ← TRAIN\n      │  101k        │  318k        │  278k        │  61k         │\nrow 1 ├──────────────┼──────────────┼──────────────┼──────────────┤  ← TRAIN\n      │  74k         │  303k        │  694k KIGALI │  227k        │\nrow 0 ├──────────────┼──────────────┼──────────────┼──────────────┤  ← TRAIN\n      │  128k        │  260k        │  39k         │  12k         │\n      └──────────────┴──────────────┴──────────────┴──────────────┘\n\nTrain: 12 tiles, rows 0–2 — covers all of southern and central Rwanda including Kigali\nVal: 2 tiles, row 3 — northern Rwanda (Musanze/Ruhengeri, NE border area)\nThe validation area is geographically distinct from training: different elevation, landscape, and building density patterns\n\n\n\n3.3 Training Setup\n\n\n\nParameter\nValue\n\n\n\n\nEpochs\n150 max (early stopping, patience = 20)\n\n\nBatch size\n32 patches\n\n\nPatch size\n128 × 128 pixels (1,280 m × 1,280 m)\n\n\nOptimizer\nAdam, lr = 5×10⁻⁵\n\n\nHardware\nMacBook (8 GB RAM, CPU only)\n\n\nTraining time\n9 hours 49 minutes"
+  },
+  {
+    "objectID": "progress_stage1.html#stage-1-results",
+    "href": "progress_stage1.html#stage-1-results",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "4 Stage 1 Results",
+    "text": "4 Stage 1 Results\n\n\nTraining ran for 26 epochs before early stopping triggered (best model at epoch 6).\n\n\n\nMetric\nValue\n\n\n\n\nAUC\n0.9301\n\n\nF1\n0.9739\n\n\nPrecision\n0.9513\n\n\nRecall\n0.9976\n\n\nDecision threshold\n0.15\n\n\n\nAll metrics computed via sliding-window inference over the full validation set (2 tiles, ~75k pixels).\n\n\n\n4.1 Interpreting the Metrics\nAUC = 0.93 is the area under the ROC curve. Concretely: if we pick one random building pixel and one random non-building pixel, the model ranks the building pixel higher 93% of the time. This is a threshold-free measure of discriminative ability.\nRecall = 0.998 at threshold 0.15 means the model detects essentially all labeled building pixels. The low threshold (0.15 rather than the conventional 0.50) reflects the deliberate bias toward sensitivity: for economic density mapping, systematically missing buildings is worse than occasionally flagging non-buildings, because we aggregate predictions across many pixels per district.\nF1 = 0.97 is close to the realistic ceiling given the training labels. Open Buildings v3 has a known miss rate of ~15% in urban Rwanda and ~40% in rural Rwanda (Sirko et al. 2021). A model that correctly detects a real building not present in Open Buildings is penalized as a false positive. The effective quality ceiling on F1 against this label source is approximately 0.97–0.98.\n\n\n4.2 Learning Curve\n\n\n\n\n\n\n\n\n\nFigure 1: Training and validation metrics over epochs\n\n\n\n\n\n\n\n\n\n\n\nFigure 2: ROC curve — final model on validation set\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 3: Early stopping trace — patience counter vs validation AUC\n\n\n\nThe model learned quickly (AUC = 0.89 after epoch 1, 0.93 by epoch 6) and then degraded. This is most likely train/val distribution shift: the training set is dominated by dense urban Rwanda (Kigali: 694k building pixels in one tile), while the validation set is northern Rwanda with lower and more dispersed building density. After epoch 6, the model increasingly specializes for urban patterns and loses generalization to the northern landscape. Early stopping correctly captures the epoch-6 snapshot.\n\n\n4.3 Pre-Training Quality Checks\nFour issues were identified and corrected before full training:\n\n\n\n\n\n\n\n\nIssue\nEffect if ignored\nFix\n\n\n\n\nVal tiles outside Rwanda (col 4 = eastern sliver, 100% empty)\nAUC stuck at 0.50 (random)\nSwitched val to northern row (row 3)\n\n\nBand indices wrong: [7, 2, 12] = NIR/Green/MNDWI instead of NIR/Blue/SWIR2\nModel uses wrong spectral features\nFixed to [7, 1, 10] = NIR/Blue/SWIR2\n\n\nLoss function field in config silently ignored\nWeighted BCE instead of focal Tversky\nAdded dispatch in training.py\n\n\npos_weight in config overridden at runtime\nN/A — auto-calculation is better\nDocumented (no action needed)\n\n\n\nThe AUC progression from these fixes: 0.50 → 0.64 → 0.78 (after 5 quick epochs each)."
+  },
+  {
+    "objectID": "progress_stage1.html#stage-2-district-level-validation-planned",
+    "href": "progress_stage1.html#stage-2-district-level-validation-planned",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "5 Stage 2: District-Level Validation (Planned)",
+    "text": "5 Stage 2: District-Level Validation (Planned)\nThe question Stage 2 answers: does predicted building density actually track economic activity?\n\n5.1 Approach\n\nRun trained model (best.keras) as a sliding-window predictor over all 16 Rwanda tiles → 10m probability map for all of Rwanda\nAggregate the mean predicted building probability within each of Rwanda’s 30 districts, using GADM district polygons\nFrom the 2020 census (rwanda_ec_2020.dta): count establishments per district\nScatter plot: mean predicted building density (x) vs log(establishment count) (y) across 30 districts\nCompute Pearson r\n\n\n\n5.2 Interpretation Thresholds\n\n\n\nr\nInterpretation\n\n\n\n\n&gt; 0.7\nProxy validated → proceed to regression head\n\n\n0.5–0.7\nPartial — investigate outlier districts (likely rural)\n\n\n&lt; 0.5\nProxy too weak → revisit label source or model\n\n\n\nThe 30-district correlation is a deliberately conservative test: it requires the model’s predictions to be not just pixel-accurate (Stage 1) but spatially aggregated into an economically meaningful signal. Even if the pixel-level F1 were 0.99, a spatially biased model (e.g., one that only detects Kigali) would fail this test."
+  },
+  {
+    "objectID": "progress_stage1.html#what-comes-after-stage-34",
+    "href": "progress_stage1.html#what-comes-after-stage-34",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "6 What Comes After (Stage 3–4)",
+    "text": "6 What Comes After (Stage 3–4)\nOnce Stage 2 validates the building-density proxy:\nStage 3 — Regression head: Replace the binary output layer with a continuous GDP density predictor. Train on Peru fine-resolution sales data (GPS-coded, via Michigan PhD student through Sebastian Sardon — currently pending data access). Rwanda provides held-out validation. The regression head predicts log GDP per 10m pixel.\nStage 4 — Global application: Run inference over all of sub-Saharan Africa using free Sentinel-2 composites from GEE. Aggregate to any desired spatial unit (grid cell, district, country).\nThe pipeline is already structured for this: the U-Net architecture, GEE download scripts, and preprocessing are all country-agnostic. Adding Peru requires only a new config block and relabeling the output head."
+  },
+  {
+    "objectID": "progress_stage1.html#code-and-reproducibility",
+    "href": "progress_stage1.html#code-and-reproducibility",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "7 Code and Reproducibility",
+    "text": "7 Code and Reproducibility\nAll code is in a private GitHub repository. The pipeline is built on top of mlgis-ponds (Sebastian Sardon, MIT License), a U-Net pipeline originally developed for irrigation pond detection in Mexico.\nKey scripts:\n\n\n\n\n\n\n\nScript\nPurpose\n\n\n\n\nsrc/download/01_download_s2.py\nGEE Sentinel-2 download (Rwanda 2022)\n\n\nsrc/download/02_download_open_buildings.py\nGEE Open Buildings export\n\n\nvendor/mlgis-ponds/src/02_preproc.py\nNormalize + tile raw GeoTIFFs\n\n\nvendor/mlgis-ponds/src/03_main.py\nU-Net training loop\n\n\nconfig/config.yaml\nAll task definitions (bands, splits, hyperparameters)\n\n\n\nThe training run is fully reproducible from the config file. The best model checkpoint is saved at out/mlgis_output/buildingsNIR-Rwanda2022/run_20260302-213840/best.keras."
+  },
+  {
+    "objectID": "progress_stage1.html#summary",
+    "href": "progress_stage1.html#summary",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "8 Summary",
+    "text": "8 Summary\n\n\n\n\n\n\n\n\nStage\nStatus\nKey result\n\n\n\n\nData download + preprocessing\n✅ Complete\n20 Sentinel-2 tiles, Open Buildings raster\n\n\nStage 1: building detection\n✅ Complete\nAUC = 0.93, F1 = 0.97 on spatially held-out val\n\n\nStage 2: district-level validation\n🔲 Next\nTarget: Pearson r &gt; 0.7 across 30 districts\n\n\nStage 3: regression head (GDP)\n🔲 Pending\nBlocked on Peru data access\n\n\nStage 4: global application\n🔲 Future\nAfter Stage 3\n\n\n\nThe pipeline works end-to-end and produces strong pixel-level results. The critical path to the paper is Peru GPS-coded firm data, which would enable training a continuous GDP regression head rather than a binary building detector."
+  },
+  {
+    "objectID": "progress_stage1.html#references",
+    "href": "progress_stage1.html#references",
+    "title": "Stage 1: Building Detection, Rwanda",
+    "section": "9 References",
+    "text": "9 References\n\nJean et al. (2016). Combining satellite imagery and machine learning to predict poverty. Science, 353(6301), 790–794.\nKhachiyan et al. (2022). Using Satellite Imagery to Reveal the Causal Effect of Zoning on Housing Prices. NBER Working Paper 29960.\nRossi-Hansberg et al. (2025). Microspatial Growth. NBER Working Paper 33527.\nSirko et al. (2021). Continental-scale building detection from high resolution satellite imagery. NeurIPS 2021.\nFernández-Villaverde et al. (2025). Dark shipping and informal trade in crude oil."
+  }
+]
