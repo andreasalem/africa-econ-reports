@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -147,8 +182,13 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#what-comes-after-stage-34" id="toc-what-comes-after-stage-34" class="nav-link" data-scroll-target="#what-comes-after-stage-34"><span class="header-section-number">6</span> What Comes After (Stage 3–4)</a></li>
   <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">7</span> Code and Reproducibility</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8</span> Summary</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">9</span> References</a></li>
+  <li><a href="#diagnostics-and-planned-improvements" id="toc-diagnostics-and-planned-improvements" class="nav-link" data-scroll-target="#diagnostics-and-planned-improvements"><span class="header-section-number">8</span> Diagnostics and Planned Improvements</a>
+  <ul class="collapse">
+  <li><a href="#precision-recall-curve-sebastians-feedback" id="toc-precision-recall-curve-sebastians-feedback" class="nav-link" data-scroll-target="#precision-recall-curve-sebastians-feedback"><span class="header-section-number">8.1</span> Precision-Recall Curve (Sebastian’s Feedback)</a></li>
+  <li><a href="#learning-dynamics-diagnosis" id="toc-learning-dynamics-diagnosis" class="nav-link" data-scroll-target="#learning-dynamics-diagnosis"><span class="header-section-number">8.2</span> Learning Dynamics Diagnosis</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9</span> Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">10</span> References</a></li>
   </ul>
 </nav>
     </div>
@@ -366,7 +406,7 @@ row 0 ├──────────────┼────────�
 </section>
 <section id="stage-1-results" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</h2>
-<div id="6160a8d0" class="cell" data-execution_count="2">
+<div id="ba7881e9" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display cell-output-markdown">
 <p>Training ran for <strong>26 epochs</strong> before early stopping triggered (best model at epoch 6).</p>
 <table class="caption-top table table-sm table-striped small">
@@ -607,8 +647,81 @@ Figure&nbsp;6: Left to right: NIR band (vegetation bright, built-up dark), SWIR2
 <p>The training run is fully reproducible from the config file. The best model checkpoint is saved at <code>out/mlgis_output/buildingsNIR-Rwanda2022/run_20260302-213840/best.keras</code>.</p>
 <hr>
 </section>
-<section id="summary" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="summary"><span class="header-section-number">8</span> Summary</h2>
+<section id="diagnostics-and-planned-improvements" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="diagnostics-and-planned-improvements"><span class="header-section-number">8</span> Diagnostics and Planned Improvements</h2>
+<section id="precision-recall-curve-sebastians-feedback" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="precision-recall-curve-sebastians-feedback"><span class="header-section-number">8.1</span> Precision-Recall Curve (Sebastian’s Feedback)</h3>
+<p>ROC AUC alone is insufficient for heavily imbalanced classification problems. With only <strong>0.54% of validation pixels</strong> being building pixels (rural northern Rwanda is sparser than the training set), a model can achieve high ROC AUC simply by ranking most negatives low — even if precision at high recall collapses. The Precision-Recall curve is the right diagnostic here.</p>
+<div id="fig-pr" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/pr_curve.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Precision-recall curve from sliding-window inference over both validation chunks (chunk_2_3 and chunk_3_3). The dashed baseline shows what a random classifier would achieve at the 0.54% positive rate. The red dot is our operating point at threshold=0.15.
+</figcaption>
+</figure>
+</div>
+<p>At our operating point (threshold = 0.15): - <strong>Precision = 0.951</strong> — 95% of flagged pixels are real buildings - <strong>Recall = 0.998</strong> — we detect essentially every labeled building pixel</p>
+<p>The curve shape confirms the model is genuinely discriminative, not just exploiting the class imbalance. Average Precision (area under the PR curve) is plotted directly on the figure.</p>
+<blockquote class="blockquote">
+<p><strong>Why threshold = 0.15 rather than 0.50?</strong> The model output is a probability map that is later aggregated spatially (mean building density per district). At the aggregation stage, missing a building (false negative) is worse than a small false positive, because the economic density signal comes from averaging many pixels. The low threshold deliberately prioritizes recall.</p>
+</blockquote>
+<hr>
+</section>
+<section id="learning-dynamics-diagnosis" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="learning-dynamics-diagnosis"><span class="header-section-number">8.2</span> Learning Dynamics Diagnosis</h3>
+<p>Sebastian identified a key issue from the AUC learning curve: <strong>the model peaks at epoch 6 (val AUC = 0.930) and then degrades monotonically to 0.623 by epoch 26</strong> — and crucially, <em>train AUC also decreases</em> (0.906 → 0.827). This is not standard overfitting (which would show train increasing while val decreases). Instead, both curves move together downward — the hallmark of <strong>learning rate instability</strong>.</p>
+<p><strong>Bayesian interpretation:</strong> Each epoch is a posterior update. With a learning rate of 5×10⁻⁵, the parameter updates at each step are large enough that after the model finds a good region of parameter space (epoch 6), the optimizer overshoots that region on subsequent steps and wanders toward worse solutions. The model never converges — it keeps moving.</p>
+<p><strong>Proposed fixes (in order of priority):</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 34%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fix</th>
+<th>Mechanism</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>1. Reduce base LR</strong></td>
+<td>Smaller steps → less overshoot</td>
+<td><code>learning_rate: 5e-6</code> in config (10× reduction)</td>
+</tr>
+<tr class="even">
+<td><strong>2. LR schedule: ReduceLROnPlateau</strong></td>
+<td>Halve LR when val_auc stalls</td>
+<td>Add Keras callback: <code>factor=0.5, patience=5, monitor='val_auc'</code></td>
+</tr>
+<tr class="odd">
+<td><strong>3. LR warmup + cosine decay</strong></td>
+<td>Ramp up for 3 epochs, anneal from epoch 6</td>
+<td>Cosine schedule with warmup (standard for transformer/CNN training)</td>
+</tr>
+<tr class="even">
+<td><strong>4. Gradient clipping</strong></td>
+<td>Cap large gradient updates directly</td>
+<td>Already present (AdamW with <code>clipnorm=1.0</code>) — may need tightening</td>
+</tr>
+</tbody>
+</table>
+<p>The current config uses <strong>AdamW</strong> (Adam with weight decay) with <code>weight_decay=0.05</code> and <code>clipnorm=1.0</code>. AdamW is the right optimizer. The problem is the learning rate magnitude relative to the loss landscape, not the optimizer choice.</p>
+<p><strong>Experiment plan for Stage 1b (on Quest, <code>buildingsALL-Rwanda2022</code>):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># config/config.yaml — ARCHITECTURE_HPARAMS override for next run</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unet_medium</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">learning_rate</span><span class="kw">:</span><span class="at"> </span><span class="fl">5.0e-6</span><span class="co">   # was 5e-5 — 10× reduction</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base_filters</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="summary" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="summary"><span class="header-section-number">9</span> Summary</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -653,8 +766,8 @@ Figure&nbsp;6: Left to right: NIR band (vegetation bright, built-up dark), SWIR2
 <p>The pipeline works end-to-end and produces strong pixel-level results. The critical path to the paper is Peru GPS-coded firm data, which would enable training a continuous GDP regression head rather than a binary building detector.</p>
 <hr>
 </section>
-<section id="references" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="references"><span class="header-section-number">9</span> References</h2>
+<section id="references" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="references"><span class="header-section-number">10</span> References</h2>
 <ul>
 <li>Jean et al.&nbsp;(2016). Combining satellite imagery and machine learning to predict poverty. <em>Science</em>, 353(6301), 790–794.</li>
 <li>Khachiyan et al.&nbsp;(2022). <em>Using Satellite Imagery to Reveal the Causal Effect of Zoning on Housing Prices</em>. NBER Working Paper 29960.</li>
