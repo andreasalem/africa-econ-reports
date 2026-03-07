@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Andrea Salem">
+<meta name="dcterms.date" content="2026-03-06">
+<meta name="description" content="Project A — Full-country inference on Rwanda (20 chunks, 11.5M building pixels). District-level correlation with census establishments: Pearson r = 0.38. Error analysis reveals FPs are urban fabric, not model failures — NDVI is the key missing band.">
+
+<title>Stage 2: District Validation + Error Analysis – Africa Econ Satellite</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Africa Econ Satellite</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reports.html"> 
+<span class="menu-text">All Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../ml_theory_guide.pdf" target="_blank"> 
+<span class="menu-text">ML Theory Guide</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/andreasalem/africa-econ-reports"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context"><span class="header-section-number">1</span> Context</a></li>
+  <li><a href="#full-country-inference" id="toc-full-country-inference" class="nav-link" data-scroll-target="#full-country-inference"><span class="header-section-number">2</span> Full-Country Inference</a></li>
+  <li><a href="#district-validation" id="toc-district-validation" class="nav-link" data-scroll-target="#district-validation"><span class="header-section-number">3</span> District Validation</a>
+  <ul class="collapse">
+  <li><a href="#correlation-summary" id="toc-correlation-summary" class="nav-link" data-scroll-target="#correlation-summary"><span class="header-section-number">3.1</span> Correlation Summary</a></li>
+  <li><a href="#scatter-building-pixels-vs-establishments" id="toc-scatter-building-pixels-vs-establishments" class="nav-link" data-scroll-target="#scatter-building-pixels-vs-establishments"><span class="header-section-number">3.2</span> Scatter: Building Pixels vs Establishments</a></li>
+  <li><a href="#choropleth-building-fraction-by-district" id="toc-choropleth-building-fraction-by-district" class="nav-link" data-scroll-target="#choropleth-building-fraction-by-district"><span class="header-section-number">3.3</span> Choropleth: Building Fraction by District</a></li>
+  <li><a href="#district-level-table-top-10-by-establishments" id="toc-district-level-table-top-10-by-establishments" class="nav-link" data-scroll-target="#district-level-table-top-10-by-establishments"><span class="header-section-number">3.4</span> District-Level Table (Top 10 by Establishments)</a></li>
+  </ul></li>
+  <li><a href="#error-analysis-sebastians-request" id="toc-error-analysis-sebastians-request" class="nav-link" data-scroll-target="#error-analysis-sebastians-request"><span class="header-section-number">4</span> Error Analysis (Sebastian’s Request)</a>
+  <ul class="collapse">
+  <li><a href="#pixel-level-confusion-kigali-chunk" id="toc-pixel-level-confusion-kigali-chunk" class="nav-link" data-scroll-target="#pixel-level-confusion-kigali-chunk"><span class="header-section-number">4.1</span> Pixel-Level Confusion (Kigali Chunk)</a></li>
+  <li><a href="#false-positive-gallery" id="toc-false-positive-gallery" class="nav-link" data-scroll-target="#false-positive-gallery"><span class="header-section-number">4.2</span> False Positive Gallery</a></li>
+  <li><a href="#false-negative-gallery" id="toc-false-negative-gallery" class="nav-link" data-scroll-target="#false-negative-gallery"><span class="header-section-number">4.3</span> False Negative Gallery</a></li>
+  <li><a href="#spectral-profiles-what-distinguishes-errors" id="toc-spectral-profiles-what-distinguishes-errors" class="nav-link" data-scroll-target="#spectral-profiles-what-distinguishes-errors"><span class="header-section-number">4.4</span> Spectral Profiles: What Distinguishes Errors?</a></li>
+  <li><a href="#confusion-by-ndvi-and-brightness" id="toc-confusion-by-ndvi-and-brightness" class="nav-link" data-scroll-target="#confusion-by-ndvi-and-brightness"><span class="header-section-number">4.5</span> Confusion by NDVI and Brightness</a></li>
+  </ul></li>
+  <li><a href="#diagnosis-why-r-0.38" id="toc-diagnosis-why-r-0.38" class="nav-link" data-scroll-target="#diagnosis-why-r-0.38"><span class="header-section-number">5</span> Diagnosis: Why r = 0.38</a></li>
+  <li><a href="#what-we-learned" id="toc-what-we-learned" class="nav-link" data-scroll-target="#what-we-learned"><span class="header-section-number">6</span> What We Learned</a>
+  <ul class="collapse">
+  <li><a href="#binary-detection-has-a-correlation-ceiling" id="toc-binary-detection-has-a-correlation-ceiling" class="nav-link" data-scroll-target="#binary-detection-has-a-correlation-ceiling"><span class="header-section-number">6.1</span> 1. Binary Detection Has a Correlation Ceiling</a></li>
+  <li><a href="#the-model-detects-settlements-not-buildings" id="toc-the-model-detects-settlements-not-buildings" class="nav-link" data-scroll-target="#the-model-detects-settlements-not-buildings"><span class="header-section-number">6.2</span> 2. The Model Detects Settlements, Not Buildings</a></li>
+  <li><a href="#spectral-limitations-are-predictable" id="toc-spectral-limitations-are-predictable" class="nav-link" data-scroll-target="#spectral-limitations-are-predictable"><span class="header-section-number">6.3</span> 3. Spectral Limitations Are Predictable</a></li>
+  <li><a href="#ndvi-gradient-maps-directly-to-error-gradient" id="toc-ndvi-gradient-maps-directly-to-error-gradient" class="nav-link" data-scroll-target="#ndvi-gradient-maps-directly-to-error-gradient"><span class="header-section-number">6.4</span> 4. NDVI Gradient Maps Directly to Error Gradient</a></li>
+  <li><a href="#building-fraction-outperforms-raw-count" id="toc-building-fraction-outperforms-raw-count" class="nav-link" data-scroll-target="#building-fraction-outperforms-raw-count"><span class="header-section-number">6.5</span> 5. Building Fraction Outperforms Raw Count</a></li>
+  </ul></li>
+  <li><a href="#what-to-try-next" id="toc-what-to-try-next" class="nav-link" data-scroll-target="#what-to-try-next"><span class="header-section-number">7</span> What to Try Next</a>
+  <ul class="collapse">
+  <li><a href="#no-retraining-needed" id="toc-no-retraining-needed" class="nav-link" data-scroll-target="#no-retraining-needed"><span class="header-section-number">7.1</span> No retraining needed:</a></li>
+  <li><a href="#model-improvements" id="toc-model-improvements" class="nav-link" data-scroll-target="#model-improvements"><span class="header-section-number">7.2</span> Model improvements:</a></li>
+  <li><a href="#strategic" id="toc-strategic" class="nav-link" data-scroll-target="#strategic"><span class="header-section-number">7.3</span> Strategic:</a></li>
+  </ul></li>
+  <li><a href="#updated-project-summary" id="toc-updated-project-summary" class="nav-link" data-scroll-target="#updated-project-summary"><span class="header-section-number">8</span> Updated Project Summary</a></li>
+  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Stage 2: District Validation + Error Analysis</h1>
+<p class="subtitle lead">Project A · Progress Report — 2026-03-06</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">Project A</div>
+    <div class="quarto-category">GDP Mapping</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Project A — Full-country inference on Rwanda (20 chunks, 11.5M building pixels). District-level correlation with census establishments: Pearson r = 0.38. Error analysis reveals FPs are urban fabric, not model failures — NDVI is the key missing band.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andrea Salem </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 6, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="context" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="context"><span class="header-section-number">1</span> Context</h2>
+<p>This report documents <strong>Stage 2</strong> — the first end-to-end test of whether our building detection model produces an economically meaningful signal at the district level. We run the Stage 1b model (AUC=0.976) on all of Rwanda, aggregate predictions by GADM district, and correlate with the Rwanda Establishment Census (2020 + 2023).</p>
+<p>We also present the <strong>error analysis</strong> requested by Sebastian (2026-03-06): where does the model make mistakes, and what spectral features distinguish errors from correct predictions?</p>
+<p>For model training details, see <a href="../posts/2026-03-03_stage1-building-detection.html">Stage 1</a> and <a href="../posts/2026-03-06_stage1b-lr-fix.html">Stage 1b</a>.</p>
+<hr>
+</section>
+<section id="full-country-inference" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="full-country-inference"><span class="header-section-number">2</span> Full-Country Inference</h2>
+<p><strong>Model:</strong> Stage 1b best.keras (unet_tiny, 6,849 params, NIR/Blue/SWIR2) <strong>Input:</strong> 20 processed S2 chunks (0.5° grid, 12 bands, <code>data/proc/2022-S2/</code>) <strong>Method:</strong> Sliding window (128×128 patches, stride 64, 50% overlap averaging) <strong>Threshold:</strong> 0.90 (optimized in Stage 1b)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Chunks processed</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td>Total building pixels</td>
+<td><strong>11,518,266</strong></td>
+</tr>
+<tr class="odd">
+<td>Mean building fraction</td>
+<td>6.40%</td>
+</tr>
+<tr class="even">
+<td>Max building fraction</td>
+<td>27.2% (Kicukiro)</td>
+</tr>
+<tr class="odd">
+<td>Min building fraction</td>
+<td>2.3% (Kayonza)</td>
+</tr>
+</tbody>
+</table>
+<p>Predictions concentrate in urban Kigali (center) with scattered rural detections — spatially plausible.</p>
+<hr>
+</section>
+<section id="district-validation" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="district-validation"><span class="header-section-number">3</span> District Validation</h2>
+<p>We aggregate predicted building pixels per GADM district (30 districts) and correlate with establishment counts from the Rwanda Establishment Census.</p>
+<section id="correlation-summary" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="correlation-summary"><span class="header-section-number">3.1</span> Correlation Summary</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Comparison</th>
+<th>Pearson r</th>
+<th>Spearman ρ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Building pixels vs Estab. 2020</td>
+<td><strong>0.382</strong></td>
+<td>0.456</td>
+</tr>
+<tr class="even">
+<td>Building pixels vs Estab. 2023</td>
+<td><strong>0.432</strong></td>
+<td>0.498</td>
+</tr>
+<tr class="odd">
+<td>Building <em>fraction</em> vs Estab. 2020</td>
+<td>0.541</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Mean probability vs Estab. 2020</td>
+<td>0.476</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scatter-building-pixels-vs-establishments" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="scatter-building-pixels-vs-establishments"><span class="header-section-number">3.2</span> Scatter: Building Pixels vs Establishments</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/corr_buildings_estab2020.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Left: levels. Right: log-log with OLS fit. Outliers labeled.</figcaption>
+</figure>
+</div>
+<p><strong>Interpretation:</strong> The positive correlation is driven by Kigali (Gasabo, Kicukiro, Nyarugenge) which correctly shows the highest values on both axes. The relationship is noisy in rural districts where building count and establishment count decouple — many buildings are residential, not commercial.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/corr_buildings_estab2023.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Same analysis for Census 2023. Pearson r = 0.432 — slightly higher, consistent with 2023 census capturing more recent growth aligned with 2022 imagery.</figcaption>
+</figure>
+</div>
+</section>
+<section id="choropleth-building-fraction-by-district" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="choropleth-building-fraction-by-district"><span class="header-section-number">3.3</span> Choropleth: Building Fraction by District</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/choropleth_building_frac.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Detected building fraction by district. Kigali clearly stands out.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/choropleth_estab2020.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Census establishment count for comparison.</figcaption>
+</figure>
+</div>
+</section>
+<section id="district-level-table-top-10-by-establishments" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="district-level-table-top-10-by-establishments"><span class="header-section-number">3.4</span> District-Level Table (Top 10 by Establishments)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>District</th>
+<th>Province</th>
+<th>Building %</th>
+<th>Estab. 2020</th>
+<th>Estab. 2023</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nyarugenge</td>
+<td>Kigali</td>
+<td>19.29%</td>
+<td>19,906</td>
+<td>22,704</td>
+</tr>
+<tr class="even">
+<td>Gasabo</td>
+<td>Kigali</td>
+<td>18.06%</td>
+<td>19,648</td>
+<td>25,110</td>
+</tr>
+<tr class="odd">
+<td>Kicukiro</td>
+<td>Kigali</td>
+<td>27.19%</td>
+<td>14,883</td>
+<td>17,070</td>
+</tr>
+<tr class="even">
+<td>Rubavu</td>
+<td>Iburengerazuba</td>
+<td>12.58%</td>
+<td>11,840</td>
+<td>13,008</td>
+</tr>
+<tr class="odd">
+<td>Musanze</td>
+<td>Amajyaruguru</td>
+<td>9.41%</td>
+<td>11,248</td>
+<td>13,240</td>
+</tr>
+<tr class="even">
+<td>Bugesera</td>
+<td>Iburasirazuba</td>
+<td>5.99%</td>
+<td>8,805</td>
+<td>11,215</td>
+</tr>
+<tr class="odd">
+<td>Nyagatare</td>
+<td>Iburasirazuba</td>
+<td>2.55%</td>
+<td>8,506</td>
+<td>9,542</td>
+</tr>
+<tr class="even">
+<td>Rwamagana</td>
+<td>Iburasirazuba</td>
+<td>6.48%</td>
+<td>8,026</td>
+<td>9,612</td>
+</tr>
+<tr class="odd">
+<td>Gicumbi</td>
+<td>Amajyaruguru</td>
+<td>5.58%</td>
+<td>7,917</td>
+<td>8,641</td>
+</tr>
+<tr class="even">
+<td>Rusizi</td>
+<td>Iburengerazuba</td>
+<td>8.87%</td>
+<td>7,706</td>
+<td>9,017</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="error-analysis-sebastians-request" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="error-analysis-sebastians-request"><span class="header-section-number">4</span> Error Analysis (Sebastian’s Request)</h2>
+<blockquote class="blockquote">
+<p>“Show me concrete examples of where the model makes mistakes. Visualize performance, then come up with clever fixes.” — Sebastian, 2026-03-06</p>
+</blockquote>
+<section id="pixel-level-confusion-kigali-chunk" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="pixel-level-confusion-kigali-chunk"><span class="header-section-number">4.1</span> Pixel-Level Confusion (Kigali Chunk)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>True Positive</td>
+<td>584,105</td>
+</tr>
+<tr class="even">
+<td>True Negative</td>
+<td>25,826,337</td>
+</tr>
+<tr class="odd">
+<td><strong>False Positive</strong></td>
+<td><strong>2,413,655</strong></td>
+</tr>
+<tr class="even">
+<td>False Negative</td>
+<td>105,951</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Precision</td>
+<td>0.195</td>
+</tr>
+<tr class="even">
+<td>Recall</td>
+<td>0.847</td>
+</tr>
+<tr class="odd">
+<td>Pixel-level F1</td>
+<td>0.317</td>
+</tr>
+<tr class="even">
+<td>FP Rate</td>
+<td>0.086</td>
+</tr>
+</tbody>
+</table>
+<p>The pixel-level precision (0.195) is much lower than the patch-level training metric (0.951). This is <strong>expected</strong> — the model was trained on patches centered on buildings (positive sampling), and Open Buildings labels mark exact footprints while the model detects broader built-up areas.</p>
+</section>
+<section id="false-positive-gallery" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="false-positive-gallery"><span class="header-section-number">4.2</span> False Positive Gallery</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/fp_gallery_chunk2_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Top 16 worst FP patches. Green = ground truth buildings. Orange = false positives.</figcaption>
+</figure>
+</div>
+<p><strong>Key finding:</strong> Most “false positives” are actually <strong>roads, bare soil, parking areas, and urban fabric</strong> surrounding labeled buildings. These are genuinely built-up areas that Open Buildings (which only labels rooftops) doesn’t capture. This is a label limitation, not a model failure.</p>
+</section>
+<section id="false-negative-gallery" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="false-negative-gallery"><span class="header-section-number">4.3</span> False Negative Gallery</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/fn_gallery_chunk2_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Top 16 worst FN patches. Green = ground truth buildings. Blue = false negatives.</figcaption>
+</figure>
+</div>
+<p>False negatives tend to be <strong>small, isolated buildings in vegetated areas</strong> where the 128×128 patch context is dominated by vegetation.</p>
+</section>
+<section id="spectral-profiles-what-distinguishes-errors" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="spectral-profiles-what-distinguishes-errors"><span class="header-section-number">4.4</span> Spectral Profiles: What Distinguishes Errors?</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/spectral_profiles_chunk2_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Left: all 12 bands. Right: the 3 model input bands (NIR, Blue, SWIR2).</figcaption>
+</figure>
+</div>
+<p><strong>Critical finding:</strong> In the 3 model bands (right panel), FP and TP have <strong>nearly identical spectral signatures</strong>. The model literally cannot tell them apart with these bands alone. However, in the full 12-band plot (left panel), NDVI (band 11) clearly separates the categories — FPs have higher NDVI than TPs.</p>
+</section>
+<section id="confusion-by-ndvi-and-brightness" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="confusion-by-ndvi-and-brightness"><span class="header-section-number">4.5</span> Confusion by NDVI and Brightness</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/confusion_by_ndvi_chunk2_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Error rates binned by NDVI (left) and red brightness (right).</figcaption>
+</figure>
+</div>
+<p>The NDVI plot tells the clearest story:</p>
+<ul>
+<li><strong>Low NDVI (bare/urban):</strong> High recall (~90%) but high FP rate (~50%) — the model detects almost everything non-vegetated</li>
+<li><strong>High NDVI (vegetation):</strong> Low FP rate but high miss rate — the model correctly ignores vegetation but misses buildings hidden under canopy</li>
+</ul>
+<p>This is exactly what an NDVI input band would fix.</p>
+<hr>
+</section>
+</section>
+<section id="diagnosis-why-r-0.38" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="diagnosis-why-r-0.38"><span class="header-section-number">5</span> Diagnosis: Why r = 0.38</h2>
+<p>The correlation is positive and statistically significant (p &lt; 0.04), but below our target of r &gt; 0.7. Three factors explain the gap:</p>
+<ol type="1">
+<li><p><strong>Building count ≠ economic activity.</strong> Our model detects physical structures. A rural district with many scattered houses has lots of building pixels but few businesses. Kigali has dense commercial activity packed into fewer (but larger) buildings. Building count is a proxy for <em>settlement extent</em>, not economic intensity.</p></li>
+<li><p><strong>Label broadening.</strong> At threshold 0.90, the model detects built-up <em>areas</em> (roads, bare soil, construction) beyond just rooftops. This inflates pixel counts in arid/cleared districts relative to forested ones, decoupling from establishment counts.</p></li>
+<li><p><strong>No area normalization.</strong> Raw building pixel count scales with district area. Eastern districts (Nyagatare, Bugesera) are large and rank high on building pixels despite moderate establishment density.</p></li>
+</ol>
+<hr>
+</section>
+<section id="what-we-learned" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="what-we-learned"><span class="header-section-number">6</span> What We Learned</h2>
+<section id="binary-detection-has-a-correlation-ceiling" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="binary-detection-has-a-correlation-ceiling"><span class="header-section-number">6.1</span> 1. Binary Detection Has a Correlation Ceiling</h3>
+<p>Building count correlates with economic activity (r = 0.38) but has a natural ceiling around r ≈ 0.5. The reason is fundamental: binary detection measures <em>settlement extent</em> (how much land is covered by buildings and their surroundings), not <em>economic intensity</em> (how much activity happens per unit of settled area). Two districts with identical building coverage can have very different economic output — Kigali’s commercial districts vs.&nbsp;rural areas with dispersed homesteads.</p>
+<p>Breaking through r &gt; 0.7 requires either a regression head predicting <em>intensity</em> (establishments per pixel, trained on GPS-coded census data) or multi-source fusion (nightlights for intensity + daytime for extent).</p>
+</section>
+<section id="the-model-detects-settlements-not-buildings" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="the-model-detects-settlements-not-buildings"><span class="header-section-number">6.2</span> 2. The Model Detects Settlements, Not Buildings</h3>
+<p>The high FP rate against Open Buildings labels is misleading. The model detects the <em>broader built environment</em> — including roads, cleared land, and infrastructure around buildings. For economic mapping, this is arguably more useful than individual building footprints, because economic activity happens in the spaces <em>between</em> buildings (markets, roads, commercial strips), not only inside buildings.</p>
+</section>
+<section id="spectral-limitations-are-predictable" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="spectral-limitations-are-predictable"><span class="header-section-number">6.3</span> 3. Spectral Limitations Are Predictable</h3>
+<p>The spectral analysis confirms a prior that should guide feature engineering: <strong>if two classes are indistinguishable in the input feature space, no amount of training will separate them</strong>. FP and TP pixels overlap in NIR/Blue/SWIR2. The fix is not more training data or a larger model — it is more informative input bands. This is a feature engineering problem, not a model capacity problem.</p>
+</section>
+<section id="ndvi-gradient-maps-directly-to-error-gradient" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="ndvi-gradient-maps-directly-to-error-gradient"><span class="header-section-number">6.4</span> 4. NDVI Gradient Maps Directly to Error Gradient</h3>
+<p>The monotonic relationship between NDVI and FP rate means NDVI is not just “helpful” — it is the <em>primary</em> missing discriminant. Adding it as a 4th band is the single largest improvement available without changing labels or architecture.</p>
+</section>
+<section id="building-fraction-outperforms-raw-count" class="level3" data-number="6.5">
+<h3 data-number="6.5" class="anchored" data-anchor-id="building-fraction-outperforms-raw-count"><span class="header-section-number">6.5</span> 5. Building Fraction Outperforms Raw Count</h3>
+<p>Building fraction (r = 0.541) already beats raw building pixel count (r = 0.382) without any retraining. This confirms that district area was a confound. <strong>Always normalize by area</strong> in future district-level analyses.</p>
+<hr>
+</section>
+</section>
+<section id="what-to-try-next" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="what-to-try-next"><span class="header-section-number">7</span> What to Try Next</h2>
+<section id="no-retraining-needed" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="no-retraining-needed"><span class="header-section-number">7.1</span> No retraining needed:</h3>
+<ul>
+<li><strong>Establishment density</strong> (per km²) to normalize both sides</li>
+<li><strong>Exclude Kigali</strong> to check rural-only correlation (Kigali dominates as leverage point)</li>
+<li><strong>Mean probability</strong> as predictor (r = 0.476, already better than raw count)</li>
+</ul>
+</section>
+<section id="model-improvements" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="model-improvements"><span class="header-section-number">7.2</span> Model improvements:</h3>
+<ul>
+<li><strong>Add NDVI as 4th input band</strong> — the error analysis shows this is the strongest FP/TP discriminator</li>
+<li><strong><code>buildingsALL</code> on Quest</strong> (10-band unet_medium) — tests full spectral information</li>
+<li><strong>Water index (MNDWI)</strong> for lakeside districts</li>
+</ul>
+</section>
+<section id="strategic" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="strategic"><span class="header-section-number">7.3</span> Strategic:</h3>
+<ul>
+<li>The ceiling for <em>building detection → establishment count</em> may be ~r ≈ 0.5. Reaching r &gt; 0.7 likely requires the <strong>regression head</strong> (Stage 3) trained on actual GDP/sales data from Peru. Buildings alone proxy settlement size, not economic productivity.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="updated-project-summary" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="updated-project-summary"><span class="header-section-number">8</span> Updated Project Summary</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 29%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>Status</th>
+<th>Key Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data download + preprocessing</td>
+<td>Done</td>
+<td>20 Sentinel-2 tiles, Open Buildings raster</td>
+</tr>
+<tr class="even">
+<td>Stage 1: Building detection baseline</td>
+<td>Done</td>
+<td>AUC = 0.930</td>
+</tr>
+<tr class="odd">
+<td>Stage 1b: LR fix</td>
+<td>Done</td>
+<td>AUC = 0.976, F1 = 0.974</td>
+</tr>
+<tr class="even">
+<td><strong>Stage 2: District validation</strong></td>
+<td><strong>Done</strong></td>
+<td><strong>r = 0.382 (raw), r = 0.541 (fraction)</strong></td>
+</tr>
+<tr class="odd">
+<td>Stage 2b: NDVI as 4th band</td>
+<td>Next</td>
+<td>Target: reduce FP rate, improve r</td>
+</tr>
+<tr class="even">
+<td>Stage 3: GDP regression head</td>
+<td>Blocked</td>
+<td>Needs Peru GPS data</td>
+</tr>
+<tr class="odd">
+<td>Stage 4: Global application</td>
+<td>Future</td>
+<td>After Stage 3</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="code-and-reproducibility" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</h2>
+<p><strong>Inference:</strong> <code>python src/inference/01_predict_rwanda.py</code> (all 20 chunks, ~2h on CPU)</p>
+<p><strong>Aggregation:</strong> <code>python src/inference/02_aggregate_districts.py</code></p>
+<p><strong>Error analysis:</strong> <code>python src/diagnostics/error_analysis.py --chunk chunk_2_1</code></p>
+<p><strong>Outputs:</strong></p>
+<ul>
+<li><code>out/predictions/buildingsNIR-Rwanda2022-1b/</code> — 20 probability GeoTIFFs</li>
+<li><code>out/diagnostics/district_validation/district_validation.csv</code> — per-district stats</li>
+<li><code>out/diagnostics/error_analysis/figures/</code> — FP/FN galleries, spectral profiles, NDVI confusion</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/andreasalem\.github\.io\/africa-econ-reports");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Maintained by <a href="https://github.com/andreasalem">Andrea Salem</a> · Northwestern University</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

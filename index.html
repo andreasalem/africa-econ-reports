@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Microspatial GDP Mapping from Satellite Imagery – Africa Econ Satellite</title>
+<title>Africa Econ Satellite</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,8 +94,19 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./progress_stage1.html"> 
-<span class="menu-text">Stage 1 Results</span></a>
+    <a class="nav-link" href="./reports.html"> 
+<span class="menu-text">All Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ml_theory_guide.pdf" target="_blank"> 
+<span class="menu-text">ML Theory Guide</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/andreasalem/africa-econ-reports"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -113,10 +124,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#project-a-microspatial-gdp-mapping" id="toc-project-a-microspatial-gdp-mapping" class="nav-link active" data-scroll-target="#project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</a>
-  <ul class="collapse">
-  <li><a href="#progress" id="toc-progress" class="nav-link" data-scroll-target="#progress"><span class="header-section-number">1.1</span> Progress</a></li>
-  </ul></li>
+  <li><a href="#project-a-microspatial-gdp-mapping" id="toc-project-a-microspatial-gdp-mapping" class="nav-link active" data-scroll-target="#project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</a></li>
   <li><a href="#project-b-dark-shipping-validation" id="toc-project-b-dark-shipping-validation" class="nav-link" data-scroll-target="#project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</a></li>
   </ul>
 </nav>
@@ -126,8 +134,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Microspatial GDP Mapping from Satellite Imagery</h1>
-<p class="subtitle lead">Andreas Salem · Northwestern University</p>
+<h1 class="title">Africa Econ Satellite</h1>
+<p class="subtitle lead">Andrea Salem · Northwestern University</p>
 </div>
 
 
@@ -144,13 +152,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This site tracks progress on two research projects that use free Sentinel-2 satellite imagery to measure economic activity at 10-meter resolution in Africa and globally.</p>
+<p>This site tracks progress on two research projects using free Sentinel satellite imagery and a shared U-Net pipeline (<a href="https://github.com/ssardon/mlgis-ponds">mlgis-ponds</a>, Sebastian Sardon).</p>
+<hr>
 <section id="project-a-microspatial-gdp-mapping" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</h2>
-<p><strong>Goal:</strong> Produce a global pixel-level (10m) economic density map, beating Rossi-Hansberg et al.&nbsp;(2025) at 2,500× finer resolution.</p>
-<p><strong>Strategy:</strong> Train a U-Net on Rwanda (establishment census) + Peru (fine GDP data) → apply globally via free Sentinel-2.</p>
-<section id="progress" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="progress"><span class="header-section-number">1.1</span> Progress</h3>
+<p><strong>Goal:</strong> Global pixel-level (10 m) economic density map from Sentinel-2, beating Rossi-Hansberg et al.&nbsp;(2025) at 2,500x finer resolution.</p>
+<p><strong>Strategy:</strong> Train a U-Net on Rwanda (establishment census + Open Buildings) + Peru (fine GDP data) → apply globally.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -161,35 +168,86 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>Stage 1: Binary building detection, Rwanda</td>
-<td>✅ Complete — AUC = 0.93</td>
-<td><a href="./progress_stage1.html">View →</a></td>
+<td>Stage 1: Building detection baseline (LR = 5e-5)</td>
+<td>Done — AUC = 0.930</td>
+<td><a href="./posts/2026-03-03_stage1-building-detection.html">View →</a></td>
 </tr>
 <tr class="even">
-<td>Stage 2: District-level validation</td>
-<td>🔲 In progress</td>
+<td>Stage 1b: LR fix (5e-6 + ReduceLROnPlateau)</td>
+<td>Done — AUC = 0.976</td>
+<td><a href="./posts/2026-03-06_stage1b-lr-fix.html">View →</a></td>
+</tr>
+<tr class="odd">
+<td>Stage 2: District validation + error analysis</td>
+<td>Done — r = 0.382</td>
+<td><a href="./posts/2026-03-06_stage2-district-validation.html">View →</a></td>
+</tr>
+<tr class="even">
+<td>Stage 3: GDP regression head (Peru)</td>
+<td>Blocked on data</td>
 <td>—</td>
 </tr>
 <tr class="odd">
-<td>Stage 3: GDP regression head (Peru)</td>
-<td>🔲 Pending data</td>
-<td>—</td>
-</tr>
-<tr class="even">
 <td>Stage 4: Global application</td>
-<td>🔲 Future</td>
+<td>Future</td>
 <td>—</td>
 </tr>
 </tbody>
 </table>
-</section>
+<hr>
 </section>
 <section id="project-b-dark-shipping-validation" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</h2>
-<p><strong>Goal:</strong> Use Sentinel-1 SAR to validate AIS gap episodes near West Africa.</p>
-<p><strong>Status:</strong> Scoping.</p>
+<p><strong>Goal:</strong> Use Sentinel-1 SAR to validate AIS gap episodes near West Africa (Gulf of Guinea), building on Fernandez-Villaverde et al.&nbsp;(2025).</p>
+<p><strong>Strategy:</strong> CFAR ship detection + U-Net on SAR imagery → match against AIS dark episodes → causal validation of dark shipping.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Status</th>
+<th>Report</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SAR download pipeline (GEE)</td>
+<td>Done</td>
+<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+</tr>
+<tr class="even">
+<td>Ocean grid (417 cells, 0.5°)</td>
+<td>Done</td>
+<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+</tr>
+<tr class="odd">
+<td>CFAR ship detection PoC (Lagos)</td>
+<td>Done — 1,299 detections</td>
+<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+</tr>
+<tr class="even">
+<td>SAR preprocessing</td>
+<td>Code ready — awaiting S1 data</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>AIS data (Global Fishing Watch)</td>
+<td>Blocked — need to register</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Ship training labels (SUMO / Kaggle)</td>
+<td>Blocked — need to download</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>U-Net ship detection training</td>
+<td>Blocked on labels</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 <hr>
-<p><em>Last updated: 2026-03-03</em></p>
+<p>See <a href="./reports.html">All Reports →</a> for the full timestamped archive.</p>
 
 
 </section>
@@ -268,7 +326,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/andreasalem\.github\.io\/africa-econ-reports");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -602,7 +660,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Andreas Salem · Northwestern University · {today}</p>
+<p>Maintained by <a href="https://github.com/andreasalem">Andrea Salem</a> · Northwestern University</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
