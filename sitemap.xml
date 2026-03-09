@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://andreasalem.github.io/africa-econ-reports/memo_google_open_buildings.html</loc>
+    <lastmod>2026-03-09T04:44:00.559Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andreasalem.github.io/africa-econ-reports/memo_building_detection_limitations.html</loc>
+    <lastmod>2026-03-09T04:47:32.645Z</lastmod>
+  </url>
+  <url>
     <loc>https://andreasalem.github.io/africa-econ-reports/reports.html</loc>
     <lastmod>2026-03-06T19:46:07.499Z</lastmod>
+  </url>
+  <url>
+    <loc>https://andreasalem.github.io/africa-econ-reports/posts/2026-03-09_stage1c-alpha-earth.html</loc>
+    <lastmod>2026-03-09T17:07:41.043Z</lastmod>
   </url>
   <url>
     <loc>https://andreasalem.github.io/africa-econ-reports/posts/2026-03-06_stage1b-lr-fix.html</loc>
@@ -17,11 +29,15 @@
     <lastmod>2026-03-07T00:35:57.144Z</lastmod>
   </url>
   <url>
+    <loc>https://andreasalem.github.io/africa-econ-reports/posts/2026-03-09_stage2b-district-comparison.html</loc>
+    <lastmod>2026-03-09T22:12:21.191Z</lastmod>
+  </url>
+  <url>
     <loc>https://andreasalem.github.io/africa-econ-reports/posts/2026-03-06_dark-shipping-pipeline.html</loc>
     <lastmod>2026-03-06T19:46:00.285Z</lastmod>
   </url>
   <url>
     <loc>https://andreasalem.github.io/africa-econ-reports/index.html</loc>
-    <lastmod>2026-03-07T00:34:29.281Z</lastmod>
+    <lastmod>2026-03-09T17:08:51.288Z</lastmod>
   </url>
 </urlset>

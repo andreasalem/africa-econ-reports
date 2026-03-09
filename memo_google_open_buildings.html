@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>memo_google_open_buildings – Africa Econ Satellite</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Africa Econ Satellite</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./reports.html"> 
+<span class="menu-text">All Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ml_theory_guide.pdf" target="_blank"> 
+<span class="menu-text">ML Theory Guide</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/andreasalem/africa-econ-reports"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#research-memo-google-open-buildings-and-its-role-as-training-labels" id="toc-research-memo-google-open-buildings-and-its-role-as-training-labels" class="nav-link active" data-scroll-target="#research-memo-google-open-buildings-and-its-role-as-training-labels"><span class="header-section-number">1</span> Research Memo: Google Open Buildings and Its Role as Training Labels</a>
+  <ul class="collapse">
+  <li><a href="#the-paper-sirko-et-al.-2021" id="toc-the-paper-sirko-et-al.-2021" class="nav-link" data-scroll-target="#the-paper-sirko-et-al.-2021"><span class="header-section-number">1.1</span> 1. The Paper: Sirko et al.&nbsp;(2021)</a>
+  <ul class="collapse">
+  <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation"><span class="header-section-number">1.1.1</span> Citation</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology"><span class="header-section-number">1.1.2</span> Methodology</a></li>
+  <li><a href="#model-architecture" id="toc-model-architecture" class="nav-link" data-scroll-target="#model-architecture"><span class="header-section-number">1.1.3</span> Model Architecture</a></li>
+  <li><a href="#training-data" id="toc-training-data" class="nav-link" data-scroll-target="#training-data"><span class="header-section-number">1.1.4</span> Training Data</a></li>
+  <li><a href="#coverage-and-output" id="toc-coverage-and-output" class="nav-link" data-scroll-target="#coverage-and-output"><span class="header-section-number">1.1.5</span> Coverage and Output</a></li>
+  <li><a href="#accuracy-metrics" id="toc-accuracy-metrics" class="nav-link" data-scroll-target="#accuracy-metrics"><span class="header-section-number">1.1.6</span> Accuracy Metrics</a></li>
+  </ul></li>
+  <li><a href="#key-insight-our-pipeline-vs.-theirs" id="toc-key-insight-our-pipeline-vs.-theirs" class="nav-link" data-scroll-target="#key-insight-our-pipeline-vs.-theirs"><span class="header-section-number">1.2</span> 2. Key Insight: Our Pipeline vs.&nbsp;Theirs</a>
+  <ul class="collapse">
+  <li><a href="#their-pipeline-google-open-buildings" id="toc-their-pipeline-google-open-buildings" class="nav-link" data-scroll-target="#their-pipeline-google-open-buildings"><span class="header-section-number">1.2.1</span> Their Pipeline (Google Open Buildings)</a></li>
+  <li><a href="#our-pipeline-africa-econ-satellite" id="toc-our-pipeline-africa-econ-satellite" class="nav-link" data-scroll-target="#our-pipeline-africa-econ-satellite"><span class="header-section-number">1.2.2</span> Our Pipeline (Africa-Econ-Satellite)</a></li>
+  <li><a href="#what-we-are-actually-doing" id="toc-what-we-are-actually-doing" class="nav-link" data-scroll-target="#what-we-are-actually-doing"><span class="header-section-number">1.2.3</span> What We Are Actually Doing</a></li>
+  </ul></li>
+  <li><a href="#implications-of-using-open-buildings-as-labels" id="toc-implications-of-using-open-buildings-as-labels" class="nav-link" data-scroll-target="#implications-of-using-open-buildings-as-labels"><span class="header-section-number">1.3</span> 3. Implications of Using Open Buildings as Labels</a>
+  <ul class="collapse">
+  <li><a href="#label-noise-precision-recall-asymmetry" id="toc-label-noise-precision-recall-asymmetry" class="nav-link" data-scroll-target="#label-noise-precision-recall-asymmetry"><span class="header-section-number">1.3.1</span> 3.1 Label Noise: Precision-Recall Asymmetry</a></li>
+  <li><a href="#resolution-mismatch-50cm-to-10m" id="toc-resolution-mismatch-50cm-to-10m" class="nav-link" data-scroll-target="#resolution-mismatch-50cm-to-10m"><span class="header-section-number">1.3.2</span> 3.2 Resolution Mismatch: 50cm to 10m</a></li>
+  <li><a href="#knowledge-distillation-and-noisy-label-theory" id="toc-knowledge-distillation-and-noisy-label-theory" class="nav-link" data-scroll-target="#knowledge-distillation-and-noisy-label-theory"><span class="header-section-number">1.3.3</span> 3.3 Knowledge Distillation and Noisy Label Theory</a></li>
+  <li><a href="#coverage-gaps-and-spatial-bias" id="toc-coverage-gaps-and-spatial-bias" class="nav-link" data-scroll-target="#coverage-gaps-and-spatial-bias"><span class="header-section-number">1.3.4</span> 3.4 Coverage Gaps and Spatial Bias</a></li>
+  </ul></li>
+  <li><a href="#why-not-replicate-googles-pipeline" id="toc-why-not-replicate-googles-pipeline" class="nav-link" data-scroll-target="#why-not-replicate-googles-pipeline"><span class="header-section-number">1.4</span> 4. Why NOT Replicate Google’s Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#key-reasons" id="toc-key-reasons" class="nav-link" data-scroll-target="#key-reasons"><span class="header-section-number">1.4.1</span> Key Reasons</a></li>
+  </ul></li>
+  <li><a href="#literature-connections" id="toc-literature-connections" class="nav-link" data-scroll-target="#literature-connections"><span class="header-section-number">1.5</span> 5. Literature Connections</a>
+  <ul class="collapse">
+  <li><a href="#building-detection-from-medium-resolution-satellite-imagery" id="toc-building-detection-from-medium-resolution-satellite-imagery" class="nav-link" data-scroll-target="#building-detection-from-medium-resolution-satellite-imagery"><span class="header-section-number">1.5.1</span> 5.1 Building Detection from Medium-Resolution Satellite Imagery</a></li>
+  <li><a href="#using-ml-model-outputs-as-training-labels" id="toc-using-ml-model-outputs-as-training-labels" class="nav-link" data-scroll-target="#using-ml-model-outputs-as-training-labels"><span class="header-section-number">1.5.2</span> 5.2 Using ML Model Outputs as Training Labels</a></li>
+  <li><a href="#sentinel-2-for-urbanbuilt-up-area-mapping" id="toc-sentinel-2-for-urbanbuilt-up-area-mapping" class="nav-link" data-scroll-target="#sentinel-2-for-urbanbuilt-up-area-mapping"><span class="header-section-number">1.5.3</span> 5.3 Sentinel-2 for Urban/Built-Up Area Mapping</a></li>
+  <li><a href="#connecting-building-detection-to-economic-outcomes" id="toc-connecting-building-detection-to-economic-outcomes" class="nav-link" data-scroll-target="#connecting-building-detection-to-economic-outcomes"><span class="header-section-number">1.5.4</span> 5.4 Connecting Building Detection to Economic Outcomes</a></li>
+  </ul></li>
+  <li><a href="#summary-position-statement-for-our-paper" id="toc-summary-position-statement-for-our-paper" class="nav-link" data-scroll-target="#summary-position-statement-for-our-paper"><span class="header-section-number">1.6</span> 6. Summary: Position Statement for Our Paper</a></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources"><span class="header-section-number">1.7</span> Sources</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="research-memo-google-open-buildings-and-its-role-as-training-labels" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Research Memo: Google Open Buildings and Its Role as Training Labels</h1>
+<p><strong>Date:</strong> 2026-03-08 <strong>Project:</strong> Africa-Econ-Satellite (Microspatial GDP Mapping)</p>
+<hr>
+<section id="the-paper-sirko-et-al.-2021" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="the-paper-sirko-et-al.-2021"><span class="header-section-number">1.1</span> 1. The Paper: Sirko et al.&nbsp;(2021)</h2>
+<section id="citation" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="citation"><span class="header-section-number">1.1.1</span> Citation</h3>
+<p>Sirko, W., Kashubin, S., Ritter, M., Annkah, A., Bouchareb, Y.S.E., Dauphin, Y., Keysers, D., Neumann, M., Cisse, M., and Quinn, J. (2021). “Continental-Scale Building Detection from High Resolution Satellite Imagery.” arXiv preprint arXiv:2107.12283. https://doi.org/10.48550/arXiv.2107.12283</p>
+</section>
+<section id="methodology" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="methodology"><span class="header-section-number">1.1.2</span> Methodology</h3>
+<p>The paper describes a pipeline for detecting individual buildings across the African continent from 50cm commercial satellite imagery (Maxar Technologies). The core approach is pixel-wise semantic segmentation: each pixel is classified as building or non-building, then connected components are grouped into individual building instances.</p>
+</section>
+<section id="model-architecture" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="model-architecture"><span class="header-section-number">1.1.3</span> Model Architecture</h3>
+<p>The model is a <strong>U-Net variant</strong> – an encoder-decoder architecture with skip connections. Key design choices:</p>
+<ul>
+<li><strong>Distance weighting:</strong> Instead of standard binary masks, the loss function uses Gaussian convolution of building edges to emphasize boundary detection. This prevents neighboring buildings from merging. Removing this degrades mAP by 0.33 – the single most important design choice.</li>
+<li><strong>Mixup regularization:</strong> Random training images are blended via weighted averaging, improving generalization across diverse terrain types (savannah, desert, forest, informal settlements). Impact: +0.12 mAP.</li>
+<li><strong>ImageNet pre-training:</strong> Transfer learning from ImageNet provides a warm start. Impact: +0.07 mAP.</li>
+<li><strong>Self-training (Noisy Student):</strong> A trained teacher model generates pseudo-labels on 8.7 million unlabeled satellite images. A student model is then trained on augmented versions of this expanded dataset with soft KL divergence loss, reducing false positives. Impact: +0.06 mAP.</li>
+</ul>
+<p>The architecture is deliberately compact to allow continental-scale inference without prohibitive compute costs.</p>
+</section>
+<section id="training-data" class="level3" data-number="1.1.4">
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="training-data"><span class="header-section-number">1.1.4</span> Training Data</h3>
+<ul>
+<li><strong>100,000 satellite images</strong> across Africa</li>
+<li><strong>1.75 million manually labeled building instances</strong> (hand-annotated polygons)</li>
+<li>Additional unlabeled datasets for self-training (8.7M images)</li>
+<li>Satellite source: <strong>Maxar Technologies</strong> commercial imagery at <strong>50cm resolution</strong></li>
+</ul>
+</section>
+<section id="coverage-and-output" class="level3" data-number="1.1.5">
+<h3 data-number="1.1.5" class="anchored" data-anchor-id="coverage-and-output"><span class="header-section-number">1.1.5</span> Coverage and Output</h3>
+<ul>
+<li><strong>516 million buildings</strong> detected in Africa (V1)</li>
+<li><strong>1.8 billion buildings</strong> globally in V3 (Africa + South Asia + Southeast Asia + Latin America + Caribbean)</li>
+<li>Coverage: <strong>58 million km2</strong> of inference area</li>
+<li>Africa: 19.4 million km2 (64% of the continent)</li>
+<li>8.6 billion image tiles processed</li>
+</ul>
+</section>
+<section id="accuracy-metrics" class="level3" data-number="1.1.6">
+<h3 data-number="1.1.6" class="anchored" data-anchor-id="accuracy-metrics"><span class="header-section-number">1.1.6</span> Accuracy Metrics</h3>
+<p>Each detected building carries a confidence score (0.65 to 1.0). The dataset provides per-tile suggested thresholds to achieve target precision levels:</p>
+<ul>
+<li><strong>80% precision threshold</strong> (higher recall)</li>
+<li><strong>85% precision threshold</strong></li>
+<li><strong>90% precision threshold</strong> (lower recall)</li>
+</ul>
+<p>Performance varies by building density category:</p>
+<ul>
+<li><strong>Urban areas:</strong> Higher precision but challenges with contiguous buildings that lack clear boundaries; tendency to split large buildings into multiple instances</li>
+<li><strong>Medium density:</strong> Generally best performance</li>
+<li><strong>Rural areas:</strong> Lower recall – small buildings may be only a few pixels wide even at 50cm; label noise also higher in sparse regions</li>
+<li><strong>Arid/desert regions:</strong> Lower precision due to natural materials blending with building materials</li>
+</ul>
+<p>Regarding the approximate figures of ~0.95 precision and ~0.70 recall for Africa at the default confidence threshold (0.65): these represent rough continent-wide averages. The key point is the <strong>asymmetry</strong> – precision is substantially higher than recall, meaning the dataset misses more buildings than it hallucinates.</p>
+<hr>
+</section>
+</section>
+<section id="key-insight-our-pipeline-vs.-theirs" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="key-insight-our-pipeline-vs.-theirs"><span class="header-section-number">1.2</span> 2. Key Insight: Our Pipeline vs.&nbsp;Theirs</h2>
+<p>This is the crucial architectural distinction that must be stated clearly in any paper.</p>
+<section id="their-pipeline-google-open-buildings" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="their-pipeline-google-open-buildings"><span class="header-section-number">1.2.1</span> Their Pipeline (Google Open Buildings)</h3>
+<pre><code>Input:  Maxar commercial imagery (50cm, RGB)
+Model:  Modified U-Net (encoder-decoder)
+Output: Individual building polygons with confidence scores
+Cost:   Commercial imagery ($$$), massive compute</code></pre>
+</section>
+<section id="our-pipeline-africa-econ-satellite" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="our-pipeline-africa-econ-satellite"><span class="header-section-number">1.2.2</span> Our Pipeline (Africa-Econ-Satellite)</h3>
+<pre><code>Input:  Sentinel-2 (10m, 12 spectral bands) -- FREE
+Labels: Google Open Buildings polygons (rasterized to 10m grid)
+Model:  U-Net variant (our own training)
+Output: Building presence/density probability per 10m pixel
+Cost:   Free imagery, moderate compute</code></pre>
+</section>
+<section id="what-we-are-actually-doing" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="what-we-are-actually-doing"><span class="header-section-number">1.2.3</span> What We Are Actually Doing</h3>
+<p>We are performing a form of <strong>cross-resolution knowledge transfer</strong>. Google’s model, trained on commercial 50cm imagery with human-annotated labels, produced building polygons. We take those polygons as ground truth and train a new model to predict building presence from freely available 10m Sentinel-2 imagery.</p>
+<p>This is emphatically <strong>not</strong> a replication of Google’s pipeline. We do not have access to 50cm imagery. We are not trying to detect individual buildings. We are learning a mapping from medium-resolution multispectral features to building density – using Google’s output as a noisy supervisory signal.</p>
+<p>The analogy is: Google built a high-resolution “oracle” using expensive inputs. We train a cheaper, coarser model to approximate that oracle’s outputs using free inputs. The ML literature calls this <strong>knowledge distillation</strong> or <strong>teacher-student learning</strong>, though our case is unusual because:</p>
+<ol type="1">
+<li>The teacher and student operate at different spatial resolutions</li>
+<li>The teacher’s outputs (polygons) are aggregated/rasterized before serving as labels</li>
+<li>We never access the teacher model itself – only its outputs</li>
+<li>The student uses different input features (multispectral vs.&nbsp;RGB)</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="implications-of-using-open-buildings-as-labels" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="implications-of-using-open-buildings-as-labels"><span class="header-section-number">1.3</span> 3. Implications of Using Open Buildings as Labels</h2>
+<section id="label-noise-precision-recall-asymmetry" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="label-noise-precision-recall-asymmetry"><span class="header-section-number">1.3.1</span> 3.1 Label Noise: Precision-Recall Asymmetry</h3>
+<p>Google Open Buildings achieves high precision (~0.95 at recommended thresholds) but moderate recall (~0.70), particularly in rural Africa. This creates <strong>asymmetric label noise</strong>:</p>
+<ul>
+<li><strong>False negatives (missed buildings, ~30% of true buildings):</strong> Our model is trained to predict “no building” where buildings actually exist. This biases our model toward under-prediction of building presence, especially in rural areas with small or informal structures.</li>
+<li><strong>False positives (hallucinated buildings, ~5%):</strong> Relatively rare. Our model occasionally learns to predict buildings where none exist, but this is a minor issue.</li>
+</ul>
+<p><strong>Practical consequence:</strong> Our model will systematically underestimate building density in areas where Open Buildings has low recall. Since recall is lowest in rural areas with small buildings, this creates a <strong>spatial bias</strong> – our model is most accurate in denser urban/peri-urban areas and least reliable in sparse rural settings.</p>
+<p><strong>Mitigation strategies:</strong> - Use higher-confidence polygons (&gt;0.75) to maximize precision, accepting even lower recall - Treat the problem as semi-supervised: pixels without building labels are “unknown,” not “negative” - Apply label smoothing to avoid training on hard zeros in potentially-missed-building areas</p>
+</section>
+<section id="resolution-mismatch-50cm-to-10m" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="resolution-mismatch-50cm-to-10m"><span class="header-section-number">1.3.2</span> 3.2 Resolution Mismatch: 50cm to 10m</h3>
+<p>A single 10m Sentinel-2 pixel covers a 10m x 10m area = 100 m2. At 50cm resolution, this same area contains 20 x 20 = <strong>400 pixels</strong> in Maxar imagery.</p>
+<p>Implications:</p>
+<ul>
+<li><strong>Building fraction, not building presence:</strong> At 10m, the natural label is not binary (building/no-building) but fractional: what proportion of the 10m pixel is covered by buildings? A 10m pixel might contain 30% building footprint. Training with hard binary labels (any overlap = 1) vs.&nbsp;soft fractional labels will produce different models.</li>
+<li><strong>Mixed pixels dominate:</strong> In all but the densest urban cores, most 10m pixels will be mixed – containing some building and some non-building area. The spectral signature of these pixels is a blend, making the classification problem fundamentally harder than at 50cm.</li>
+<li><strong>Small buildings vanish:</strong> A 3m x 3m building covers 9% of a 10m pixel. Its spectral contribution is swamped by the surrounding land cover. Google’s model can detect this building at 50cm; our model likely cannot at 10m. This is a fundamental resolution limit, not a model limitation.</li>
+<li><strong>Building counting is impossible:</strong> At 10m, we cannot count individual buildings. We can estimate building density or built-up fraction. This is actually fine for our research question (economic density), but it means our model answers a different question than Google’s.</li>
+</ul>
+<p><strong>Best practice for label construction:</strong> - Compute building <strong>area fraction</strong> per 10m pixel from the Open Buildings polygons - Use this fraction as a continuous label (regression target) rather than a binary one - This better represents the ground truth at 10m resolution and is directly interpretable as building density</p>
+</section>
+<section id="knowledge-distillation-and-noisy-label-theory" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="knowledge-distillation-and-noisy-label-theory"><span class="header-section-number">1.3.3</span> 3.3 Knowledge Distillation and Noisy Label Theory</h3>
+<p>Our approach fits within the broader ML literature on learning from imperfect supervision:</p>
+<p><strong>Knowledge distillation (Hinton et al., 2015):</strong> Originally proposed for model compression, where a small “student” network is trained to match the soft outputs of a large “teacher” network. The key insight is that the teacher’s probability distribution over classes (soft labels) carries more information than hard labels alone. Our case differs: we use the teacher’s <em>thresholded</em> output polygons rather than soft probabilities, and we operate across resolution scales.</p>
+<blockquote class="blockquote">
+<p>Hinton, G., Vinyals, O., and Dean, J. (2015). “Distilling the Knowledge in a Neural Network.” arXiv:1503.02531.</p>
+</blockquote>
+<p><strong>Learning from noisy labels:</strong> A rich literature establishes that deep networks can learn effectively from noisy labels under certain conditions:</p>
+<ul>
+<li><p><em>Natarajan et al.&nbsp;(2013)</em> showed that if the noise rates (false positive and false negative rates) are known, the optimal classifier under clean labels can be recovered by cost-sensitive learning on noisy labels. Applied to our setting: if we know Open Buildings’ precision (~0.95) and recall (~0.70), we can theoretically correct for the label noise.</p>
+<blockquote class="blockquote">
+<p>Natarajan, N., Dhillon, I.S., Ravikumar, P., and Tewari, A. (2013). “Learning with Noisy Labels.” Advances in Neural Information Processing Systems 26 (NeurIPS).</p>
+</blockquote></li>
+<li><p><em>Arpit et al.&nbsp;(2017)</em> demonstrated that DNNs first learn “simple patterns” from the data before memorizing noisy labels in later epochs. This suggests that early stopping or regularization can help our model learn the real building signal without overfitting to label noise.</p>
+<blockquote class="blockquote">
+<p>Arpit, D. et al.&nbsp;(2017). “A Closer Look at Memorization in Deep Networks.” Proceedings of the 34th International Conference on Machine Learning (ICML).</p>
+</blockquote></li>
+<li><p><em>Li et al.&nbsp;(2017)</em> specifically studied knowledge distillation as a mechanism for handling noisy labels, showing that the distillation process itself acts as a regularizer that suppresses the influence of mislabeled examples.</p>
+<blockquote class="blockquote">
+<p>Li, Y., Yang, J., Song, Y., Cao, L., Luo, J., and Li, L.-J. (2017). “Learning from Noisy Labels with Distillation.” Proceedings of the IEEE International Conference on Computer Vision (ICCV).</p>
+</blockquote></li>
+</ul>
+<p><strong>Practical takeaway:</strong> The literature suggests our approach is fundamentally sound. Training on Open Buildings labels – even with ~30% false negative rate – will produce a useful model, especially with: - Appropriate loss functions (focal loss / focal Tversky, which we already use) - Regularization (early stopping, dropout, augmentation) - Treating confidence scores as label quality indicators</p>
+</section>
+<section id="coverage-gaps-and-spatial-bias" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="coverage-gaps-and-spatial-bias"><span class="header-section-number">1.3.4</span> 3.4 Coverage Gaps and Spatial Bias</h3>
+<p>Open Buildings coverage is not uniform:</p>
+<ul>
+<li><strong>Temporal gaps:</strong> The underlying Maxar imagery was captured at various times. Some areas may have older imagery that misses recent construction.</li>
+<li><strong>Cloud/quality gaps:</strong> Some areas lack sufficient high-quality cloud-free imagery for reliable detection.</li>
+<li><strong>Rural bias:</strong> Rural areas have lower recall due to smaller buildings, lower image contrast, and sparser training data in Google’s own pipeline.</li>
+<li><strong>Regional variation:</strong> The paper documents varying performance across regions – e.g., Sierra Leone and Mozambique had sparser labeling; Cairo showed building-splitting artifacts.</li>
+</ul>
+<p><strong>For our model:</strong> These coverage gaps translate directly into label quality variation across our study area. Our model will be more reliable in areas where Open Buildings performs well (dense settlements, cloud-free imagery) and less reliable where it performs poorly (sparse rural areas, recently developed areas).</p>
+<hr>
+</section>
+</section>
+<section id="why-not-replicate-googles-pipeline" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="why-not-replicate-googles-pipeline"><span class="header-section-number">1.4</span> 4. Why NOT Replicate Google’s Pipeline</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Google Open Buildings</th>
+<th>Our Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Imagery</strong></td>
+<td>Maxar 50cm (commercial, $$)</td>
+<td>Sentinel-2 10m (free, open)</td>
+</tr>
+<tr class="even">
+<td><strong>Resolution</strong></td>
+<td>Individual building footprints</td>
+<td>Building density per 10m pixel</td>
+</tr>
+<tr class="odd">
+<td><strong>Temporal coverage</strong></td>
+<td>Snapshot (varies by tile)</td>
+<td>Regular 5-day revisits since 2017</td>
+</tr>
+<tr class="even">
+<td><strong>Spectral bands</strong></td>
+<td>RGB (3 bands)</td>
+<td>12 bands including NIR, SWIR, Red Edge</td>
+</tr>
+<tr class="odd">
+<td><strong>Research question</strong></td>
+<td>Where are buildings?</td>
+<td>Where is economic activity?</td>
+</tr>
+<tr class="even">
+<td><strong>Scalability</strong></td>
+<td>Requires commercial imagery purchases</td>
+<td>Fully reproducible with open data</td>
+</tr>
+<tr class="odd">
+<td><strong>Temporal analysis</strong></td>
+<td>Limited by imagery availability</td>
+<td>Can track changes over time</td>
+</tr>
+<tr class="even">
+<td><strong>Cost</strong></td>
+<td>Imagery + massive compute</td>
+<td>Moderate compute only</td>
+</tr>
+</tbody>
+</table>
+<section id="key-reasons" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="key-reasons"><span class="header-section-number">1.4.1</span> Key Reasons</h3>
+<ol type="1">
+<li><p><strong>Cost prohibition:</strong> Maxar imagery costs thousands of dollars per tile. Continental-scale coverage is only feasible for well-funded organizations (Google, Microsoft). Sentinel-2 is free and globally available.</p></li>
+<li><p><strong>Different research question:</strong> We do not need individual building footprints. We need a <em>proxy for economic density</em> at moderate resolution. Building presence probability at 10m is actually better suited to this task than individual polygons, because it naturally aggregates to the district level where we validate against economic data.</p></li>
+<li><p><strong>Temporal dimension:</strong> Sentinel-2 provides repeat observations every 5 days. This enables change detection and temporal compositing, which is impossible with one-time commercial imagery snapshots. Our model can potentially track urbanization dynamics.</p></li>
+<li><p><strong>Spectral richness:</strong> Sentinel-2’s 12 bands (including near-infrared, red edge, and shortwave infrared) provide information about land cover that RGB alone cannot. Vegetation indices (NDVI), built-up indices (NDBI), and soil brightness can all help distinguish built-up areas from bare soil – a key confusion source at 10m resolution.</p></li>
+<li><p><strong>Reproducibility:</strong> Any researcher can replicate our pipeline using only open data. This is a core scientific value.</p></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="literature-connections" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="literature-connections"><span class="header-section-number">1.5</span> 5. Literature Connections</h2>
+<section id="building-detection-from-medium-resolution-satellite-imagery" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="building-detection-from-medium-resolution-satellite-imagery"><span class="header-section-number">1.5.1</span> 5.1 Building Detection from Medium-Resolution Satellite Imagery</h3>
+<p><strong>Sirko, W., Asiedu Brempong, E., Marcos, J.T.C., et al.&nbsp;(2023). “High-Resolution Building and Road Detection from Sentinel-2.” arXiv:2310.11622.</strong></p>
+<p>This is the most directly relevant paper – also from Google Research. It explicitly implements the teacher-student framework we use implicitly: - Teacher model: trained on 50cm imagery, generates building/road segmentation masks - Student model: trained on Sentinel-2 10m imagery to reproduce teacher’s predictions - Key finding: Using stacks of up to 32 temporally offset Sentinel-2 frames, the student achieves <strong>78.3% mIoU</strong> for building segmentation (vs.&nbsp;85.3% for the teacher on high-res imagery) - Achieves performance comparable to models running on single 4m-resolution images - Building counting R2: 0.91 (student) vs.&nbsp;0.95 (teacher on high-res)</p>
+<p>This paper validates the core idea behind our approach: Sentinel-2 contains enough information to predict building presence, even though individual buildings are sub-pixel.</p>
+<p><strong>Corbane, C., Syrris, V., Sabo, F., et al.&nbsp;(2021). “Convolutional neural networks for global human settlements mapping from Sentinel-2 satellite imagery.” Neural Computing and Applications, 33, 6697-6717.</strong></p>
+<p>Developed GHS-S2Net for the European Commission’s Global Human Settlement Layer (GHSL): - Lightweight CNN (1.4M parameters, 4 conv layers) for pixel-wise classification - Global coverage using Sentinel-2 composites at 10m - Validated against 40 million building polygons across 277 areas of interest - Uses UTM-zone-specific transfer learning to handle geographic variation - Produces the GHS-BUILT-S2 layer used in many development studies</p>
+<p><strong>Qiu, C., Schmitt, M., Geiss, C., Chen, T.-H.K., and Zhu, X.X. (2020). “A framework for large-scale mapping of human settlement extent from Sentinel-2 images via fully convolutional neural networks.” ISPRS Journal of Photogrammetry and Remote Sensing, 163, 152-170.</strong></p>
+<ul>
+<li>Fully convolutional architecture (Sen2HSE) for settlement extent mapping</li>
+<li>Validated against OpenStreetMap building layer and manual labels</li>
+<li>Addresses the specific challenges of mixed pixels at 10m resolution</li>
+</ul>
+</section>
+<section id="using-ml-model-outputs-as-training-labels" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="using-ml-model-outputs-as-training-labels"><span class="header-section-number">1.5.2</span> 5.2 Using ML Model Outputs as Training Labels</h3>
+<p><strong>Hinton, G., Vinyals, O., and Dean, J. (2015). “Distilling the Knowledge in a Neural Network.” arXiv:1503.02531.</strong></p>
+<p>The foundational knowledge distillation paper. Key insight: soft probability outputs from a teacher model contain “dark knowledge” about inter-class similarities that hard labels do not. While our case uses hard(ish) polygon labels rather than soft probabilities, the principle applies: Google’s model has encoded information about building detection that we transfer to our student model.</p>
+<p><strong>Li, Y., Yang, J., Song, Y., Cao, L., Luo, J., and Li, L.-J. (2017). “Learning from Noisy Labels with Distillation.” IEEE International Conference on Computer Vision (ICCV).</strong></p>
+<p>Directly studies how knowledge distillation interacts with label noise. Shows that distillation acts as a regularizer against noisy labels, and that student models can sometimes outperform teachers when label noise is present.</p>
+</section>
+<section id="sentinel-2-for-urbanbuilt-up-area-mapping" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="sentinel-2-for-urbanbuilt-up-area-mapping"><span class="header-section-number">1.5.3</span> 5.3 Sentinel-2 for Urban/Built-Up Area Mapping</h3>
+<p><strong>Pesaresi, M., Corbane, C., Julea, A., et al.&nbsp;(2016). “Assessment of the Added-Value of Sentinel-2 for Detecting Built-up Areas.” Remote Sensing, 8(4), 299.</strong></p>
+<p>Early assessment of Sentinel-2’s capabilities for built-up area detection, establishing that the 10m bands plus red-edge and SWIR bands provide meaningful improvements over Landsat for urban mapping.</p>
+</section>
+<section id="connecting-building-detection-to-economic-outcomes" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="connecting-building-detection-to-economic-outcomes"><span class="header-section-number">1.5.4</span> 5.4 Connecting Building Detection to Economic Outcomes</h3>
+<p><strong>Jean, N., Burke, M., Xie, M., Davis, W.M., Lobell, D.B., and Ermon, S. (2016). “Combining satellite imagery and machine learning to predict poverty.” Science, 353(6301), 790-794.</strong></p>
+<p>The landmark paper establishing that CNN features extracted from satellite imagery can explain up to 75% of variation in local economic outcomes across five African countries. Uses a transfer learning approach (nightlights as intermediate target) to overcome limited survey data. Demonstrates the fundamental link between visible satellite features and economic well-being.</p>
+<p><strong>Yeh, C., Perez, A., Driscoll, A., et al.&nbsp;(2020). “Using publicly available satellite imagery and deep learning to understand economic well-being in Africa.” Nature Communications, 11, 2583.</strong></p>
+<p>Extends Jean et al.&nbsp;using publicly available multispectral imagery (Landsat, Sentinel) to predict asset wealth across ~20,000 African villages. Key results: - Explains 70% of variation in village wealth in held-out countries - Can explain up to 50% of variation in <em>changes</em> in wealth over time - Daytime imagery outperforms nightlights for predicting wealth changes - Demonstrates that freely available medium-resolution imagery is sufficient for economic prediction</p>
+<p>This paper is our closest methodological cousin: it uses free Sentinel-type imagery to predict economic outcomes, though it predicts wealth directly rather than using building detection as an intermediate step.</p>
+<p><strong>Goldblatt, R., You, W., Hanson, G., and Khandelwal, A.K. (2016). “Detecting the Boundaries of Urban Areas in India: A Dataset for Pixel-Based Image Classification in Google Earth Engine.” Remote Sensing, 8(8), 634.</strong></p>
+<p>Demonstrates pixel-level urban classification using freely available imagery in a developing-country context, connecting urban extent to economic activity.</p>
+<hr>
+</section>
+</section>
+<section id="summary-position-statement-for-our-paper" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="summary-position-statement-for-our-paper"><span class="header-section-number">1.6</span> 6. Summary: Position Statement for Our Paper</h2>
+<p>The recommended framing for our methodology section:</p>
+<blockquote class="blockquote">
+<p>We use building footprint polygons from Google Open Buildings V3 (Sirko et al., 2021) as training labels for a U-Net segmentation model operating on freely available Sentinel-2 imagery at 10m resolution. This approach constitutes a form of cross-resolution knowledge transfer: the Open Buildings dataset, derived from commercial 50cm satellite imagery using a separate deep learning pipeline, serves as a noisy but high-quality supervisory signal. Our model learns to predict building density – not individual footprints – from the multispectral features available in Sentinel-2, effectively distilling the building detection capability of a high-resolution commercial system into a model that runs entirely on open data.</p>
+<p>This design choice entails specific label noise characteristics. Open Buildings achieves high precision (~0.95) but moderate recall (~0.70) across Africa, with recall lowest in rural areas with small or informal structures. Our training labels therefore exhibit asymmetric noise: false negatives (missed buildings) substantially outnumber false positives. We address this through [focal Tversky loss / label smoothing / confidence thresholding] and note that our downstream validation target – district-level economic intensity – is robust to pixel-level label noise because aggregation over thousands of pixels attenuates random errors.</p>
+</blockquote>
+<hr>
+</section>
+<section id="sources" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sources"><span class="header-section-number">1.7</span> Sources</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2107.12283">Sirko et al.&nbsp;2021 - arXiv</a></li>
+<li><a href="https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_Research_open-buildings_v3_polygons">Open Buildings V3 - Earth Engine Catalog</a></li>
+<li><a href="https://research.google/blog/mapping-africas-buildings-with-satellite-imagery/">Google Research Blog - Mapping Africa’s Buildings</a></li>
+<li><a href="https://sites.research.google/gr/open-buildings/">Open Buildings Website</a></li>
+<li><a href="https://arxiv.org/abs/2310.11622">Sirko et al.&nbsp;2023 - High-Resolution Building Detection from Sentinel-2</a></li>
+<li><a href="https://link.springer.com/article/10.1007/s00521-020-05449-7">Corbane et al.&nbsp;2021 - GHS-S2Net</a></li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S0924271620300344">Qiu et al.&nbsp;2020 - Sen2HSE</a></li>
+<li><a href="https://www.science.org/doi/10.1126/science.aaf7894">Jean et al.&nbsp;2016 - Predicting Poverty</a></li>
+<li><a href="https://www.nature.com/articles/s41467-020-16185-w">Yeh et al.&nbsp;2020 - Economic Well-Being in Africa</a></li>
+<li><a href="https://arxiv.org/abs/1503.02531">Hinton et al.&nbsp;2015 - Knowledge Distillation</a></li>
+<li><a href="https://arxiv.org/abs/1703.02391">Li et al.&nbsp;2017 - Noisy Labels with Distillation</a></li>
+<li><a href="https://papers.nips.cc/paper/5073-learning-with-noisy-labels">Natarajan et al.&nbsp;2013 - Learning with Noisy Labels</a></li>
+<li><a href="https://openreview.net/pdf?id=H12GRgcxg">Arpit et al.&nbsp;2017 - Memorization in Deep Networks</a></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/andreasalem\.github\.io\/africa-econ-reports");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Maintained by <a href="https://github.com/andreasalem">Andrea Salem</a> · Northwestern University</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

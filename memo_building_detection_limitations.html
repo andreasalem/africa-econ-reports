@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>memo_building_detection_limitations – Africa Econ Satellite</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Africa Econ Satellite</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./reports.html"> 
+<span class="menu-text">All Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ml_theory_guide.pdf" target="_blank"> 
+<span class="menu-text">ML Theory Guide</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/andreasalem/africa-econ-reports"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#analytical-memo-building-detection-as-a-proxy-for-economic-activity" id="toc-analytical-memo-building-detection-as-a-proxy-for-economic-activity" class="nav-link active" data-scroll-target="#analytical-memo-building-detection-as-a-proxy-for-economic-activity"><span class="header-section-number">1</span> Analytical Memo: Building Detection as a Proxy for Economic Activity</a>
+  <ul class="collapse">
+  <li><a href="#methodological-quality-limitations-and-paths-forward" id="toc-methodological-quality-limitations-and-paths-forward" class="nav-link" data-scroll-target="#methodological-quality-limitations-and-paths-forward"><span class="header-section-number">1.1</span> Methodological Quality, Limitations, and Paths Forward</a></li>
+  <li><a href="#the-semantic-bottleneck-why-building-count-economic-intensity" id="toc-the-semantic-bottleneck-why-building-count-economic-intensity" class="nav-link" data-scroll-target="#the-semantic-bottleneck-why-building-count-economic-intensity"><span class="header-section-number">1.2</span> 1. The Semantic Bottleneck: Why Building Count != Economic Intensity</a>
+  <ul class="collapse">
+  <li><a href="#specific-sources-of-semantic-mismatch" id="toc-specific-sources-of-semantic-mismatch" class="nav-link" data-scroll-target="#specific-sources-of-semantic-mismatch"><span class="header-section-number">1.2.1</span> 1.1 Specific Sources of Semantic Mismatch</a></li>
+  <li><a href="#what-the-literature-says" id="toc-what-the-literature-says" class="nav-link" data-scroll-target="#what-the-literature-says"><span class="header-section-number">1.2.2</span> 1.2 What the Literature Says</a></li>
+  </ul></li>
+  <li><a href="#what-could-improve-district-level-correlation-beyond-pixel-auc" id="toc-what-could-improve-district-level-correlation-beyond-pixel-auc" class="nav-link" data-scroll-target="#what-could-improve-district-level-correlation-beyond-pixel-auc"><span class="header-section-number">1.3</span> 2. What COULD Improve District-Level Correlation Beyond Pixel AUC?</a>
+  <ul class="collapse">
+  <li><a href="#building-morphology-features-not-just-count" id="toc-building-morphology-features-not-just-count" class="nav-link" data-scroll-target="#building-morphology-features-not-just-count"><span class="header-section-number">1.3.1</span> 2.1 Building Morphology Features (Not Just Count)</a></li>
+  <li><a href="#spectral-signatures-of-economic-activity" id="toc-spectral-signatures-of-economic-activity" class="nav-link" data-scroll-target="#spectral-signatures-of-economic-activity"><span class="header-section-number">1.3.2</span> 2.2 Spectral Signatures of Economic Activity</a></li>
+  <li><a href="#nighttime-lights-as-complementary-signal" id="toc-nighttime-lights-as-complementary-signal" class="nav-link" data-scroll-target="#nighttime-lights-as-complementary-signal"><span class="header-section-number">1.3.3</span> 2.3 Nighttime Lights as Complementary Signal</a></li>
+  <li><a href="#alpha-earth-embeddings" id="toc-alpha-earth-embeddings" class="nav-link" data-scroll-target="#alpha-earth-embeddings"><span class="header-section-number">1.3.4</span> 2.4 Alpha Earth Embeddings</a></li>
+  <li><a href="#temporal-change-detection" id="toc-temporal-change-detection" class="nav-link" data-scroll-target="#temporal-change-detection"><span class="header-section-number">1.3.5</span> 2.5 Temporal Change Detection</a></li>
+  <li><a href="#land-use-classification" id="toc-land-use-classification" class="nav-link" data-scroll-target="#land-use-classification"><span class="header-section-number">1.3.6</span> 2.6 Land Use Classification</a></li>
+  </ul></li>
+  <li><a href="#benchmarks-from-the-literature" id="toc-benchmarks-from-the-literature" class="nav-link" data-scroll-target="#benchmarks-from-the-literature"><span class="header-section-number">1.4</span> 3. Benchmarks from the Literature</a>
+  <ul class="collapse">
+  <li><a href="#key-performance-numbers" id="toc-key-performance-numbers" class="nav-link" data-scroll-target="#key-performance-numbers"><span class="header-section-number">1.4.1</span> 3.1 Key Performance Numbers</a></li>
+  <li><a href="#interpretation-of-r-0.38-0.43" id="toc-interpretation-of-r-0.38-0.43" class="nav-link" data-scroll-target="#interpretation-of-r-0.38-0.43"><span class="header-section-number">1.4.2</span> 3.2 Interpretation of r = 0.38-0.43</a></li>
+  <li><a href="#what-constitutes-good-performance" id="toc-what-constitutes-good-performance" class="nav-link" data-scroll-target="#what-constitutes-good-performance"><span class="header-section-number">1.4.3</span> 3.3 What Constitutes “Good” Performance?</a></li>
+  </ul></li>
+  <li><a href="#alpha-earth-embeddings-detailed-assessment" id="toc-alpha-earth-embeddings-detailed-assessment" class="nav-link" data-scroll-target="#alpha-earth-embeddings-detailed-assessment"><span class="header-section-number">1.5</span> 4. Alpha Earth Embeddings: Detailed Assessment</a>
+  <ul class="collapse">
+  <li><a href="#what-ae-is" id="toc-what-ae-is" class="nav-link" data-scroll-target="#what-ae-is"><span class="header-section-number">1.5.1</span> 4.1 What AE Is</a></li>
+  <li><a href="#theoretical-case-for-economic-relevant-features" id="toc-theoretical-case-for-economic-relevant-features" class="nav-link" data-scroll-target="#theoretical-case-for-economic-relevant-features"><span class="header-section-number">1.5.2</span> 4.2 Theoretical Case for Economic-Relevant Features</a></li>
+  <li><a href="#interpreting-experimental-outcomes" id="toc-interpreting-experimental-outcomes" class="nav-link" data-scroll-target="#interpreting-experimental-outcomes"><span class="header-section-number">1.5.3</span> 4.3 Interpreting Experimental Outcomes</a></li>
+  <li><a href="#concerns-for-economics-reviewers" id="toc-concerns-for-economics-reviewers" class="nav-link" data-scroll-target="#concerns-for-economics-reviewers"><span class="header-section-number">1.5.4</span> 4.4 Concerns for Economics Reviewers</a></li>
+  </ul></li>
+  <li><a href="#recommendations-for-improving-the-pipeline" id="toc-recommendations-for-improving-the-pipeline" class="nav-link" data-scroll-target="#recommendations-for-improving-the-pipeline"><span class="header-section-number">1.6</span> 5. Recommendations for Improving the Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#continuous-output-instead-of-binary-detection" id="toc-continuous-output-instead-of-binary-detection" class="nav-link" data-scroll-target="#continuous-output-instead-of-binary-detection"><span class="header-section-number">1.6.1</span> 5.1 Continuous Output Instead of Binary Detection</a></li>
+  <li><a href="#multi-task-learning" id="toc-multi-task-learning" class="nav-link" data-scroll-target="#multi-task-learning"><span class="header-section-number">1.6.2</span> 5.2 Multi-Task Learning</a></li>
+  <li><a href="#feature-aggregation-beyond-count" id="toc-feature-aggregation-beyond-count" class="nav-link" data-scroll-target="#feature-aggregation-beyond-count"><span class="header-section-number">1.6.3</span> 5.3 Feature Aggregation Beyond Count</a></li>
+  <li><a href="#incorporate-height-information" id="toc-incorporate-height-information" class="nav-link" data-scroll-target="#incorporate-height-information"><span class="header-section-number">1.6.4</span> 5.4 Incorporate Height Information</a></li>
+  <li><a href="#recommendations-for-the-economics-paper" id="toc-recommendations-for-the-economics-paper" class="nav-link" data-scroll-target="#recommendations-for-the-economics-paper"><span class="header-section-number">1.6.5</span> 5.5 Recommendations for the Economics Paper</a></li>
+  </ul></li>
+  <li><a href="#summary-of-key-takeaways" id="toc-summary-of-key-takeaways" class="nav-link" data-scroll-target="#summary-of-key-takeaways"><span class="header-section-number">1.7</span> 6. Summary of Key Takeaways</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">1.8</span> References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="analytical-memo-building-detection-as-a-proxy-for-economic-activity" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Analytical Memo: Building Detection as a Proxy for Economic Activity</h1>
+<section id="methodological-quality-limitations-and-paths-forward" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="methodological-quality-limitations-and-paths-forward"><span class="header-section-number">1.1</span> Methodological Quality, Limitations, and Paths Forward</h2>
+<p><em>Prepared: 2026-03-08</em> <em>For: Africa-Econ-Satellite Project (GDP Mapping, Project A)</em> <em>Target audience: Top-5 economics journal (AER/QJE) framing</em></p>
+<hr>
+</section>
+<section id="the-semantic-bottleneck-why-building-count-economic-intensity" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-semantic-bottleneck-why-building-count-economic-intensity"><span class="header-section-number">1.2</span> 1. The Semantic Bottleneck: Why Building Count != Economic Intensity</h2>
+<p>The core methodological concern for any referee at AER/QJE is straightforward: a U-Net trained on Google Open Buildings labels learns to detect <em>physical structures</em>, not <em>economic activity</em>. Building presence is a necessary but insufficient condition for economic output. The gap between pixel-level detection performance (AUC = 0.976) and district-level economic correlation (Pearson r = 0.38-0.43) is not a model failure – it is a <em>conceptual ceiling</em> imposed by the proxy itself.</p>
+<section id="specific-sources-of-semantic-mismatch" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="specific-sources-of-semantic-mismatch"><span class="header-section-number">1.2.1</span> 1.1 Specific Sources of Semantic Mismatch</h3>
+<p><strong>Heterogeneous economic intensity per unit footprint.</strong> A warehouse employing 500 workers and generating millions in revenue occupies roughly the same 2D footprint as a small retail shop employing 2 people. At 10m Sentinel-2 resolution, both register as identical building-present pixels. Building count treats them as interchangeable, but their economic contributions differ by orders of magnitude. This is the intensive-margin problem: satellite-derived building counts capture the <em>extensive</em> margin of economic activity (whether activity exists) but not the <em>intensive</em> margin (how much activity occurs) (Baragwanath Vogel et al., 2021, Journal of Urban Economics; Goldblatt et al., 2020, World Bank Economic Review).</p>
+<p><strong>Informal economy invisibility.</strong> In Sub-Saharan Africa, the informal sector accounts for 25-65% of GDP and an even larger share of employment (ILO estimates). Market stalls, street vendors, mobile traders, and home-based enterprises leave minimal or zero building footprint. Recent work by researchers using satellite imagery to map rural markets in Ethiopia found that market activity has a “unique temporal and visual signature” but requires specialized detection methods distinct from building footprint analysis (arxiv:2407.12953). Standard building detection systematically undercounts economic activity in precisely the places where measurement is most needed.</p>
+<p><strong>Building age, quality, and functional status.</strong> A derelict structure and an active factory may present near-identical spectral signatures at 10m resolution. Sentinel-2 cannot reliably distinguish between occupied commercial buildings, abandoned structures, residential dwellings, and public/government buildings. The Google Open Buildings confidence score reflects detection confidence, not building function or economic use. This functional ambiguity degrades the building-to-economic-activity mapping.</p>
+<p><strong>Vertical density is invisible.</strong> Multi-story buildings are ubiquitous in African commercial districts (Kigali, Lagos, Nairobi). A 10-story commercial building generates far more economic output per footprint pixel than a single-story residential structure. At 10m resolution, both are one building. Google’s Open Buildings 2.5D Temporal dataset now provides building <em>height</em> estimates from Sentinel-2 time series (2016-2023), which could partially address this, but the current pipeline uses only presence/absence.</p>
+<p><strong>Land use heterogeneity within building class.</strong> Religious buildings, schools, government offices, and commercial establishments all register as “buildings” but contribute very differently to establishment census counts. The semantic gap between “is a building” and “is an economic establishment” cannot be closed by improving pixel-level detection accuracy.</p>
+</section>
+<section id="what-the-literature-says" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="what-the-literature-says"><span class="header-section-number">1.2.2</span> 1.2 What the Literature Says</h3>
+<p>Donaldson and Storeygard (2016, JEP) provide the canonical framework for evaluating satellite-derived economic proxies. They emphasize that satellite data measures <em>physical correlates</em> of economic activity, not economic activity itself, and that the strength of the correlation depends on how tightly the physical signal tracks the economic concept of interest. Building presence is a weaker correlate of economic intensity than, say, nightlight luminance is of electrified economic activity – because nightlights at least vary in <em>intensity</em> proportional to activity level, while building presence is binary.</p>
+<p>Goldblatt et al.&nbsp;(2020, WBER) directly address this limitation: “one would need additional information, such as the density and height of structures, to improve the prediction of economic activity based on daytime satellite imagery, because the landcover layers only record whether or not a man-made impervious structure is present.” Their Vietnam study found that Landsat spectral bands outperform nightlights at predicting enterprise counts at the commune level, but the landcover-to-economics mapping remains noisy.</p>
+<p>The proxying-economic-activity literature (Beyer et al., 2023, PNAS Nexus) finds that daytime satellite imagery can proxy economic activity, but notes that “while satellite imagery may reveal the spatial extent of markets, it may not reveal the intensity of economic activity.”</p>
+<hr>
+</section>
+</section>
+<section id="what-could-improve-district-level-correlation-beyond-pixel-auc" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="what-could-improve-district-level-correlation-beyond-pixel-auc"><span class="header-section-number">1.3</span> 2. What COULD Improve District-Level Correlation Beyond Pixel AUC?</h2>
+<p>The project’s key insight is correct: pixel AUC is near its ceiling (~0.97), and the bottleneck is the district-level correlation. Improving r from 0.38-0.43 requires changing <em>what</em> the model predicts, not <em>how accurately</em> it predicts buildings.</p>
+<section id="building-morphology-features-not-just-count" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="building-morphology-features-not-just-count"><span class="header-section-number">1.3.1</span> 2.1 Building Morphology Features (Not Just Count)</h3>
+<p>Instead of counting buildings, aggregate <em>building characteristics</em>: - <strong>Total building area</strong> per district (sum of footprint areas). OpenStreetMap-based studies using building area achieve r-squared of 0.58-0.66 for wealth prediction at fine spatial scales (Lee and Braithwaite, 2020). - <strong>Building size distribution</strong> (Gini of footprint areas, share of large vs.&nbsp;small buildings). Large buildings correlate with commercial/industrial use; small buildings with residential. - <strong>Building density gradients</strong> (central vs.&nbsp;peripheral concentration within districts). - <strong>Morphological typology</strong> (regular grid patterns suggest planned commercial areas; irregular patterns suggest organic residential growth).</p>
+<p>These features require either Google Open Buildings polygons (which include area) or a model that outputs continuous building density/area rather than binary presence.</p>
+</section>
+<section id="spectral-signatures-of-economic-activity" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="spectral-signatures-of-economic-activity"><span class="header-section-number">1.3.2</span> 2.2 Spectral Signatures of Economic Activity</h3>
+<p>Economic activity generates ancillary physical signals beyond buildings: - <strong>Impervious surface fraction</strong> (roads, parking lots, paved areas): strongly correlated with commercial intensity. Landsat’s spectral bands can detect these (Goldblatt et al., 2020). - <strong>Roof material signatures</strong>: corrugated iron (informal/residential) vs.&nbsp;concrete/commercial roofing have distinct NIR/SWIR signatures. This is already partially captured by the model’s input bands but not explicitly leveraged. - <strong>Vegetation patterns</strong>: commercial areas have less vegetation (lower NDVI). NDVI as an additional input band (Experiment 1 in the Alpha Earth plan) could help separate commercial from residential areas. - <strong>Road network density</strong>: a strong proxy for market access and economic connectivity. Available from OSM and the Global Human Settlement Layer.</p>
+</section>
+<section id="nighttime-lights-as-complementary-signal" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="nighttime-lights-as-complementary-signal"><span class="header-section-number">1.3.3</span> 2.3 Nighttime Lights as Complementary Signal</h3>
+<p>Henderson, Storeygard, and Weil (2012, AER) established that nighttime light intensity has an elasticity of ~1.55 with respect to GDP in developing countries. VIIRS nighttime lights provide an <em>intensity</em> measure that complements the <em>extent</em> measure from building detection. However: - Nightlights saturate in cities (top-coding problem). - Nightlights are zero in many rural areas with real economic activity. - Resolution (~500m for VIIRS) is far coarser than Sentinel-2 (10m). - Nightlights are better for cross-sectional level estimation than for growth (R-squared ~ 0.10 for changes over time; World Bank, 2015).</p>
+<p>A combined model using building density (extent) + nightlight intensity (intensity) could capture both margins. Yeh et al.&nbsp;(2020, Nature Communications) found that CNNs trained on nightlights alone and daytime imagery alone perform “similarly to each other and almost as well as the combined model,” suggesting these signals contain overlapping but not identical information.</p>
+</section>
+<section id="alpha-earth-embeddings" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="alpha-earth-embeddings"><span class="header-section-number">1.3.4</span> 2.4 Alpha Earth Embeddings</h3>
+<p>Google’s Satellite Embedding V1 (Alpha Earth) compresses multi-sensor time series (Sentinel-2, Sentinel-1, Landsat) into 64 learned features per pixel at 10m resolution. These embeddings are trained via self-supervised learning on diverse geospatial tasks and encode spatial and temporal semantics that raw spectral bands may not explicitly represent.</p>
+<p><strong>Theoretical argument for AE improving district r:</strong> - AE embeddings capture <em>contextual</em> information: a building pixel surrounded by commercial infrastructure may have a different embedding than one surrounded by agricultural land, even if both have identical spectral signatures. - AE is trained on temporal patterns (annual composites from multiple years), so it may encode <em>dynamism</em> (actively used areas vs.&nbsp;static structures). - The AlphaEarth model integrates Sentinel-1 SAR (sensitive to structure/texture) alongside optical data, potentially capturing building material, height proxies, and urban morphology that S2 alone misses. - In downstream benchmarks, AE embeddings fused with socioeconomic features improved prediction of FEMA’s National Risk Index by an average of 11% in R-squared across 20 hazards (Google Research, 2025).</p>
+<p><strong>Theoretical argument against:</strong> - AE embeddings are optimized for general geospatial representation, not economic measurement specifically. They may encode ecological and geological features that are irrelevant or confounding for economic prediction. - 64 bands of learned features with no physical interpretation create a black-box concern for economics reviewers. - If AE’s training data overlaps heavily with Google Open Buildings (both use Sentinel-2 as input), the embeddings may not contain much information beyond what building detection already captures.</p>
+</section>
+<section id="temporal-change-detection" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="temporal-change-detection"><span class="header-section-number">1.3.5</span> 2.5 Temporal Change Detection</h3>
+<p>New construction is a strong signal of economic growth. A model trained on temporal pairs (year t vs.&nbsp;year t+k) could detect building <em>change</em> rather than building <em>level</em>. Google’s Open Buildings 2.5D Temporal dataset now provides yearly building presence and height estimates from 2016-2023. This enables: - Measuring construction rates per district as a growth proxy. - Identifying areas of rapid densification (commercial development) vs.&nbsp;stable (residential). - Correlating construction change with census change (2020 vs.&nbsp;2023 establishment censuses).</p>
+</section>
+<section id="land-use-classification" class="level3" data-number="1.3.6">
+<h3 data-number="1.3.6" class="anchored" data-anchor-id="land-use-classification"><span class="header-section-number">1.3.6</span> 2.6 Land Use Classification</h3>
+<p>Rather than binary building detection, a multi-class land use model could distinguish: commercial, residential, industrial, agricultural, institutional. Each class has different economic intensity. This transforms the problem from “how many buildings?” to “what kind of land use?” – directly addressing the semantic bottleneck. Dynamic World (Google, available on GEE) provides 10m land use classification that could serve as either an additional input or a training target.</p>
+<hr>
+</section>
+</section>
+<section id="benchmarks-from-the-literature" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="benchmarks-from-the-literature"><span class="header-section-number">1.4</span> 3. Benchmarks from the Literature</h2>
+<section id="key-performance-numbers" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="key-performance-numbers"><span class="header-section-number">1.4.1</span> 3.1 Key Performance Numbers</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paper</th>
+<th>Outcome Variable</th>
+<th>Unit of Analysis</th>
+<th>Metric</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jean et al.&nbsp;(2016, Science)</td>
+<td>Consumption expenditure &amp; asset wealth</td>
+<td>Village/cluster (~5km)</td>
+<td>R-squared</td>
+<td><strong>0.75</strong></td>
+<td>5 African countries; CNN transfer from nightlights</td>
+</tr>
+<tr class="even">
+<td>Yeh et al.&nbsp;(2020, Nat. Comms)</td>
+<td>Asset wealth index</td>
+<td>Village (~5km)</td>
+<td>R-squared</td>
+<td><strong>0.50-0.70</strong></td>
+<td>0.70 cross-sectional; 0.50 for temporal changes; publicly available Landsat+NTL</td>
+</tr>
+<tr class="odd">
+<td>Henderson et al.&nbsp;(2012, AER)</td>
+<td>GDP</td>
+<td>Country-level</td>
+<td>Elasticity</td>
+<td><strong>1.55</strong></td>
+<td>NTL-GDP elasticity in developing countries</td>
+</tr>
+<tr class="even">
+<td>Goldblatt et al.&nbsp;(2020, WBER)</td>
+<td>Enterprise count, employment, expenditure</td>
+<td>Commune (~district)</td>
+<td>R-squared</td>
+<td><strong>0.30-0.50</strong></td>
+<td>Medium-resolution Landsat; Vietnam</td>
+</tr>
+<tr class="odd">
+<td>Beyer et al.&nbsp;(2023, PNAS Nexus)</td>
+<td>Regional economic activity</td>
+<td>Subnational</td>
+<td>Correlation</td>
+<td><strong>0.60-0.80</strong></td>
+<td>Daytime surface groups as activity proxy</td>
+</tr>
+<tr class="even">
+<td>Lee &amp; Braithwaite (2020)</td>
+<td>Asset wealth</td>
+<td>Fine grid (115m cell)</td>
+<td>R-squared</td>
+<td><strong>0.58-0.66</strong></td>
+<td>OSM building features + random forest</td>
+</tr>
+<tr class="odd">
+<td>Asher, Novosad et al.&nbsp;(various)</td>
+<td>Poverty, economic performance</td>
+<td>District/subdistrict</td>
+<td>Various</td>
+<td><strong>0.30-0.60</strong></td>
+<td>India; SHRUG platform; nightlights as proxy</td>
+</tr>
+<tr class="even">
+<td><strong>This project</strong></td>
+<td><strong>Establishment count</strong></td>
+<td><strong>District (n=30)</strong></td>
+<td><strong>Pearson r</strong></td>
+<td><strong>0.38-0.43</strong></td>
+<td><strong>Rwanda; building count from U-Net</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="interpretation-of-r-0.38-0.43" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="interpretation-of-r-0.38-0.43"><span class="header-section-number">1.4.2</span> 3.2 Interpretation of r = 0.38-0.43</h3>
+<p>An r of 0.38-0.43 corresponds to R-squared of 0.14-0.18 – meaning building counts explain only 14-18% of the variance in establishment counts across Rwanda’s 30 districts. This is <em>below</em> the typical range in the literature (R-squared 0.30-0.70 depending on method, resolution, and outcome variable).</p>
+<p>However, critical context: 1. <strong>n = 30 is very small.</strong> With only 30 districts, the confidence interval on r is wide (roughly +/- 0.30 at 95% CI). The true population correlation could plausibly be anywhere from 0.10 to 0.65. Most papers in the literature use hundreds or thousands of spatial units. 2. <strong>Establishment count is a harder target</strong> than asset wealth or consumption expenditure. Asset wealth indices aggregate durable goods (roof material, water source) that have direct spectral signatures. Establishment counts measure firm presence, which has a weaker physical correlate. 3. <strong>Binary count vs.&nbsp;continuous features.</strong> The current approach counts building pixels per district. Papers achieving R-squared &gt; 0.50 typically use CNN-extracted feature vectors (hundreds of learned features), not simple building counts. The comparison is between a hand-crafted single-variable predictor and a learned multi-feature predictor. 4. <strong>The label source matters.</strong> Google Open Buildings has known miss rates (60% recall in rural Rwanda). Systematic label errors propagate to district-level aggregates, attenuating the correlation.</p>
+</section>
+<section id="what-constitutes-good-performance" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="what-constitutes-good-performance"><span class="header-section-number">1.4.3</span> 3.3 What Constitutes “Good” Performance?</h3>
+<p>For a top-5 economics paper, the absolute R-squared matters less than: - <strong>Demonstrating improvement</strong> over existing measures (nightlights, GHSL, existing poverty maps). - <strong>Documenting what the measure captures and what it misses</strong> – honest characterization of measurement error is valued. - <strong>Showing the measure is useful for answering an economic question</strong> (causal identification, policy evaluation) – not just prediction accuracy.</p>
+<p>The measurement-paper template for top-5 journals (following Donaldson &amp; Storeygard, 2016; Henderson et al., 2012) emphasizes: (a) construct the measure, (b) validate it against ground truth, (c) show it reveals something new that existing measures cannot capture, (d) demonstrate an application. An r of 0.40 is publishable if the measure fills a gap (10m resolution vs.&nbsp;1km+ from nightlights) and enables analysis at spatial scales previously impossible.</p>
+<hr>
+</section>
+</section>
+<section id="alpha-earth-embeddings-detailed-assessment" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="alpha-earth-embeddings-detailed-assessment"><span class="header-section-number">1.5</span> 4. Alpha Earth Embeddings: Detailed Assessment</h2>
+<section id="what-ae-is" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="what-ae-is"><span class="header-section-number">1.5.1</span> 4.1 What AE Is</h3>
+<p>Alpha Earth / Satellite Embedding V1 is a foundation model from Google DeepMind that processes multi-year time series of Sentinel-2, Sentinel-1, and Landsat imagery and outputs 64 learned features per 10m pixel. It is trained via self-supervised learning (likely masked image modeling or contrastive learning) on global coverage. The embeddings “compress vast Earth observation information into 64 features representing meaningful spatial and temporal semantics” (Google Earth Engine documentation).</p>
+<p>The model is described as a “virtual satellite” that integrates diverse observation sources into a unified representation. Critically, it uses SAR (Sentinel-1) data alongside optical data, meaning it encodes structural information (building height, surface roughness, urban texture) that pure optical sensors miss.</p>
+</section>
+<section id="theoretical-case-for-economic-relevant-features" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="theoretical-case-for-economic-relevant-features"><span class="header-section-number">1.5.2</span> 4.2 Theoretical Case for Economic-Relevant Features</h3>
+<p>Raw Sentinel-2 bands measure <em>spectral reflectance</em> – the physical interaction between sunlight and surfaces. AE embeddings encode <em>learned semantic features</em> that capture higher-order spatial patterns. The distinction matters for economic measurement:</p>
+<ul>
+<li><strong>Urban morphology encoding.</strong> AE may learn to distinguish planned commercial districts (grid streets, large rectangular footprints, parking areas) from organic residential settlements (irregular, small footprints, vegetation interspersed). This morphological information is latent in raw spectral bands but requires complex spatial reasoning to extract – exactly what a foundation model is trained to do.</li>
+<li><strong>Temporal activity signatures.</strong> Annual AE composites may encode seasonal variation patterns that differ between active commercial areas (stable year-round) and agricultural areas (seasonal). This temporal signature is a proxy for economic structure.</li>
+<li><strong>Cross-sensor fusion.</strong> By integrating SAR data, AE embeddings may capture building volume and surface texture features invisible to optical sensors. Multi-story buildings produce stronger SAR returns than single-story structures. Industrial facilities have distinct SAR signatures from residential areas.</li>
+</ul>
+</section>
+<section id="interpreting-experimental-outcomes" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="interpreting-experimental-outcomes"><span class="header-section-number">1.5.3</span> 4.3 Interpreting Experimental Outcomes</h3>
+<p><strong>Scenario 1: AE-only AUC ~ baseline, but district r improves.</strong> This would be the most informative outcome. It means AE embeddings detect buildings roughly as well as raw S2 bands (not surprising, since AE is trained on S2 as input), but the <em>way</em> they represent building-adjacent information captures economic-relevant variation. The building detection task is a bottleneck that both representations hit equally, but AE embeddings carry additional economic signal in their non-building features (land use context, infrastructure patterns, temporal dynamics). This would strongly support using AE as input for economic measurement.</p>
+<p><strong>Scenario 2: AE-only AUC &lt; baseline, but district r improves.</strong> This would be the most <em>surprising</em> and theoretically provocative outcome. It would mean AE embeddings are <em>worse</em> at pixel-level building detection (perhaps because their 64 dimensions are allocated to encode broader geospatial semantics rather than fine-grained building boundaries) but <em>better</em> at capturing the economic signal we actually care about. This would demonstrate that the building-detection task is the wrong intermediate objective – that economic prediction benefits from a richer representation even at the cost of building detection accuracy. For a paper, this finding would be gold: it directly demonstrates the semantic bottleneck and motivates moving beyond building detection to learned representations.</p>
+<p><strong>Scenario 3: AE-only AUC &gt; baseline, but district r unchanged.</strong> AE is better at detecting buildings (plausible given richer training data) but the additional building pixels don’t help at the district level. This confirms the semantic bottleneck: the problem is not detection accuracy but the building-to-economics mapping.</p>
+<p><strong>Scenario 4: Dual-branch (S2+AE) improves both AUC and district r.</strong> The expected outcome if AE provides complementary information. The magnitude of the district-r improvement relative to the AUC improvement is the key diagnostic: if district r increases proportionally more than AUC, AE is contributing economic signal beyond building detection.</p>
+</section>
+<section id="concerns-for-economics-reviewers" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="concerns-for-economics-reviewers"><span class="header-section-number">1.5.4</span> 4.4 Concerns for Economics Reviewers</h3>
+<ul>
+<li><strong>Black-box features.</strong> AE’s 64 bands have no physical interpretation. Reviewers may ask: “What exactly are these features measuring?” Unlike spectral bands (NIR = vegetation vigor, SWIR = moisture content), AE features are latent dimensions. Mitigation: report feature importance analysis, SHAP values, or PCA/t-SNE visualizations showing that AE features cluster by land-use type.</li>
+<li><strong>Reproducibility and stability.</strong> AE is a Google product. If Google updates the model, embeddings change. This is a concern for reproducibility of economic research. Mitigation: specify exact version (V1 ANNUAL), document GEE asset ID, note that the dataset is CC-BY 4.0 and archived.</li>
+<li><strong>Circular validation risk.</strong> If AE was trained partly on Google Open Buildings (which uses Sentinel-2 as input), and we use Open Buildings as labels, the AE features might trivially encode “building presence” rather than providing independent economic information. This needs careful discussion.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="recommendations-for-improving-the-pipeline" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="recommendations-for-improving-the-pipeline"><span class="header-section-number">1.6</span> 5. Recommendations for Improving the Pipeline</h2>
+<section id="continuous-output-instead-of-binary-detection" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="continuous-output-instead-of-binary-detection"><span class="header-section-number">1.6.1</span> 5.1 Continuous Output Instead of Binary Detection</h3>
+<p>The single highest-impact change: replace binary building presence with <strong>continuous building density or building area fraction</strong> per pixel. This converts the output from {0, 1} to [0, 1], where the value represents the fraction of the pixel covered by building footprint. Benefits: - Captures intensive margin (a pixel 90% covered by a large warehouse vs.&nbsp;10% covered by a small hut). - Naturally aggregates to district-level building area rather than building count. - Building <em>area</em> is a much better economic proxy than building <em>count</em> (Newhouse, 2024, JIDS).</p>
+<p>Implementation: change the loss function from binary cross-entropy / focal loss to MSE or Huber loss; use Google Open Buildings polygon areas rasterized as continuous labels rather than binary.</p>
+</section>
+<section id="multi-task-learning" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="multi-task-learning"><span class="header-section-number">1.6.2</span> 5.2 Multi-Task Learning</h3>
+<p>Train the U-Net with a dual objective: 1. <strong>Primary task:</strong> building segmentation (pixel-level, using Open Buildings labels). 2. <strong>Auxiliary task:</strong> district-level establishment count regression (weak supervision).</p>
+<p>The auxiliary task forces the learned representation to encode information relevant to economic outcomes, not just building geometry. This is architecturally similar to the approach in the multi-task poverty prediction literature (AAAI, 2018) which jointly predicted developmental statistics (roof material, lighting source, water source) and used them to estimate poverty.</p>
+<p>Implementation: add a global average pooling + regression head after the U-Net encoder. During training, alternate between pixel-level segmentation loss and district-level regression loss (with appropriate loss weighting). The district-level signal is weak (n=30) but even a small gradient signal pointing the representation toward economic relevance could help.</p>
+</section>
+<section id="feature-aggregation-beyond-count" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="feature-aggregation-beyond-count"><span class="header-section-number">1.6.3</span> 5.3 Feature Aggregation Beyond Count</h3>
+<p>Even without retraining the model, the district-level correlation could improve by aggregating richer statistics from the existing predictions: - <strong>Predicted building probability distribution</strong> per district (mean, std, skewness, kurtosis). - <strong>Spatial concentration index</strong> (Moran’s I of predicted building density within each district). - <strong>Urban-rural gradient</strong> (ratio of high-density to low-density predicted pixels). - <strong>Predicted building area</strong> (using Open Buildings polygon areas to weight pixels).</p>
+<p>Use these as features in a simple regression (OLS or random forest) predicting establishment counts. This extracts more signal from the existing model without retraining.</p>
+</section>
+<section id="incorporate-height-information" class="level3" data-number="1.6.4">
+<h3 data-number="1.6.4" class="anchored" data-anchor-id="incorporate-height-information"><span class="header-section-number">1.6.4</span> 5.4 Incorporate Height Information</h3>
+<p>Google Open Buildings 2.5D Temporal now provides estimated building height from Sentinel-2 time series. Building <em>volume</em> (footprint * height) is a far better economic proxy than footprint alone. Districts with tall commercial buildings would register as higher economic intensity. This is the most direct way to address the multi-story limitation.</p>
+</section>
+<section id="recommendations-for-the-economics-paper" class="level3" data-number="1.6.5">
+<h3 data-number="1.6.5" class="anchored" data-anchor-id="recommendations-for-the-economics-paper"><span class="header-section-number">1.6.5</span> 5.5 Recommendations for the Economics Paper</h3>
+<p><strong>Framing.</strong> Position the paper as a <em>measurement contribution</em> in the tradition of Henderson et al.&nbsp;(2012) and Donaldson and Storeygard (2016). The value proposition is not prediction accuracy per se, but <em>spatial resolution</em> (10m vs.&nbsp;1km+) and <em>global scalability</em> (free Sentinel-2 data, trainable with existing census data).</p>
+<p><strong>Honest limitations section.</strong> Explicitly acknowledge: - Building count is a noisy proxy for economic activity (cite r = 0.38-0.43). - The informal economy is systematically undercounted. - The measure captures the extensive margin (where activity exists) better than the intensive margin (how much activity occurs). - Performance likely varies by urbanization level, economic structure, and region.</p>
+<p><strong>Validation strategy.</strong> Benchmark against: 1. Nighttime lights (VIIRS) at district level – your 10m measure should outperform at fine spatial scales even if it underperforms at coarse scales. 2. GHSL built-up area fraction – a simpler building-based proxy; show your model adds value. 3. Dynamic World land use – test whether land use classification captures economic variation your building detector misses. 4. If Peru data arrives: validate at finer spatial scales where n &gt;&gt; 30 and confidence intervals are tighter.</p>
+<p><strong>Application.</strong> The measure is most convincing if used to answer an economic question: inequality within districts, market access effects, spatial agglomeration patterns. Show that 10m resolution reveals variation that 1km measures miss.</p>
+<hr>
+</section>
+</section>
+<section id="summary-of-key-takeaways" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="summary-of-key-takeaways"><span class="header-section-number">1.7</span> 6. Summary of Key Takeaways</h2>
+<ol type="1">
+<li><p><strong>The r = 0.38-0.43 gap is not a model failure but a proxy limitation.</strong> Building count is a crude extensive-margin measure. The literature achieves R-squared 0.50-0.75 using learned CNN features (not simple counts) or continuous wealth indices (not establishment counts).</p></li>
+<li><p><strong>The path to higher district correlation runs through richer representations, not better building detection.</strong> Pixel AUC is near its ceiling. Improvements should focus on: continuous output (building area/density), multi-feature aggregation, height information, and learned embeddings (Alpha Earth).</p></li>
+<li><p><strong>Alpha Earth embeddings are the most promising single intervention.</strong> They encode multi-sensor, temporal, contextual information that raw S2 bands lack. The experiment plan is well-designed. The interpretability challenge is real but manageable.</p></li>
+<li><p><strong>For a top-5 paper, the correlation coefficient matters less than the narrative.</strong> Position as a measurement innovation (10m global resolution), honestly document limitations, benchmark against alternatives, and demonstrate an economic application.</p></li>
+<li><p><strong>n = 30 districts is the binding statistical constraint.</strong> With Peru data (finer spatial units, larger n), the same model could achieve both tighter confidence intervals and higher correlations. Rwanda validates the concept; Peru validates the measurement.</p></li>
+</ol>
+<hr>
+</section>
+<section id="references" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="references"><span class="header-section-number">1.8</span> References</h2>
+<ul>
+<li>Baragwanath Vogel, K., Goldblatt, R., Hanson, G., Khandelwal, A. (2021). Detecting urban markets with satellite imagery: An application to India. <em>Journal of Urban Economics</em>, 125.</li>
+<li>Beyer, R., Hu, Y., Yao, J. (2023). Proxying economic activity with daytime satellite imagery. <em>PNAS Nexus</em>, 2(4).</li>
+<li>Burke, M., Driscoll, A., Lobell, D., Ermon, S. (2021). Using satellite imagery to understand and promote sustainable development. <em>Science</em>, 371(6535).</li>
+<li>Donaldson, D., Storeygard, A. (2016). The view from above: Applications of satellite data in economics. <em>Journal of Economic Perspectives</em>, 30(4), 171-198.</li>
+<li>Goldblatt, R., Stuber, G., Glickman, R., You, S., Hanson, G., Khandelwal, A. (2020). Can medium-resolution satellite imagery measure economic activity at small geographies? Evidence from Landsat in Vietnam. <em>World Bank Economic Review</em>, 34(3), 635-653.</li>
+<li>Google DeepMind (2025). AlphaEarth Foundations: An embedding field model for accurate and efficient global mapping from sparse label data.</li>
+<li>Henderson, J.V., Storeygard, A., Weil, D. (2012). Measuring economic growth from outer space. <em>American Economic Review</em>, 102(2), 994-1028.</li>
+<li>Jean, N., Burke, M., Xie, M., Davis, W.M., Lobell, D., Ermon, S. (2016). Combining satellite imagery and machine learning to predict poverty. <em>Science</em>, 353(6301), 790-794.</li>
+<li>Lee, K., Braithwaite, J. (2020). High-resolution poverty maps in Sub-Saharan Africa. <em>arXiv:2009.00544</em>.</li>
+<li>Newhouse, D. (2024). Small area estimation of poverty and wealth using geospatial data: What have we learned so far? <em>Journal of International Development and Cooperation</em>, 30(1).</li>
+<li>Yeh, C., Perez, A., Driscoll, A., Azzari, G., Tang, Z., Lobell, D., Ermon, S., Burke, M. (2020). Using publicly available satellite imagery and deep learning to understand economic well-being in Africa. <em>Nature Communications</em>, 11, 2583.</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/andreasalem\.github\.io\/africa-econ-reports");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Maintained by <a href="https://github.com/andreasalem">Andrea Salem</a> · Northwestern University</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
