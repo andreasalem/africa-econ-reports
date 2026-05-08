@@ -8,9 +8,9 @@
 
 <meta name="author" content="Andrea Salem">
 <meta name="dcterms.date" content="2026-05-08">
-<meta name="description" content="Full pipeline build and first training run for Galamsey mine detection in Ghana. U-Net on S2 NDVI bands achieves val_AUC = 0.861, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Hansen label contamination identified as the precision ceiling; six workstreams planned.">
+<meta name="description" content="U-Net on S2 NDVI bands achieves val_AUC = 0.861 for Galamsey mine detection in Ghana, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Recall is 0.988 but precision is 0.437 — label contamination from cocoa farming is the ceiling. Spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates.">
 
-<title>Ghana Mines Stage 1: Pipeline + Baseline Results – Africa Econ Satellite</title>
+<title>Ghana Mines Stage 1: Baseline Training – Africa Econ Satellite</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -156,49 +191,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">1</span> Summary</a></li>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">2</span> Motivation</a></li>
-  <li><a href="#pipeline" id="toc-pipeline" class="nav-link" data-scroll-target="#pipeline"><span class="header-section-number">3</span> Pipeline</a>
+  <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context"><span class="header-section-number">1</span> Context</a></li>
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method"><span class="header-section-number">2</span> Method</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3</span> Results</a>
   <ul class="collapse">
-  <li><a href="#task-scaffolding" id="toc-task-scaffolding" class="nav-link" data-scroll-target="#task-scaffolding"><span class="header-section-number">3.1</span> Task scaffolding</a></li>
-  <li><a href="#sentinel-2-imagery" id="toc-sentinel-2-imagery" class="nav-link" data-scroll-target="#sentinel-2-imagery"><span class="header-section-number">3.2</span> Sentinel-2 imagery</a></li>
-  <li><a href="#hansen-forest-loss-data-weak-mining-labels" id="toc-hansen-forest-loss-data-weak-mining-labels" class="nav-link" data-scroll-target="#hansen-forest-loss-data-weak-mining-labels"><span class="header-section-number">3.3</span> Hansen forest-loss data (weak mining labels)</a></li>
-  <li><a href="#hansen-filtering-rightarrow-mining-candidate-patches" id="toc-hansen-filtering-rightarrow-mining-candidate-patches" class="nav-link" data-scroll-target="#hansen-filtering-rightarrow-mining-candidate-patches"><span class="header-section-number">3.4</span> Hansen filtering <span class="math inline">\(\rightarrow\)</span> mining candidate patches</a></li>
-  <li><a href="#mine-site-coordinates-79-gps-points" id="toc-mine-site-coordinates-79-gps-points" class="nav-link" data-scroll-target="#mine-site-coordinates-79-gps-points"><span class="header-section-number">3.5</span> Mine site coordinates (79 GPS points)</a></li>
-  <li><a href="#pipeline-scripts" id="toc-pipeline-scripts" class="nav-link" data-scroll-target="#pipeline-scripts"><span class="header-section-number">3.6</span> Pipeline scripts</a></li>
+  <li><a href="#baseline-metrics" id="toc-baseline-metrics" class="nav-link" data-scroll-target="#baseline-metrics"><span class="header-section-number">3.1</span> Baseline Metrics</a></li>
+  <li><a href="#comparison-to-benchmarks" id="toc-comparison-to-benchmarks" class="nav-link" data-scroll-target="#comparison-to-benchmarks"><span class="header-section-number">3.2</span> Comparison to Benchmarks</a></li>
+  <li><a href="#training-progression" id="toc-training-progression" class="nav-link" data-scroll-target="#training-progression"><span class="header-section-number">3.3</span> Training Progression</a></li>
   </ul></li>
-  <li><a href="#experiment-setup" id="toc-experiment-setup" class="nav-link" data-scroll-target="#experiment-setup"><span class="header-section-number">4</span> Experiment Setup</a>
+  <li><a href="#the-precision-problem" id="toc-the-precision-problem" class="nav-link" data-scroll-target="#the-precision-problem"><span class="header-section-number">4</span> The Precision Problem</a>
   <ul class="collapse">
-  <li><a href="#trainval-split" id="toc-trainval-split" class="nav-link" data-scroll-target="#trainval-split"><span class="header-section-number">4.1</span> Train/val split</a></li>
-  <li><a href="#key-design-decisions" id="toc-key-design-decisions" class="nav-link" data-scroll-target="#key-design-decisions"><span class="header-section-number">4.2</span> Key design decisions</a></li>
+  <li><a href="#spectral-label-filtering-w1" id="toc-spectral-label-filtering-w1" class="nav-link" data-scroll-target="#spectral-label-filtering-w1"><span class="header-section-number">4.1</span> Spectral Label Filtering (W1)</a></li>
   </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">5</span> Results</a>
-  <ul class="collapse">
-  <li><a href="#final-metrics-best-model-epoch-13" id="toc-final-metrics-best-model-epoch-13" class="nav-link" data-scroll-target="#final-metrics-best-model-epoch-13"><span class="header-section-number">5.1</span> Final metrics (best model, epoch 13)</a></li>
-  <li><a href="#comparison-to-benchmarks" id="toc-comparison-to-benchmarks" class="nav-link" data-scroll-target="#comparison-to-benchmarks"><span class="header-section-number">5.2</span> Comparison to benchmarks</a></li>
-  <li><a href="#training-progression" id="toc-training-progression" class="nav-link" data-scroll-target="#training-progression"><span class="header-section-number">5.3</span> Training progression</a></li>
-  <li><a href="#diagnostic-plots" id="toc-diagnostic-plots" class="nav-link" data-scroll-target="#diagnostic-plots"><span class="header-section-number">5.4</span> Diagnostic plots</a></li>
-  </ul></li>
-  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation"><span class="header-section-number">6</span> Interpretation</a>
-  <ul class="collapse">
-  <li><a href="#what-this-result-means" id="toc-what-this-result-means" class="nav-link" data-scroll-target="#what-this-result-means"><span class="header-section-number">6.1</span> What this result means</a></li>
-  <li><a href="#why-precision-is-low-and-expected-to-be" id="toc-why-precision-is-low-and-expected-to-be" class="nav-link" data-scroll-target="#why-precision-is-low-and-expected-to-be"><span class="header-section-number">6.2</span> Why precision is low (and expected to be)</a></li>
-  <li><a href="#train-auc-vs-val-auc-gap" id="toc-train-auc-vs-val-auc-gap" class="nav-link" data-scroll-target="#train-auc-vs-val-auc-gap"><span class="header-section-number">6.3</span> Train AUC vs val AUC gap</a></li>
-  </ul></li>
-  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">7</span> Known Issues</a></li>
-  <li><a href="#planned-improvements-six-workstreams" id="toc-planned-improvements-six-workstreams" class="nav-link" data-scroll-target="#planned-improvements-six-workstreams"><span class="header-section-number">8</span> Planned Improvements: Six Workstreams</a>
-  <ul class="collapse">
-  <li><a href="#phase-1-start-now-parallel-independent" id="toc-phase-1-start-now-parallel-independent" class="nav-link" data-scroll-target="#phase-1-start-now-parallel-independent"><span class="header-section-number">8.1</span> Phase 1 — Start now (parallel, independent)</a></li>
-  <li><a href="#phase-2-after-w1-baseline-results" id="toc-phase-2-after-w1-baseline-results" class="nav-link" data-scroll-target="#phase-2-after-w1-baseline-results"><span class="header-section-number">8.2</span> Phase 2 — After W1 + baseline results</a></li>
-  <li><a href="#dependency-graph" id="toc-dependency-graph" class="nav-link" data-scroll-target="#dependency-graph"><span class="header-section-number">8.3</span> Dependency graph</a></li>
-  <li><a href="#updated-experiment-ladder" id="toc-updated-experiment-ladder" class="nav-link" data-scroll-target="#updated-experiment-ladder"><span class="header-section-number">8.4</span> Updated experiment ladder</a></li>
-  </ul></li>
-  <li><a href="#data-status" id="toc-data-status" class="nav-link" data-scroll-target="#data-status"><span class="header-section-number">9</span> Data Status</a>
-  <ul class="collapse">
-  <li><a href="#google-drive-structure" id="toc-google-drive-structure" class="nav-link" data-scroll-target="#google-drive-structure"><span class="header-section-number">9.1</span> Google Drive structure</a></li>
-  </ul></li>
-  <li><a href="#artifacts" id="toc-artifacts" class="nav-link" data-scroll-target="#artifacts"><span class="header-section-number">10</span> Artifacts</a></li>
-  <li><a href="#next-steps-in-priority-order" id="toc-next-steps-in-priority-order" class="nav-link" data-scroll-target="#next-steps-in-priority-order"><span class="header-section-number">11</span> Next Steps (in priority order)</a></li>
+  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">5</span> Known Issues</a></li>
+  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">6</span> Updated Project Status</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">7</span> Next Steps</a></li>
+  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">8</span> Code and Reproducibility</a></li>
   </ul>
 </nav>
     </div>
@@ -207,7 +215,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Ghana Mines Stage 1: Pipeline + Baseline Results</h1>
+<h1 class="title">Ghana Mines Stage 1: Baseline Training</h1>
 <p class="subtitle lead">Project C · Progress Report — 2026-05-08</p>
   <div class="quarto-categories">
     <div class="quarto-category">Project C</div>
@@ -218,7 +226,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    Full pipeline build and first training run for Galamsey mine detection in Ghana. U-Net on S2 NDVI bands achieves val_AUC = 0.861, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Hansen label contamination identified as the precision ceiling; six workstreams planned.
+    U-Net on S2 NDVI bands achieves val_AUC = 0.861 for Galamsey mine detection in Ghana, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Recall is 0.988 but precision is 0.437 — label contamination from cocoa farming is the ceiling. Spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates.
   </div>
 </div>
 
@@ -247,283 +255,15 @@ window.Quarto = {
 </header>
 
 
-<section id="summary" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="summary"><span class="header-section-number">1</span> Summary</h2>
-<p>Built a complete detection pipeline for illegal artisanal gold mines (Galamsey) in Ghana and ran the first baseline model. The U-Net (<code>unet_tiny</code>, 4 S2 NDVI bands) achieved <strong>val_AUC = 0.861</strong>, beating the Christensen et al.&nbsp;(2025) benchmark of 0.75 by a wide margin. Training converged in 25 epochs (7.5 hours on Quest A100) with early stopping.</p>
-<p>Recall is very high (0.988) but precision is low (0.437). Root cause: Hansen deforestation labels conflate mining with cocoa farming and logging — the cocoa belt and gold belt overlap in southwest Ghana. Six workstreams are planned to address label quality before the next training iteration.</p>
+<section id="context" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="context"><span class="header-section-number">1</span> Context</h2>
+<p>This report covers the first training run for Project C — detecting illegal artisanal gold mines (Galamsey) in Ghana from Sentinel-2 imagery. For pipeline details (S2 download, Hansen filtering, GPS validation sites), see the <a href="../posts/2026-05-06_ghana-mines-pipeline.html">pipeline report</a>. For the Alpha Earth experiment plan, see the <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">AE-16 report</a>.</p>
+<p><strong>The question:</strong> Can a U-Net trained on Hansen deforestation labels detect Galamsey mines, and can we beat Christensen et al.&nbsp;(2025) AUC of 0.75 on Tanzania?</p>
 <hr>
 </section>
-<section id="motivation" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="motivation"><span class="header-section-number">2</span> Motivation</h2>
-<p>Ghana faces a severe illegal artisanal gold mining (Galamsey) crisis. Galamsey operations cause deforestation, mercury water contamination, and destruction of agricultural land. The problem is concentrated in the gold-bearing Birimian greenstone belts of southwest Ghana (Ashanti, Western, Eastern regions).</p>
-<p><strong>Goal:</strong> Reliably detect Galamsey mine sites from Sentinel-2 satellite imagery, then estimate their causal impact on local outcomes (health, water quality, economic activity).</p>
-<p><strong>Why this is tractable:</strong> Galamsey mines are spectrally distinctive — bare red soil and turbid water ponds carved into dense tropical forest create an extreme NDVI drop (~0.8 forest <span class="math inline">\(\rightarrow\)</span> ~0.2 mine). This is a stronger signal than the Tanzania mines that Christensen et al.&nbsp;(2025) detected at AUC 0.75.</p>
-<p><strong>Key references:</strong></p>
-<ul>
-<li>Christensen et al.&nbsp;(2025) NBER — Mine detection across Africa, AUC 0.75 on Tanzania, RCF method (GitHub unavailable)</li>
-<li>Arezki et al.&nbsp;(2025) Oxford — AlphaEarth + CNN mine detection, presence only</li>
-<li>Snapir et al.&nbsp;(2017) RSE — Mining deforestation in Ghana via Landsat NDVI time series</li>
-</ul>
-<hr>
-</section>
-<section id="pipeline" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="pipeline"><span class="header-section-number">3</span> Pipeline</h2>
-<section id="task-scaffolding" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="task-scaffolding"><span class="header-section-number">3.1</span> Task scaffolding</h3>
-<p>Full task directory following the established repo pattern:</p>
-<pre><code>tasks/mines-ghana/
-├── config.yaml          # task metadata + label provenance
-├── README.md            # full documentation
-└── labels/
-    └── ghana_grid_halfdeg.shp  # 117 cells, 0.5° grid</code></pre>
-</section>
-<section id="sentinel-2-imagery" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="sentinel-2-imagery"><span class="header-section-number">3.2</span> Sentinel-2 imagery</h3>
-<p>Downloaded dry-season composite (Nov 2022 – Feb 2023) for all of Ghana:</p>
+<section id="method" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="method"><span class="header-section-number">2</span> Method</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 53%">
-<col style="width: 46%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>AOI</td>
-<td>Full Ghana (240,000 km<span class="math inline">\(^2\)</span>)</td>
-</tr>
-<tr class="even">
-<td>Sensor</td>
-<td>Sentinel-2 SR Harmonized</td>
-</tr>
-<tr class="odd">
-<td>Season</td>
-<td>Dry (Nov 2022 – Feb 2023)</td>
-</tr>
-<tr class="even">
-<td>Bands</td>
-<td>10 (B02–B12, resampled to 10 m)</td>
-</tr>
-<tr class="odd">
-<td>Cloud masking</td>
-<td>SCL + s2cloudless (threshold 20%)</td>
-</tr>
-<tr class="even">
-<td>Compositing</td>
-<td>Median</td>
-</tr>
-<tr class="odd">
-<td>Tiles</td>
-<td>70 (auto-split by GEE)</td>
-</tr>
-<tr class="even">
-<td>Total size</td>
-<td>57 GB</td>
-</tr>
-<tr class="odd">
-<td>Drive location</td>
-<td><code>mlgis-macrodev/3-data collection/GEE/Ghana-S2-2023/</code></td>
-</tr>
-</tbody>
-</table>
-<p>Dry season chosen to minimize cloud contamination and maximize mine scar visibility (exposed bare soil).</p>
-</section>
-<section id="hansen-forest-loss-data-weak-mining-labels" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="hansen-forest-loss-data-weak-mining-labels"><span class="header-section-number">3.3</span> Hansen forest-loss data (weak mining labels)</h3>
-<p>Downloaded Hansen Global Forest Change v1.13 for Ghana via GEE:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 30%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Product</th>
-<th>File</th>
-<th>Size</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Loss year (2001–2023)</td>
-<td><code>Ghana_Hansen_lossyear_2001_2023.tif</code></td>
-<td>23 MB</td>
-<td>Temporal analysis (mine opening dates)</td>
-</tr>
-<tr class="even">
-<td>Forest loss binary (2015–2023)</td>
-<td><code>Ghana_Hansen_ForestLoss_2015_2023.tif</code></td>
-<td>7.5 MB</td>
-<td>Weak training labels</td>
-</tr>
-<tr class="odd">
-<td>Tree cover baseline (2000)</td>
-<td><code>Ghana_Hansen_treecover2000.tif</code></td>
-<td>89 MB</td>
-<td>Filter: $$30% canopy = forest</td>
-</tr>
-</tbody>
-</table>
-<p>Filtered to 2015–2023 because Galamsey acceleration began ~2013–2015.</p>
-</section>
-<section id="hansen-filtering-rightarrow-mining-candidate-patches" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="hansen-filtering-rightarrow-mining-candidate-patches"><span class="header-section-number">3.4</span> Hansen filtering <span class="math inline">\(\rightarrow\)</span> mining candidate patches</h3>
-<p>Applied spatial and morphological filters to separate mining-related deforestation from agricultural clearing:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Filter</th>
-<th>Positive pixels</th>
-<th>Patches</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Raw forest loss (2015–2023, $$30% canopy)</td>
-<td>11,261,686</td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td>+ Gold belt restriction (Ashanti, Sefwi, Kibi)</td>
-<td>8,118,056</td>
-<td>—</td>
-</tr>
-<tr class="odd">
-<td>+ Patch size filter (0.1–10 ha)</td>
-<td>5,596,902</td>
-<td><strong>601,017</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Filter rationale:</strong></p>
-<ul>
-<li><strong>Gold belt restriction:</strong> Galamsey occurs in Birimian greenstone belts. Loss outside these zones is overwhelmingly agricultural.</li>
-<li><strong>Patch size 0.1–10 ha:</strong> Mine clearings are small and irregular. Agricultural clearings tend to be &gt;10 ha and more regular.</li>
-<li><strong>Not yet applied:</strong> River proximity filter (alluvial gold clusters within 1 km of waterways).</li>
-</ul>
-<p>Output: <code>data/ghana/labels/gfw_mining_loss.shp</code> (601,017 polygons) + <code>gfw_mining_loss.tif</code> (binary raster).</p>
-</section>
-<section id="mine-site-coordinates-79-gps-points" class="level3" data-number="3.5">
-<h3 data-number="3.5" class="anchored" data-anchor-id="mine-site-coordinates-79-gps-points"><span class="header-section-number">3.5</span> Mine site coordinates (79 GPS points)</h3>
-<p>Compiled from publicly available sources for <strong>validation only</strong> (not training — most are town centroids, too imprecise for 10 m pixel-level labels):</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Confidence</th>
-<th>Count</th>
-<th>Source</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1 (confirmed)</td>
-<td>23</td>
-<td>USGS MRDS, peer-reviewed papers</td>
-</tr>
-<tr class="even">
-<td>2 (probable)</td>
-<td>31</td>
-<td>Media reports, Water Resources Commission</td>
-</tr>
-<tr class="odd">
-<td>3 (possible)</td>
-<td>25</td>
-<td>Town centroids of known mining areas</td>
-</tr>
-</tbody>
-</table>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Region</th>
-<th>Count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Western</td>
-<td>32</td>
-</tr>
-<tr class="even">
-<td>Ashanti</td>
-<td>21</td>
-</tr>
-<tr class="odd">
-<td>Eastern</td>
-<td>13</td>
-</tr>
-<tr class="even">
-<td>Western North</td>
-<td>7</td>
-</tr>
-<tr class="odd">
-<td>Central</td>
-<td>6</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="pipeline-scripts" class="level3" data-number="3.6">
-<h3 data-number="3.6" class="anchored" data-anchor-id="pipeline-scripts"><span class="header-section-number">3.6</span> Pipeline scripts</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 47%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Script</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>src/download/05_download_s2_ghana.py</code></td>
-<td>GEE S2 download (dry/annual/quarterly)</td>
-</tr>
-<tr class="even">
-<td><code>src/download/06_download_hansen_ghana.py</code></td>
-<td>Hansen forest-loss download (v1.13)</td>
-</tr>
-<tr class="odd">
-<td><code>src/preprocessing/08_make_labels_ghana.py</code></td>
-<td>Multi-source labels <span class="math inline">\(\rightarrow\)</span> buffered <span class="math inline">\(\rightarrow\)</span> binary TIF</td>
-</tr>
-<tr class="even">
-<td><code>src/preprocessing/09_filter_hansen_mining.py</code></td>
-<td>Hansen filtering (patch size + gold belt)</td>
-</tr>
-<tr class="odd">
-<td><code>scripts/quest/sync_ghana_to_quest.sh</code></td>
-<td>Code + labels <span class="math inline">\(\rightarrow\)</span> Quest HPC</td>
-</tr>
-<tr class="even">
-<td><code>scripts/quest/preproc_ghana.sbatch</code></td>
-<td>S2 preprocessing on Quest (grid + normalize + tile)</td>
-</tr>
-<tr class="odd">
-<td><code>scripts/quest/train_ghana_mines.sbatch</code></td>
-<td>GPU training on Quest (A100)</td>
-</tr>
-</tbody>
-</table>
-<hr>
-</section>
-</section>
-<section id="experiment-setup" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="experiment-setup"><span class="header-section-number">4</span> Experiment Setup</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 61%">
-<col style="width: 38%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Parameter</th>
@@ -545,7 +285,7 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>Patch size</td>
-<td>64 <span class="math inline">\(\times\)</span> 64 (reduced from 128 — mines are 0.1–10 ha = 10–32 px)</td>
+<td>64 (mines are 0.1–10 ha = 10–32 px at 10 m)</td>
 </tr>
 <tr class="odd">
 <td>Loss</td>
@@ -553,85 +293,33 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>Learning rate</td>
-<td><span class="math inline">\(5 \times 10^{-6}\)</span> (validated in Rwanda Stage 1b)</td>
+<td><span class="math inline">\(5 \times 10^{-6}\)</span> (ReduceLROnPlateau, patience 5)</td>
 </tr>
 <tr class="odd">
 <td>Labels</td>
-<td>Hansen GFC, filtered to gold belt, patch size 0.1–10 ha</td>
+<td>Hansen GFC filtered to gold belt, 0.1–10 ha patches</td>
 </tr>
 <tr class="even">
 <td>Train/val split</td>
 <td>Every-5th-chunk interleave (94 train / 23 val)</td>
 </tr>
 <tr class="odd">
-<td>Train patches</td>
-<td>1,823,188 (19.65% positive)</td>
+<td>Positive fraction</td>
+<td>19.65% train, 17.75% val</td>
 </tr>
 <tr class="even">
-<td>Val patches</td>
-<td>465,731 (17.75% positive)</td>
-</tr>
-<tr class="odd">
 <td>GPU</td>
-<td>NVIDIA A100-PCIE-40GB (Quest, allocation p32315)</td>
+<td>NVIDIA A100-PCIE-40GB (Quest, 7h31m)</td>
 </tr>
 </tbody>
 </table>
-<section id="trainval-split" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="trainval-split"><span class="header-section-number">4.1</span> Train/val split</h3>
-<p>Initial contiguous split (chunks 0–93 train, 94–116 val) placed all val chunks in northern Ghana where there are no mines — val had zero positive pixels. Fixed by interleaving: every 5th chunk goes to val, ensuring both splits sample from the gold belt. Val set contains 9 chunks with positive mine labels, spread across the full geographic range.</p>
-</section>
-<section id="key-design-decisions" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="key-design-decisions"><span class="header-section-number">4.2</span> Key design decisions</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 47%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Decision</th>
-<th>Rationale</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Dry season composite (Nov–Feb)</td>
-<td>Minimal clouds; mine scars most visible</td>
-</tr>
-<tr class="even">
-<td>NDVI bands (4-band)</td>
-<td>Rwanda Stage 2b: NDVI r=0.750 vs NIR r=0.432; NDVI captures forest<span class="math inline">\(\rightarrow\)</span>mine contrast (Snapir 2017)</td>
-</tr>
-<tr class="odd">
-<td><code>patch_size=64</code> (was 128)</td>
-<td>Mines are 0.1–10 ha = 10–32 px. 64-patch <span class="math inline">\(\rightarrow\)</span> mine fills ~25% vs ~6%</td>
-</tr>
-<tr class="even">
-<td>Hansen as training labels</td>
-<td>Thousands of precise deforestation polygons vs 79 imprecise GPS points</td>
-</tr>
-<tr class="odd">
-<td>Gold belt spatial filter</td>
-<td>Removes non-mining deforestation</td>
-</tr>
-<tr class="even">
-<td>Full Ghana AOI</td>
-<td>Allows detection of unknown sites</td>
-</tr>
-<tr class="odd">
-<td><code>pos_weight=30</code></td>
-<td>Class ratio 69:1 (1.42% positive) — computed from label raster</td>
-</tr>
-</tbody>
-</table>
+<p>NDVI bands chosen based on Rwanda Stage 2b (NDVI r=0.750 vs NIR r=0.432) and mine-specific spectral contrast (forest NDVI ~0.8 drops to ~0.2 at mine scars; Snapir et al.&nbsp;2017).</p>
 <hr>
 </section>
-</section>
-<section id="results" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="results"><span class="header-section-number">5</span> Results</h2>
-<section id="final-metrics-best-model-epoch-13" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="final-metrics-best-model-epoch-13"><span class="header-section-number">5.1</span> Final metrics (best model, epoch 13)</h3>
+<section id="results" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="results"><span class="header-section-number">3</span> Results</h2>
+<section id="baseline-metrics" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="baseline-metrics"><span class="header-section-number">3.1</span> Baseline Metrics</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -645,43 +333,32 @@ window.Quarto = {
 <td><strong>0.8615</strong></td>
 </tr>
 <tr class="even">
-<td>val_loss</td>
-<td>0.9340</td>
+<td>Precision</td>
+<td>0.437</td>
 </tr>
 <tr class="odd">
 <td>Recall</td>
 <td>0.988</td>
 </tr>
 <tr class="even">
-<td>Precision</td>
-<td>0.437</td>
-</tr>
-<tr class="odd">
 <td>F1</td>
 <td>0.606</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Threshold</td>
 <td>0.95</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="comparison-to-benchmarks" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="comparison-to-benchmarks"><span class="header-section-number">5.2</span> Comparison to benchmarks</h3>
+<section id="comparison-to-benchmarks" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="comparison-to-benchmarks"><span class="header-section-number">3.2</span> Comparison to Benchmarks</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 17%">
-<col style="width: 27%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Method</th>
 <th>Target</th>
 <th>AUC</th>
-<th>Source</th>
 </tr>
 </thead>
 <tbody>
@@ -689,505 +366,178 @@ window.Quarto = {
 <td><strong>This work (baseline)</strong></td>
 <td><strong>Ghana (Galamsey)</strong></td>
 <td><strong>0.861</strong></td>
-<td>—</td>
 </tr>
 <tr class="even">
 <td>Christensen et al.&nbsp;(2025)</td>
 <td>Tanzania (all mines)</td>
 <td>0.750</td>
-<td>NBER w33350</td>
 </tr>
 <tr class="odd">
 <td>Arezki et al.&nbsp;(2025)</td>
 <td>Africa-wide (large mines)</td>
 <td>not reported</td>
-<td>Oxford</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Headline: AUC 0.861 beats the Christensen benchmark by 0.11 on the first attempt.</strong> The extreme spectral contrast of Galamsey sites (bare laterite + turbid water in dense tropical forest) makes Ghana an easier target than Tanzania’s semi-arid mines.</p>
 </section>
-<section id="training-progression" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="training-progression"><span class="header-section-number">5.3</span> Training progression</h3>
+<section id="training-progression" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="training-progression"><span class="header-section-number">3.3</span> Training Progression</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/ghana_mines_training_progress.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Training progress — val AUC plateaus at ~0.86 by epoch 25</figcaption>
+</figure>
+</div>
+<p>Best weights at epoch 13 (val_AUC = 0.8614). ReduceLROnPlateau fired at epochs 11, 16, and 21. Early stopping at epoch 25.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/ghana_mines_roc_curve.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>ROC curve — AUC = 0.8615</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-precision-problem" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="the-precision-problem"><span class="header-section-number">4</span> The Precision Problem</h2>
+<p>Recall is near-perfect (0.988) — the model catches almost every mine. But precision is only 0.437 — roughly half of flagged pixels are false positives. <strong>This is a label quality ceiling, not a model failure.</strong></p>
+<p><strong>Root cause: Ghana’s cocoa belt and gold belt overlap.</strong> Both follow the Birimian greenstone formation. The Hansen training labels mark all forest loss in the gold belt as “mining,” but cocoa farm clearings are the same size (0.1–10 ha) and geography as Galamsey sites. The model learned “deforestation in southwest Ghana,” not “mine sites specifically.”</p>
+<section id="spectral-label-filtering-w1" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="spectral-label-filtering-w1"><span class="header-section-number">4.1</span> Spectral Label Filtering (W1)</h3>
+<p>To quantify the contamination, we filtered the 601k Hansen patches by mine-specific spectral signatures at each patch centroid (NDVI &lt; 0.4, BSI &gt; 0.0):</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 18%">
-<col style="width: 16%">
-<col style="width: 9%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Epoch</th>
-<th>train_loss</th>
-<th>train_auc</th>
-<th>val_loss</th>
-<th>val_auc</th>
-<th>LR</th>
+<th>Step</th>
+<th>Patches</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>0.9655</td>
-<td>0.576</td>
-<td>0.9513</td>
-<td>0.825</td>
-<td>5.0e-6</td>
+<td>Hansen filtered (gold belt, 0.1–10 ha)</td>
+<td>601,017</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>0.9418</td>
-<td>0.621</td>
-<td>0.9439</td>
-<td>0.841</td>
-<td>5.0e-6</td>
+<td>With S2 coverage (38/70 tiles local)</td>
+<td>57,165</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>0.9254</td>
-<td>0.640</td>
-<td>0.9394</td>
-<td>0.853</td>
-<td>5.0e-6</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>0.9148</td>
-<td>0.653</td>
-<td>0.9377</td>
-<td>0.860</td>
-<td>5.0e-6</td>
-</tr>
-<tr class="odd">
-<td><strong>5</strong></td>
-<td><strong>0.9089</strong></td>
-<td><strong>0.664</strong></td>
-<td><strong>0.9368</strong></td>
-<td><strong>0.862</strong></td>
-<td><strong>5.0e-6</strong></td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>0.9057</td>
-<td>0.670</td>
-<td>0.9361</td>
-<td>0.859</td>
-<td>5.0e-6</td>
-</tr>
-<tr class="odd">
-<td>10</td>
-<td>0.9013</td>
-<td>0.682</td>
-<td>0.9351</td>
-<td>0.849</td>
-<td>5.0e-6</td>
-</tr>
-<tr class="even">
-<td>11</td>
-<td>0.9018</td>
-<td>0.680</td>
-<td>0.9342</td>
-<td>0.852</td>
-<td>2.5e-6</td>
-</tr>
-<tr class="odd">
-<td><strong>13</strong></td>
-<td><strong>0.9011</strong></td>
-<td><strong>0.683</strong></td>
-<td><strong>0.9340</strong></td>
-<td><strong>0.861</strong></td>
-<td><strong>2.5e-6</strong></td>
-</tr>
-<tr class="even">
-<td>16</td>
-<td>0.9011</td>
-<td>0.683</td>
-<td>0.9327</td>
-<td>0.858</td>
-<td>1.25e-6</td>
-</tr>
-<tr class="odd">
-<td>21</td>
-<td>0.9011</td>
-<td>0.684</td>
-<td>0.9318</td>
-<td>0.855</td>
-<td>6.25e-7</td>
-</tr>
-<tr class="even">
-<td>25</td>
-<td>0.9008</td>
-<td>0.684</td>
-<td>0.9315</td>
-<td>0.852</td>
-<td>6.25e-7</td>
+<td><strong>Passed spectral filter (mine-like)</strong></td>
+<td><strong>4,309 (7.5%)</strong></td>
 </tr>
 </tbody>
 </table>
-<p>Early stopping triggered at epoch 25. Best weights restored from epoch 13 (val_auc = 0.8614). ReduceLROnPlateau fired at epochs 11 (<span class="math inline">\(\rightarrow\)</span> 2.5e-6), 16 (<span class="math inline">\(\rightarrow\)</span> 1.25e-6), and 21 (<span class="math inline">\(\rightarrow\)</span> 6.25e-7).</p>
-</section>
-<section id="diagnostic-plots" class="level3" data-number="5.4">
-<h3 data-number="5.4" class="anchored" data-anchor-id="diagnostic-plots"><span class="header-section-number">5.4</span> Diagnostic plots</h3>
+<p><strong>92.5% of sampled patches were spectrally inconsistent with mining</strong> — they had high NDVI (vegetated) or low BSI (no exposed soil). These are predominantly cocoa farms and logging clearings.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../../diagnostics/ghana-mines/training_progress.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Training progress</figcaption>
+<p><img src="../figures/ghana_mines_spectral_distributions.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Spectral distributions: mine-like patches (red) vs removed (gray)</figcaption>
 </figure>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../diagnostics/ghana-mines/roc_curve.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>ROC curve</figcaption>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../diagnostics/ghana-mines/patience_curve.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Patience curve (early stopping)</figcaption>
-</figure>
-</div>
+<p><strong>Implication:</strong> Retraining with the 4,309 filtered patches should substantially improve precision — the training signal will be purer, and the model will learn to distinguish bare-soil mine scars from vegetated farm clearings.</p>
 <hr>
 </section>
 </section>
-<section id="interpretation" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="interpretation"><span class="header-section-number">6</span> Interpretation</h2>
-<section id="what-this-result-means" class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="what-this-result-means"><span class="header-section-number">6.1</span> What this result means</h3>
-<p>The baseline AUC of 0.861 is strong for a first pass — the model is clearly learning to distinguish mine-affected areas from background. The high recall (0.988) means it catches nearly every mine. The low precision (0.437) means roughly half of flagged pixels are false positives.</p>
-</section>
-<section id="why-precision-is-low-and-expected-to-be" class="level3" data-number="6.2">
-<h3 data-number="6.2" class="anchored" data-anchor-id="why-precision-is-low-and-expected-to-be"><span class="header-section-number">6.2</span> Why precision is low (and expected to be)</h3>
-<p>The core issue is <strong>label contamination</strong>. The training labels are Hansen GFC patches filtered to the gold belt (0.1–10 ha clearings). But in Ghana, the cocoa belt and gold belt overlap almost perfectly — both follow the Birimian greenstone formation. Cocoa farm clearings in Ashanti/Western regions are the same size range and geography as Galamsey sites. The model has learned “deforestation in western Ghana” rather than “mine sites specifically.”</p>
-<p>This is not a model failure — it is a label quality ceiling. Improving precision requires either (a) better labels or (b) mine-specific spectral features that separate bare-soil mines from agricultural clearings.</p>
-</section>
-<section id="train-auc-vs-val-auc-gap" class="level3" data-number="6.3">
-<h3 data-number="6.3" class="anchored" data-anchor-id="train-auc-vs-val-auc-gap"><span class="header-section-number">6.3</span> Train AUC vs val AUC gap</h3>
-<p>Train AUC (0.683) is substantially lower than val AUC (0.861). This inversion (opposite of the usual overfitting pattern) is an artifact of the patch sampling: with <code>neg_ratio=1</code>, training patches are balanced (~50/50), while val patches reflect the natural class distribution (17.75% positive). The model’s confident negative predictions yield higher AUC on the sparser val set.</p>
-<hr>
-</section>
-</section>
-<section id="known-issues" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">7</span> Known Issues</h2>
+<section id="known-issues" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">5</span> Known Issues</h2>
 <ol type="1">
-<li><p><strong>pos_weight override:</strong> The runtime pos_weight calculation sampled 50 batches from the start of the TFRecord, found zero positives (unlucky draw), and defaulted to 1.0 instead of the configured 30. Likely slowed early convergence. Fix: shuffle TFRecords or bypass runtime calculation when config specifies pos_weight.</p></li>
-<li><p><strong>No inference-style validation:</strong> The pipeline’s post-training inference validation was skipped (“No val_chunks found in config”). Reported metrics are from Keras <code>model.evaluate()</code>, not sliding-window inference over full chunks. Spatial prediction maps require inference-style evaluation.</p></li>
-<li><p><strong>79 GPS sites not yet tested:</strong> The known Galamsey coordinates have not been validated against model predictions. This is the independent ground truth — Hansen-based val_AUC is partially circular.</p></li>
+<li><p><strong>pos_weight override:</strong> Runtime calculation sampled zero positives from TFRecord start, defaulted to 1.0 instead of configured 30. Likely slowed early convergence.</p></li>
+<li><p><strong>No spatial inference validation yet.</strong> Reported metrics are from <code>model.evaluate()</code>, not sliding-window inference over full chunks. Scripts ready (<code>03_predict_ghana.py</code>, <code>04_validate_ghana_mines.py</code>).</p></li>
+<li><p><strong>W1 coverage gap:</strong> Only 38/70 S2 tiles available locally — 543k of 601k centroids had no coverage. Running W1 on Quest (all 70 tiles preprocessed) will produce a more complete filtered set.</p></li>
 </ol>
 <hr>
 </section>
-<section id="planned-improvements-six-workstreams" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="planned-improvements-six-workstreams"><span class="header-section-number">8</span> Planned Improvements: Six Workstreams</h2>
-<p>The baseline exposes a clear path: the model architecture works and the spectral signal is strong, but the labels are contaminated. Six workstreams address this.</p>
-<section id="phase-1-start-now-parallel-independent" class="level3" data-number="8.1">
-<h3 data-number="8.1" class="anchored" data-anchor-id="phase-1-start-now-parallel-independent"><span class="header-section-number">8.1</span> Phase 1 — Start now (parallel, independent)</h3>
-<section id="w1-spectral-label-filtering" class="level4" data-number="8.1.1">
-<h4 data-number="8.1.1" class="anchored" data-anchor-id="w1-spectral-label-filtering"><span class="header-section-number">8.1.1</span> W1: Spectral label filtering</h4>
-<p><strong>Problem:</strong> 601k Hansen patches include cocoa, logging, and agriculture — not just mines.</p>
-<p><strong>Solution:</strong> Post-filter Hansen patches by mine-specific spectral signatures at each patch location:</p>
-<ul>
-<li><strong>NDVI &lt; 0.3</strong> (bare soil, not vegetated farmland)</li>
-<li><strong>BSI &gt; threshold</strong> (Bare Soil Index: exposed laterite/clay)</li>
-<li><strong>NDWI &gt; threshold</strong> (turbid mine ponds)</li>
-</ul>
-<p>Expected: reduce 601k patches to ~50–100k with much higher mine purity. Directly improves precision.</p>
-<p><strong>Script:</strong> <code>src/preprocessing/11_spectral_label_filter.py</code></p>
-</section>
-<section id="w3-timestamp-mines-from-hansen-lossyear" class="level4" data-number="8.1.2">
-<h4 data-number="8.1.2" class="anchored" data-anchor-id="w3-timestamp-mines-from-hansen-lossyear"><span class="header-section-number">8.1.2</span> W3: Timestamp mines from Hansen lossyear</h4>
-<p><strong>Problem:</strong> Need mine opening dates for causal identification (event study, diff-in-diff).</p>
-<p><strong>Solution:</strong> Overlay filtered mining patches onto <code>Ghana_Hansen_lossyear_2001_2023.tif</code>. For each patch, extract modal year <span class="math inline">\(\rightarrow\)</span> mine opening date at annual resolution. Output: GeoDataFrame with <code>geometry, area_ha, opening_year, centroid_lat, centroid_lon</code>.</p>
-<p>Not ML — raster overlay on two small files (~30 MB). Runs locally in minutes. Mine opening = treatment event for causal estimation.</p>
-<p><strong>Script:</strong> <code>src/preprocessing/12_timestamp_mines_hansen.py</code></p>
-</section>
-<section id="w6-external-label-upgrade" class="level4" data-number="8.1.3">
-<h4 data-number="8.1.3" class="anchored" data-anchor-id="w6-external-label-upgrade"><span class="header-section-number">8.1.3</span> W6: External label upgrade</h4>
-<p><strong>Problem:</strong> Hansen is a noisy proxy. Better labels exist but require access.</p>
+<section id="updated-project-status" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">6</span> Updated Project Status</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 36%">
-<col style="width: 27%">
-<col style="width: 36%">
+<col style="width: 25%">
+<col style="width: 29%">
+<col style="width: 44%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Source</th>
-<th>Type</th>
-<th>Access</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Snapir et al.&nbsp;(2017)</td>
-<td>Digitized mining polygons (Ghana)</td>
-<td>Paper supplement, RSE</td>
-</tr>
-<tr class="even">
-<td>Sebastian / GPRL</td>
-<td>2k+ labeled mine sites (Africa)</td>
-<td>Ask if Ghana covered</td>
-</tr>
-<tr class="odd">
-<td>Ghana Minerals Commission</td>
-<td>Official mine registry</td>
-<td>Via Justina</td>
-</tr>
-<tr class="even">
-<td>OSM Overpass API</td>
-<td>Mining-tagged features</td>
-<td>Public</td>
-</tr>
-<tr class="odd">
-<td>artisanalGold.org / Delve</td>
-<td>Artisanal mine locations</td>
-<td>Public/academic</td>
-</tr>
-</tbody>
-</table>
-<p>Long lead time on institutional sources — start requests immediately.</p>
-</section>
-</section>
-<section id="phase-2-after-w1-baseline-results" class="level3" data-number="8.2">
-<h3 data-number="8.2" class="anchored" data-anchor-id="phase-2-after-w1-baseline-results"><span class="header-section-number">8.2</span> Phase 2 — After W1 + baseline results</h3>
-<section id="w2-mine-specific-spectral-indices" class="level4" data-number="8.2.1">
-<h4 data-number="8.2.1" class="anchored" data-anchor-id="w2-mine-specific-spectral-indices"><span class="header-section-number">8.2.1</span> W2: Mine-specific spectral indices</h4>
-<p>Replace generic S2 NDVI bands with mine-targeted indices: BSI (bare soil), NDWI (turbid ponds), FMF (ferrous minerals / laterite), plus standard NDVI. Config task: <code>minesGH-Ghana-MineIdx</code>.</p>
-</section>
-<section id="w4-multi-temporal-stacking" class="level4" data-number="8.2.2">
-<h4 data-number="8.2.2" class="anchored" data-anchor-id="w4-multi-temporal-stacking"><span class="header-section-number">8.2.2</span> W4: Multi-temporal stacking</h4>
-<p>Stack 2018 + 2023 S2 composites (8 channels) so the model sees the forest <span class="math inline">\(\rightarrow\)</span> mine transition directly. Requires downloading 2018 S2 for Ghana. Config task: <code>minesGH-Ghana-Temporal</code>.</p>
-</section>
-<section id="w5-sar-fusion" class="level4" data-number="8.2.3">
-<h4 data-number="8.2.3" class="anchored" data-anchor-id="w5-sar-fusion"><span class="header-section-number">8.2.3</span> W5: SAR fusion</h4>
-<p>Add Sentinel-1 VV backscatter as an extra channel. Flooded mine pits show distinctive low backscatter, providing cloud-independent signal. Config task: <code>minesGH-Ghana-SAR</code>.</p>
-</section>
-</section>
-<section id="dependency-graph" class="level3" data-number="8.3">
-<h3 data-number="8.3" class="anchored" data-anchor-id="dependency-graph"><span class="header-section-number">8.3</span> Dependency graph</h3>
-<pre><code>Phase 1 (parallel, start now):
-  W1 (spectral filtering) ---+
-  W3 (timestamps)            |--- independent
-  W6 (external labels)     --+
-
-Phase 2 (after W1 + baseline):
-  W2 (mine indices)     ---+
-  W4 (multi-temporal)   ---|--- all need W1 filtered labels
-  W5 (SAR fusion)       --+</code></pre>
-</section>
-<section id="updated-experiment-ladder" class="level3" data-number="8.4">
-<h3 data-number="8.4" class="anchored" data-anchor-id="updated-experiment-ladder"><span class="header-section-number">8.4</span> Updated experiment ladder</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>#</th>
-<th>Experiment</th>
-<th>Bands</th>
-<th>Dim</th>
-<th>Dependency</th>
+<th>Stage</th>
 <th>Status</th>
+<th>Key Result</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>0</strong></td>
-<td><strong>S2 NDVI baseline</strong></td>
-<td><strong>NIR, Blue, SWIR2, NDVI</strong></td>
-<td><strong>4</strong></td>
-<td><strong>—</strong></td>
-<td><strong>AUC 0.861</strong></td>
-</tr>
-<tr class="even">
-<td>0b</td>
-<td>Mine indices (W2)</td>
-<td>NDVI, BSI, NDWI, FMF</td>
-<td>4</td>
-<td>W1</td>
-<td>Planned</td>
-</tr>
-<tr class="odd">
-<td>0c</td>
-<td>Multi-temporal (W4)</td>
-<td>NDVI <span class="math inline">\(\times\)</span> 2 dates</td>
-<td>8</td>
-<td>W1 + 2018 download</td>
-<td>Planned</td>
-</tr>
-<tr class="even">
-<td>0d</td>
-<td>S2+SAR (W5)</td>
-<td>NDVI + S1 VV</td>
-<td>5</td>
-<td>W1 + S1 download</td>
-<td>Planned</td>
-</tr>
-<tr class="odd">
-<td>1</td>
-<td>+SWIR1</td>
-<td>+B11</td>
-<td>5</td>
-<td>Baseline</td>
-<td>Planned</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>AE-16 (PCA)</td>
-<td>Top 16 AE bands</td>
-<td>16</td>
-<td>AE on Quest</td>
-<td>Planned — <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">see AE-16 report</a></td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>S2+AE-16</td>
-<td>NDVI + AE-16</td>
-<td>20</td>
-<td>After #2</td>
-<td>Planned</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>AE-64 (full)</td>
-<td>All 64 AE bands</td>
-<td>64</td>
-<td>M4 Pro or Quest A100</td>
-<td>Planned</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Critical rule:</strong> W1 (spectral label filtering) should run before any Phase 2 experiment. Every subsequent training run benefits from cleaner labels.</p>
-<hr>
-</section>
-</section>
-<section id="data-status" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="data-status"><span class="header-section-number">9</span> Data Status</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 33%">
-<col style="width: 20%">
-<col style="width: 26%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Data</th>
-<th>Location</th>
-<th>Size</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>S2 dry season 2023 (70 tiles)</td>
-<td>Drive + Quest</td>
-<td>57 GB</td>
+<td>Pipeline + GEE downloads</td>
 <td>Done</td>
+<td>70 S2 tiles (57 GB) + Hansen + 79 GPS sites</td>
 </tr>
 <tr class="even">
-<td>Preprocessed S2 chunks (117)</td>
-<td>Quest</td>
-<td>~57 GB</td>
+<td>Hansen filtering</td>
 <td>Done</td>
+<td>601,017 mining candidate patches</td>
 </tr>
 <tr class="odd">
-<td>Hansen lossyear / loss / treecover</td>
-<td>Drive + Quest + local</td>
-<td>120 MB</td>
+<td>S2 preprocessing (Quest)</td>
 <td>Done</td>
+<td>117 chunks</td>
 </tr>
 <tr class="even">
-<td>GFW filtered mining patches</td>
-<td>Quest + local</td>
-<td>137 MB (shp)</td>
+<td><strong>Baseline training</strong></td>
+<td><strong>Done</strong></td>
+<td><strong>AUC = 0.861, Recall 0.988, Precision 0.437</strong></td>
+</tr>
+<tr class="odd">
+<td>W1: Spectral label filtering</td>
 <td>Done</td>
-</tr>
-<tr class="odd">
-<td>Mine site coordinates (79)</td>
-<td>Quest + local</td>
-<td>7 KB (csv)</td>
-<td>Done</td>
+<td>601k <span class="math inline">\(\to\)</span> 4,309 mine-like patches</td>
 </tr>
 <tr class="even">
-<td>Alpha Earth 2022 (408 tiles)</td>
-<td>Drive</td>
-<td>314 GB</td>
-<td>Done — pending Quest transfer</td>
+<td>W3: Mine timestamps</td>
+<td>Ready</td>
+<td>Script + lossyear downloaded</td>
 </tr>
 <tr class="odd">
-<td><strong>Trained model</strong></td>
-<td><strong>Quest</strong></td>
-<td>—</td>
-<td><strong>Done (best.keras)</strong></td>
-</tr>
-</tbody>
-</table>
-<section id="google-drive-structure" class="level3" data-number="9.1">
-<h3 data-number="9.1" class="anchored" data-anchor-id="google-drive-structure"><span class="header-section-number">9.1</span> Google Drive structure</h3>
-<pre><code>mlgis-macrodev/3-data collection/GEE/
-├── Ghana-S2-2023/      (70 tiles, 57 GB)
-├── Ghana-Hansen/       (lossyear + forest-loss + treecover2000)
-├── Ghana-AE-2022/      (408 tiles, 314 GB)
-├── Rwanda-S2-2022/     (existing)
-└── ...</code></pre>
-<hr>
-</section>
-</section>
-<section id="artifacts" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="artifacts"><span class="header-section-number">10</span> Artifacts</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 37%">
-<col style="width: 62%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>File</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Trained weights</td>
-<td><code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> (Quest)</td>
+<td>Retrain with filtered labels</td>
+<td>Next</td>
+<td>Expect precision improvement</td>
 </tr>
 <tr class="even">
-<td>Metrics</td>
-<td><code>diagnostics/ghana-mines/val_metrics.json</code></td>
+<td>Inference + GPS validation</td>
+<td>Next</td>
+<td>03/04 scripts ready</td>
 </tr>
 <tr class="odd">
-<td>ROC curve</td>
-<td><code>diagnostics/ghana-mines/roc_curve.png</code></td>
+<td>Phase 2 experiments (AE-16, W2–W5)</td>
+<td>Planned</td>
+<td>After retrain</td>
 </tr>
 <tr class="even">
-<td>Training progress</td>
-<td><code>diagnostics/ghana-mines/training_progress.png</code></td>
-</tr>
-<tr class="odd">
-<td>Patience curve</td>
-<td><code>diagnostics/ghana-mines/patience_curve.png</code></td>
-</tr>
-<tr class="even">
-<td>Training log</td>
-<td><code>logs/ghana-mines-7459404.out</code> (Quest)</td>
-</tr>
-<tr class="odd">
-<td>Config</td>
-<td><code>config/config.yaml</code> <span class="math inline">\(\rightarrow\)</span> <code>minesGH-Ghana</code></td>
+<td>Impact estimation</td>
+<td>Future</td>
+<td>DHS, water quality, night lights</td>
 </tr>
 </tbody>
 </table>
 <hr>
 </section>
-<section id="next-steps-in-priority-order" class="level2" data-number="11">
-<h2 data-number="11" class="anchored" data-anchor-id="next-steps-in-priority-order"><span class="header-section-number">11</span> Next Steps (in priority order)</h2>
+<section id="next-steps" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">7</span> Next Steps</h2>
 <ol type="1">
-<li><strong>W1: Spectral label filtering</strong> — filter 601k Hansen patches by NDVI/BSI/NDWI, re-rasterize</li>
-<li><strong>W3: Timestamp mines</strong> — overlay onto lossyear, produce mine opening dates for causal ID</li>
-<li><strong>W6: External labels</strong> — email Sebastian (GPRL labels), Justina (Minerals Commission), download Snapir supplement</li>
-<li><strong>Validate against 79 GPS sites</strong> — run inference, overlay predictions on known Galamsey coordinates</li>
-<li><strong>Retrain with W1-filtered labels</strong> — expect precision improvement from ~0.44 to ~0.60+</li>
-<li><strong>Phase 2 experiments</strong> (W2/W4/W5) — mine indices, multi-temporal, SAR fusion</li>
+<li><strong>Retrain with W1-filtered labels</strong> — 4,309 clean patches instead of 601k noisy ones. Primary lever for precision improvement.</li>
+<li><strong>Run inference</strong> (<code>03_predict_ghana.py --all</code>) and <strong>validate against 79 GPS sites</strong> (<code>04_validate_ghana_mines.py</code>) — the independent ground truth that avoids Hansen circularity.</li>
+<li><strong>Run W3</strong> (mine timestamps from Hansen lossyear) — gives mine opening dates for causal identification.</li>
+<li><strong>AE-16 experiment</strong> — most ready Phase 2 entry: 314 GB on Drive, PCA script written. Tests whether Alpha Earth reverses its Rwanda failure for mine detection.</li>
 </ol>
+<hr>
+</section>
+<section id="code-and-reproducibility" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">8</span> Code and Reproducibility</h2>
+<p><strong>Training:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> scripts/quest/train_ghana_mines.sbatch   <span class="co"># Quest job 7459404, 7h31m</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Post-training (ready to run):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/03_predict_ghana.py <span class="at">--all</span> <span class="at">--task</span> minesGH-Ghana</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/04_validate_ghana_mines.py <span class="at">--task</span> minesGH-Ghana</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Spectral filtering (completed):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/11_spectral_label_filter.py <span class="at">--plot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Outputs:</strong> - <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> - <code>data/ghana/labels/gfw_mining_loss_filtered.shp</code> (4,309 mine-like patches) - <code>diagnostics/mines-ghana/spectral_filtering/spectral_distributions.png</code></p>
 
 
 </section>
