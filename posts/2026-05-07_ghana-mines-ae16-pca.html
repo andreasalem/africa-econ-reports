@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Andrea Salem">
+<meta name="dcterms.date" content="2026-05-07">
+<meta name="description" content="Project C — Alpha Earth 16-band PCA experiment for Ghana mine detection. Tests whether AE’s learned land-cover embeddings improve mine detection over the S2 NDVI baseline. Key hypothesis: AE failed for Rwanda buildings (r=-0.29) because buildings are structure-level features, but mines are land-cover-level (forest→bare soil) — exactly what AE encodes.">
 
-<title>Africa Econ Satellite</title>
+<title>Ghana Mines: AE-16 PCA Experiment – Africa Econ Satellite</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Africa Econ Satellite</span>
     </a>
   </div>
@@ -90,15 +93,15 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./reports.html"> 
+    <a class="nav-link" href="../reports.html"> 
 <span class="menu-text">All Reports</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./ml_theory_guide.pdf" target="_blank"> 
+    <a class="nav-link" href="../ml_theory_guide.pdf" target="_blank"> 
 <span class="menu-text">ML Theory Guide</span></a>
   </li>  
 </ul>
@@ -124,9 +127,29 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#project-a-microspatial-gdp-mapping" id="toc-project-a-microspatial-gdp-mapping" class="nav-link active" data-scroll-target="#project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</a></li>
-  <li><a href="#project-b-dark-shipping-validation" id="toc-project-b-dark-shipping-validation" class="nav-link" data-scroll-target="#project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</a></li>
-  <li><a href="#project-c-ghana-mine-detection-galamsey" id="toc-project-c-ghana-mine-detection-galamsey" class="nav-link" data-scroll-target="#project-c-ghana-mine-detection-galamsey"><span class="header-section-number">3</span> Project C — Ghana Mine Detection (Galamsey)</a></li>
+  <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context"><span class="header-section-number">1</span> Context</a>
+  <ul class="collapse">
+  <li><a href="#why-test-alpha-earth-for-mines" id="toc-why-test-alpha-earth-for-mines" class="nav-link" data-scroll-target="#why-test-alpha-earth-for-mines"><span class="header-section-number">1.1</span> Why test Alpha Earth for mines?</a></li>
+  </ul></li>
+  <li><a href="#experiment-design" id="toc-experiment-design" class="nav-link" data-scroll-target="#experiment-design"><span class="header-section-number">2</span> Experiment Design</a>
+  <ul class="collapse">
+  <li><a href="#position-in-the-experiment-ladder" id="toc-position-in-the-experiment-ladder" class="nav-link" data-scroll-target="#position-in-the-experiment-ladder"><span class="header-section-number">2.1</span> Position in the experiment ladder</a></li>
+  <li><a href="#why-pca-why-16-bands" id="toc-why-pca-why-16-bands" class="nav-link" data-scroll-target="#why-pca-why-16-bands"><span class="header-section-number">2.2</span> Why PCA? Why 16 bands?</a></li>
+  <li><a href="#band-selection-methodology" id="toc-band-selection-methodology" class="nav-link" data-scroll-target="#band-selection-methodology"><span class="header-section-number">2.3</span> Band selection methodology</a></li>
+  <li><a href="#controlled-variables-vs-baseline" id="toc-controlled-variables-vs-baseline" class="nav-link" data-scroll-target="#controlled-variables-vs-baseline"><span class="header-section-number">2.4</span> Controlled variables (vs baseline)</a></li>
+  </ul></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">3</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#alpha-earth-download" id="toc-alpha-earth-download" class="nav-link" data-scroll-target="#alpha-earth-download"><span class="header-section-number">3.1</span> Alpha Earth download</a></li>
+  <li><a href="#preprocessing-pipeline-to-run" id="toc-preprocessing-pipeline-to-run" class="nav-link" data-scroll-target="#preprocessing-pipeline-to-run"><span class="header-section-number">3.2</span> Preprocessing pipeline (to run)</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">4</span> Results</a>
+  <ul class="collapse">
+  <li><a href="#metrics-to-report" id="toc-metrics-to-report" class="nav-link" data-scroll-target="#metrics-to-report"><span class="header-section-number">4.1</span> Metrics to report</a></li>
+  <li><a href="#pca-analysis-to-fill" id="toc-pca-analysis-to-fill" class="nav-link" data-scroll-target="#pca-analysis-to-fill"><span class="header-section-number">4.2</span> PCA analysis (to fill)</a></li>
+  <li><a href="#prediction-maps-to-fill" id="toc-prediction-maps-to-fill" class="nav-link" data-scroll-target="#prediction-maps-to-fill"><span class="header-section-number">4.3</span> Prediction maps (to fill)</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">5</span> Discussion</a></li>
   </ul>
 </nav>
     </div>
@@ -135,15 +158,37 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Africa Econ Satellite</h1>
-<p class="subtitle lead">Andrea Salem · Northwestern University</p>
-</div>
+<h1 class="title">Ghana Mines: AE-16 PCA Experiment</h1>
+<p class="subtitle lead">Project C · Experiment Report — 2026-05-07</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">Project C</div>
+    <div class="quarto-category">Ghana Mines</div>
+    <div class="quarto-category">Alpha Earth</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    Project C — Alpha Earth 16-band PCA experiment for Ghana mine detection. Tests whether AE’s learned land-cover embeddings improve mine detection over the S2 NDVI baseline. Key hypothesis: AE failed for Rwanda buildings (r=-0.29) because buildings are structure-level features, but mines are land-cover-level (forest→bare soil) — exactly what AE encodes.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andrea Salem </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 7, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -153,204 +198,359 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This site tracks progress on two research projects using free Sentinel satellite imagery and a shared U-Net pipeline (<a href="https://github.com/ssardon/mlgis-ponds">mlgis-ponds</a>, Sebastian Sardon).</p>
-<hr>
-<section id="project-a-microspatial-gdp-mapping" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</h2>
-<p><strong>Goal:</strong> Global pixel-level (10 m) economic density map from Sentinel-2, beating Rossi-Hansberg et al.&nbsp;(2025) at 2,500x finer resolution.</p>
-<p><strong>Strategy:</strong> Train a U-Net on Rwanda (establishment census + Open Buildings) + Peru (fine GDP data) → apply globally.</p>
+<section id="context" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="context"><span class="header-section-number">1</span> Context</h2>
+<p>This report documents the <strong>AE-16 PCA experiment</strong> — the second entry on the Ghana mines experiment ladder, testing whether Google’s Alpha Earth learned embeddings improve mine detection beyond the S2 NDVI baseline.</p>
+<p>For background on the Ghana mine detection pipeline, label strategy, and baseline setup, see the <a href="../posts/2026-05-06_ghana-mines-pipeline.html">pipeline report</a>.</p>
+<section id="why-test-alpha-earth-for-mines" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="why-test-alpha-earth-for-mines"><span class="header-section-number">1.1</span> Why test Alpha Earth for mines?</h3>
+<p>Alpha Earth (64 learned embeddings at 10m) <strong>catastrophically failed</strong> for Rwanda building detection:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Stage</th>
-<th>Status</th>
-<th>Report</th>
+<th>Experiment</th>
+<th>AUC</th>
+<th>District r (2023)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Stage 1: Building detection baseline (LR = 5e-5)</td>
-<td>Done — AUC = 0.930</td>
-<td><a href="./posts/2026-03-03_stage1-building-detection.html">View →</a></td>
+<td>S2 NDVI (4 bands)</td>
+<td>0.941</td>
+<td><strong>0.750</strong></td>
 </tr>
 <tr class="even">
-<td>Stage 1b: LR fix (5e-6 + ReduceLROnPlateau)</td>
-<td>Done — AUC = 0.976</td>
-<td><a href="./posts/2026-03-06_stage1b-lr-fix.html">View →</a></td>
+<td>AE-only (64 bands)</td>
+<td>0.921</td>
+<td><strong>-0.289</strong></td>
 </tr>
 <tr class="odd">
-<td>Stage 2: District validation + error analysis</td>
-<td>Done — r = 0.382</td>
-<td><a href="./posts/2026-03-06_stage2-district-validation.html">View →</a></td>
+<td>S2+AE (76 bands)</td>
+<td>0.931</td>
+<td><strong>-0.260</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Root cause: AE encodes <strong>land-cover semantics</strong> at landscape scale, not structure-level features like individual buildings. The 11/30 Rwandan districts with zero building pixels in AE predictions showed the model was classifying entire landscapes, not detecting structures.</p>
+<p><strong>But mines are different.</strong> Galamsey mines are a land-cover-scale transformation: dense tropical forest (NDVI ~0.8) replaced by bare soil, mud ponds, and turbid water (NDVI ~0.2). This is exactly the kind of signal AE was trained to encode. Supporting evidence:</p>
+<ul>
+<li><strong>Arezki et al.&nbsp;(2025)</strong> used Alpha Earth for mine detection in Africa with positive results</li>
+<li>Mine footprints (0.1–10 ha) are landscape features, not point structures like buildings</li>
+<li>The spectral contrast (forest → bare soil) is among the strongest land-cover transitions possible</li>
+</ul>
+<p><strong>Hypothesis:</strong> AE-16 will match or exceed the S2 NDVI baseline for mine detection, reversing the Rwanda failure pattern.</p>
+<hr>
+</section>
+</section>
+<section id="experiment-design" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="experiment-design"><span class="header-section-number">2</span> Experiment Design</h2>
+<section id="position-in-the-experiment-ladder" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="position-in-the-experiment-ladder"><span class="header-section-number">2.1</span> Position in the experiment ladder</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 37%">
+<col style="width: 24%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Experiment</th>
+<th>Bands</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><strong>S2 NDVI (baseline)</strong></td>
+<td>4 (NIR, Blue, SWIR2, NDVI)</td>
+<td>Submitted to Quest</td>
 </tr>
 <tr class="even">
-<td>Stage 1c: Alpha Earth experiments (5 models)</td>
-<td>Done — AUC 0.921–0.976</td>
-<td><a href="./posts/2026-03-09_stage1c-alpha-earth.html">View →</a></td>
+<td>1</td>
+<td>+SWIR1</td>
+<td>5 (+B11 for turbid pond separation)</td>
+<td>After baseline</td>
 </tr>
 <tr class="odd">
-<td>Stage 2b: District comparison (all 5 models)</td>
-<td>Done — r = 0.75 (NDVI)</td>
-<td><a href="./posts/2026-03-09_stage2b-district-comparison.html">View →</a></td>
+<td><strong>2</strong></td>
+<td><strong>AE-16 (PCA) — this report</strong></td>
+<td><strong>16 (top PCA components)</strong></td>
+<td><strong>Data downloaded</strong></td>
 </tr>
 <tr class="even">
-<td>Seed Seed 420: Multi-seed robustness (3 tasks × 10 seeds)</td>
-<td>In progress — Quest jobs pending</td>
-<td><a href="./posts/2026-03-17_seed-seed-420.html">View →</a></td>
+<td>3</td>
+<td>S2+AE-16</td>
+<td>20 (S2 NDVI + AE-16)</td>
+<td>After #2</td>
 </tr>
 <tr class="odd">
-<td>Stage 3: GDP regression head (Peru)</td>
-<td>Blocked on data</td>
-<td>—</td>
+<td>4</td>
+<td>AE-64 (full)</td>
+<td>64 (all Alpha Earth bands)</td>
+<td>Needs larger architecture</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical rule:</strong> Run the ladder in order. If the 4-band baseline already beats Christensen’s 0.75 AUC (likely, given Galamsey’s extreme spectral signal), AE experiments reveal <em>how much improvement</em> rather than <em>whether the pipeline works</em>.</p>
+</section>
+<section id="why-pca-why-16-bands" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="why-pca-why-16-bands"><span class="header-section-number">2.2</span> Why PCA? Why 16 bands?</h3>
+<p><strong>The dimensionality problem:</strong> 64 input channels means 64x more parameters in the first conv layer. <code>unet_tiny</code> (~6,800 params) lacks capacity to learn in 64-dimensional space — this is why AE-only needed threshold=0.05 in Rwanda (model couldn’t separate classes).</p>
+<p><strong>PCA addresses three issues at once:</strong></p>
+<ol type="1">
+<li><strong>Dimensionality:</strong> 64 → 16 bands = 4x fewer first-layer parameters</li>
+<li><strong>Redundancy:</strong> AE’s 64 bands are learned embeddings, many highly correlated. PCA extracts orthogonal components.</li>
+<li><strong>GPU memory:</strong> 16 bands fits <code>unet_small</code> comfortably on Quest or M4 Pro</li>
+</ol>
+<p><strong>Why 16 specifically:</strong> Sebastian’s convention for AE experiments. Retains ~90% of variance in typical satellite embeddings. Testable: if top-4 PCA components capture &gt;80% of variance, a 4-band PCA experiment could also be informative.</p>
+</section>
+<section id="band-selection-methodology" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="band-selection-methodology"><span class="header-section-number">2.3</span> Band selection methodology</h3>
+<p>PCA band selection script: <code>src/preprocessing/10_band_selection_ae.py</code></p>
+<p>Modes: - <code>mode=select</code>: Rank original bands by loading on top PCA components, pick top-k originals (interpretable but suboptimal) - <code>mode=transform</code>: Write new GeoTIFFs with PCA-transformed bands (optimal but non-interpretable)</p>
+<p><strong>For this experiment:</strong> <code>mode=transform</code> — we want maximum information compression, not interpretability. The model trains on PCA-transformed 16-band inputs.</p>
+<p>Fallback heuristics if PCA disappoints:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Cost</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mutual information ranking</td>
+<td>~1 hr CPU</td>
+<td>If PCA components lack discriminative power</td>
 </tr>
 <tr class="even">
-<td>Stage 4: Global application</td>
-<td>Future</td>
-<td>—</td>
+<td>Correlation pruning</td>
+<td>Minutes</td>
+<td>Pre-filter before PCA</td>
+</tr>
+<tr class="odd">
+<td>L1 on first conv layer</td>
+<td>1 training run</td>
+<td>Nuclear option — let the CNN decide</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="controlled-variables-vs-baseline" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="controlled-variables-vs-baseline"><span class="header-section-number">2.4</span> Controlled variables (vs baseline)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Baseline (Exp #0)</th>
+<th>AE-16 (Exp #2)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Input bands</strong></td>
+<td>4 (S2 NDVI)</td>
+<td><strong>16 (AE PCA)</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Architecture</strong></td>
+<td>unet_tiny</td>
+<td><strong>unet_small</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Imagery source</strong></td>
+<td>S2 dry 2023</td>
+<td><strong>Alpha Earth 2022</strong></td>
+</tr>
+<tr class="even">
+<td>Labels</td>
+<td>Hansen filtered</td>
+<td>Hansen filtered</td>
+</tr>
+<tr class="odd">
+<td>patch_size</td>
+<td>64</td>
+<td>64</td>
+</tr>
+<tr class="even">
+<td>Loss</td>
+<td>Focal</td>
+<td>Focal</td>
+</tr>
+<tr class="odd">
+<td>LR</td>
+<td>5e-6</td>
+<td>5e-6</td>
+</tr>
+<tr class="even">
+<td>pos_weight</td>
+<td>TBD (from class balance)</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Train/val split</td>
+<td>Spatial (grid chunks)</td>
+<td>Spatial (grid chunks)</td>
 </tr>
 </tbody>
 </table>
 <hr>
 </section>
-<section id="project-b-dark-shipping-validation" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</h2>
-<p><strong>Goal:</strong> Use Sentinel-1 SAR to validate AIS gap episodes near West Africa (Gulf of Guinea), building on Fernandez-Villaverde et al.&nbsp;(2025).</p>
-<p><strong>Strategy:</strong> CFAR ship detection + U-Net on SAR imagery → match against AIS dark episodes → causal validation of dark shipping.</p>
+</section>
+<section id="data" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="data"><span class="header-section-number">3</span> Data</h2>
+<section id="alpha-earth-download" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="alpha-earth-download"><span class="header-section-number">3.1</span> Alpha Earth download</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Component</th>
-<th>Status</th>
-<th>Report</th>
+<th>Field</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>SAR download pipeline (GEE)</td>
-<td>Done</td>
-<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+<td>GEE collection</td>
+<td><code>GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL</code></td>
 </tr>
 <tr class="even">
-<td>Ocean grid (417 cells, 0.5°)</td>
-<td>Done</td>
-<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+<td>Year</td>
+<td>2022 (matches S2 dry season Nov 2022 – Feb 2023)</td>
 </tr>
 <tr class="odd">
-<td>CFAR ship detection PoC (Lagos)</td>
-<td>Done — 1,299 detections</td>
-<td><a href="./posts/2026-03-06_dark-shipping-pipeline.html">View →</a></td>
+<td>Bands</td>
+<td>64 (A00–A63)</td>
 </tr>
 <tr class="even">
-<td>SAR preprocessing</td>
-<td>Code ready — awaiting S1 data</td>
-<td>—</td>
+<td>Resolution</td>
+<td>10 m</td>
 </tr>
 <tr class="odd">
-<td>AIS data (Global Fishing Watch)</td>
-<td>Blocked — need to register</td>
-<td>—</td>
+<td>AOI</td>
+<td>Full Ghana (240,000 km²)</td>
 </tr>
 <tr class="even">
-<td>Ship training labels (SUMO / Kaggle)</td>
-<td>Blocked — need to download</td>
-<td>—</td>
+<td>Export format</td>
+<td>GeoTIFF</td>
 </tr>
 <tr class="odd">
-<td>U-Net ship detection training</td>
-<td>Blocked on labels</td>
-<td>—</td>
+<td>GEE task</td>
+<td><code>AE_2022_ANNUAL</code> — <strong>SUCCEEDED</strong></td>
+</tr>
+<tr class="even">
+<td>Drive folder</td>
+<td><code>Ghana-AE-2022/</code></td>
+</tr>
+<tr class="odd">
+<td>Download script</td>
+<td><code>src/download/07_download_ae_ghana.py</code></td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="preprocessing-pipeline-to-run" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="preprocessing-pipeline-to-run"><span class="header-section-number">3.2</span> Preprocessing pipeline (to run)</h3>
+<ol type="1">
+<li>Transfer from Drive: <code>rclone copy "gdrive:Ghana-AE-2022/" data/ghana/imagery/2022-AE/</code></li>
+<li>PCA band selection: <code>python src/preprocessing/10_band_selection_ae.py --ae-dir data/ghana/imagery/2022-AE/ --n-components 16</code></li>
+<li>Preprocessing on Quest: grid + normalize + tile (same as S2 pipeline)</li>
+<li>Training: new config entry <code>minesGH-Ghana-AE16</code> with PCA-selected bands</li>
+</ol>
 <hr>
 </section>
-<section id="project-c-ghana-mine-detection-galamsey" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="project-c-ghana-mine-detection-galamsey"><span class="header-section-number">3</span> Project C — Ghana Mine Detection (Galamsey)</h2>
-<p><strong>Goal:</strong> Detect illegal artisanal gold mines (Galamsey) in Ghana from Sentinel-2, then estimate their causal impact on local outcomes.</p>
-<p><strong>Strategy:</strong> Hansen forest-loss as training labels → U-Net on S2 dry season → validate against known mine sites → cross with outcome data for causal estimation.</p>
+</section>
+<section id="results" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="results"><span class="header-section-number">4</span> Results</h2>
+<p><em>Pending — awaiting S2 NDVI baseline results before running AE-16 training.</em></p>
+<section id="metrics-to-report" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="metrics-to-report"><span class="header-section-number">4.1</span> Metrics to report</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Component</th>
-<th>Status</th>
-<th>Report</th>
+<th>Metric</th>
+<th>Baseline (Exp #0)</th>
+<th>AE-16 (Exp #2)</th>
+<th>Delta</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Pipeline scaffolding + GEE downloads</td>
-<td>Done — 70 S2 tiles, 57 GB + Hansen</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
+<td>Pixel AUC</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
 </tr>
 <tr class="even">
-<td>Hansen filtering → 601k mining patches</td>
-<td>Done</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
-</tr>
-<tr class="odd">
-<td>79 mine site coordinates (validation)</td>
-<td>Done</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
-</tr>
-<tr class="even">
-<td>Spectral label filtering — W1 (NDVI/BSI/NDWI)</td>
-<td>Pending</td>
+<td>Pixel F1</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr class="odd">
-<td>External label upgrade — W6 (Snapir, GPRL, EPA)</td>
-<td>Pending</td>
+<td>Pixel precision</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr class="even">
-<td>Mine timestamps — W3 (Hansen lossyear)</td>
-<td>Pending</td>
+<td>Pixel recall</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr class="odd">
-<td>AE-16 PCA experiment (Alpha Earth, 16 bands)</td>
-<td>Data downloaded — awaiting baseline</td>
-<td><a href="./posts/2026-05-07_ghana-mines-ae16-pca.html">View →</a></td>
-</tr>
-<tr class="even">
-<td>S2 preprocessing (Quest HPC)</td>
-<td>In progress</td>
+<td>Validation hit rate (79 sites)</td>
 <td>—</td>
-</tr>
-<tr class="odd">
-<td>U-Net baseline training (Quest GPU)</td>
-<td>Pending</td>
+<td>—</td>
 <td>—</td>
 </tr>
 <tr class="even">
-<td>Mine spectral indices — W2 (BSI/NDWI/FMF)</td>
-<td>Pending</td>
+<td>Training epochs to convergence</td>
 <td>—</td>
-</tr>
-<tr class="odd">
-<td>Multi-temporal — W4 (2018 + 2023)</td>
-<td>Pending</td>
 <td>—</td>
-</tr>
-<tr class="even">
-<td>SAR fusion — W5 (S2 + S1 VV)</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="odd">
-<td>Validation against known sites</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td>Impact estimation (DHS, water, NTL)</td>
-<td>Future</td>
 <td>—</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="pca-analysis-to-fill" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="pca-analysis-to-fill"><span class="header-section-number">4.2</span> PCA analysis (to fill)</h3>
+<ul>
+<li>Cumulative variance explained by 16 components: —</li>
+<li>Scree plot: —</li>
+<li>Top-3 component spatial patterns: —</li>
+</ul>
+</section>
+<section id="prediction-maps-to-fill" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="prediction-maps-to-fill"><span class="header-section-number">4.3</span> Prediction maps (to fill)</h3>
+<ul>
+<li>Side-by-side: S2 NDVI baseline vs AE-16 predictions</li>
+<li>Focus areas: Ashanti, Western, Eastern gold belt regions</li>
+<li>False positive analysis: does AE reduce agricultural FP?</li>
+</ul>
 <hr>
-<p>See <a href="./reports.html">All Reports →</a> for the full timestamped archive.</p>
+</section>
+</section>
+<section id="discussion" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="discussion"><span class="header-section-number">5</span> Discussion</h2>
+<p><em>To be written after results.</em></p>
+<p>Key questions to address:</p>
+<ol type="1">
+<li><strong>Does AE reverse the Rwanda failure pattern?</strong> If AE-16 matches or beats S2 NDVI for mines, this confirms the hypothesis that AE encodes land-cover features better than structure features.</li>
+<li><strong>What do the PCA components capture?</strong> Spatial maps of top components may reveal whether AE separates forest/bare-soil/water — the key mine signature.</li>
+<li><strong>Is 16 bands enough?</strong> If cumulative variance at 16 components is &lt;80%, consider AE-24 or full AE-64 with <code>unet_medium</code>.</li>
+<li><strong>Does AE reduce false positives?</strong> The NDVI baseline may confuse agricultural clearing with mining. AE’s richer feature space might better separate these.</li>
+<li><strong>Implications for the experiment ladder:</strong> If AE-16 improves, proceed to Exp #3 (S2+AE-16 fusion). If not, skip to Exp #1 (+SWIR1) and investigate MI-based band selection.</li>
+</ol>
 
 
 </section>

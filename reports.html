@@ -73,20 +73,76 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    const listingTargetEl = window.document.querySelector('#listing-project-a .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-categories','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
       searchColumns: ["listing-date","listing-title","listing-author"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+    window['quarto-listings']['listing-project-a'] = new List('listing-project-a', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-project-b .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-project-b'] = new List('listing-project-b', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-project-c .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-project-c'] = new List('listing-project-c', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -179,8 +235,16 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#project-a-microspatial-gdp-mapping" id="toc-project-a-microspatial-gdp-mapping" class="nav-link active" data-scroll-target="#project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</a></li>
+  <li><a href="#project-b-dark-shipping-validation" id="toc-project-b-dark-shipping-validation" class="nav-link" data-scroll-target="#project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</a></li>
+  <li><a href="#project-c-ghana-mine-detection" id="toc-project-c-ghana-mine-detection" class="nav-link" data-scroll-target="#project-c-ghana-mine-detection"><span class="header-section-number">3</span> Project C — Ghana Mine Detection</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -205,15 +269,14 @@ window.Quarto = {
 
 
 <p>Timestamped progress reports. Each report captures a snapshot — old reports are never overwritten.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<hr>
+<section id="project-a-microspatial-gdp-mapping" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="project-a-microspatial-gdp-mapping"><span class="header-section-number">1</span> Project A — Microspatial GDP Mapping</h2>
+<div id="listing-project-a" class="quarto-listing quarto-listing-container-table">
 <div class="listing-actions-group">
    <div class="input-group input-group-sm quarto-listing-sort">
     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+    <select id="listing-project-a-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-project-a'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
       <option value="" disabled="" selected="" hidden="">Order By</option>
       <option value="index" data-direction="asc">Default</option>
       <option value="listing-date-sort" data-direction="asc">
@@ -245,10 +308,6 @@ window.Quarto = {
 </th>
 
 <th>
-Categories
-</th>
-
-<th>
 Description
 </th>
 
@@ -256,7 +315,20 @@ Description
 </thead>
 <tbody class="list">
 
-<tr data-index="0" data-categories="UHJvamVjdCUyMEElMkNHRFAlMjBNYXBwaW5n" data-listing-date-sort="1773032400000" data-listing-file-modified-sort="1773076061043" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1241" data-listing-title-sort="Stage 1c: Alpha Earth Experiments" data-listing-filename-sort="2026-03-09_stage1c-alpha-earth.qmd">
+<tr data-index="0" data-categories="UHJvamVjdCUyMEElMkNHRFAlMjBNYXBwaW5nJTJDTWV0aG9kb2xvZ3k=" data-listing-date-sort="1773723600000" data-listing-file-modified-sort="1773770425735" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="824" data-listing-title-sort="Seed Seed 420: Hyperparameter Robustness via Multi-Seed Validation" data-listing-filename-sort="2026-03-17_seed-seed-420.qmd">
+<td>
+<span class="listing-date">2026-03-17</span>
+</td>
+<td>
+<a href="./posts/2026-03-17_seed-seed-420.html" class="title listing-title">Seed Seed 420: Hyperparameter Robustness via Multi-Seed Validation</a>
+</td>
+<td>
+<span class="listing-description">Our Stage 2b finding (NDVI r=0.750) is based on a single random seed. Sebastian Sardon shows that seed variance ≈ hyperparameter variance above LR=1e-5 — most apparent model improvements are luck. This report describes the methodology and will be updated with results once 30 Quest GPU runs complete (3 tasks × 10 seeds).</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-categories="UHJvamVjdCUyMEElMkNHRFAlMjBNYXBwaW5n" data-listing-date-sort="1773032400000" data-listing-file-modified-sort="1773076061043" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1241" data-listing-title-sort="Stage 1c: Alpha Earth Experiments" data-listing-filename-sort="2026-03-09_stage1c-alpha-earth.qmd">
 <td>
 <span class="listing-date">2026-03-09</span>
 </td>
@@ -264,15 +336,12 @@ Description
 <a href="./posts/2026-03-09_stage1c-alpha-earth.html" class="title listing-title">Stage 1c: Alpha Earth Experiments</a>
 </td>
 <td>
-<span class="listing-categories">Project A, GDP Mapping</span>
-</td>
-<td>
 <span class="listing-description">Project A — Five spectral experiments tested: NIR baseline (3 bands), NDVI (4), S2-all (10), Alpha Earth embeddings (64), and S2+AE dual-branch (76). More bands do not improve pixel AUC; NIR baseline remains best at 0.976. Alpha Earth embeddings alone achieve AUC=0.921 with a concerning threshold of 0.05.</span>
 </td>
 
 </tr>
 
-<tr data-index="1" data-categories="UHJvamVjdCUyMEElMkNHRFAlMjBNYXBwaW5n" data-listing-date-sort="1773032400000" data-listing-file-modified-sort="1773094341191" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1559" data-listing-title-sort="Stage 2b: District Validation — 5-Experiment Comparison" data-listing-filename-sort="2026-03-09_stage2b-district-comparison.qmd">
+<tr data-index="2" data-categories="UHJvamVjdCUyMEElMkNHRFAlMjBNYXBwaW5n" data-listing-date-sort="1773032400000" data-listing-file-modified-sort="1773094341191" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1559" data-listing-title-sort="Stage 2b: District Validation — 5-Experiment Comparison" data-listing-filename-sort="2026-03-09_stage2b-district-comparison.qmd">
 <td>
 <span class="listing-date">2026-03-09</span>
 </td>
@@ -280,26 +349,7 @@ Description
 <a href="./posts/2026-03-09_stage2b-district-comparison.html" class="title listing-title">Stage 2b: District Validation — 5-Experiment Comparison</a>
 </td>
 <td>
-<span class="listing-categories">Project A, GDP Mapping</span>
-</td>
-<td>
 <span class="listing-description">Project A — NDVI model achieves district correlation r=0.75 (2023), a 75% improvement over the NIR baseline (r=0.43). Alpha Earth embeddings catastrophically fail at district level (r=-0.29). Pixel AUC does not predict district-level economic correlation.</span>
-</td>
-
-</tr>
-
-<tr data-index="2" data-categories="UHJvamVjdCUyMEIlMkNEYXJrJTIwU2hpcHBpbmc=" data-listing-date-sort="1772776800000" data-listing-file-modified-sort="1772826360285" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="876" data-listing-title-sort="Dark Shipping Pipeline" data-listing-filename-sort="2026-03-06_dark-shipping-pipeline.qmd">
-<td>
-<span class="listing-date">2026-03-06</span>
-</td>
-<td>
-<a href="./posts/2026-03-06_dark-shipping-pipeline.html" class="title listing-title">Dark Shipping Pipeline</a>
-</td>
-<td>
-<span class="listing-categories">Project B, Dark Shipping</span>
-</td>
-<td>
-<span class="listing-description">Project B — SAR download, ocean grid, preprocessing, and CFAR ship detection PoC validated. 1,299 ship candidates at Lagos port. Awaiting AIS data + ship labels.</span>
 </td>
 
 </tr>
@@ -310,9 +360,6 @@ Description
 </td>
 <td>
 <a href="./posts/2026-03-06_stage1b-lr-fix.html" class="title listing-title">Stage 1b: Learning Rate Fix</a>
-</td>
-<td>
-<span class="listing-categories">Project A, GDP Mapping</span>
 </td>
 <td>
 <span class="listing-description">Project A — LR reduced 10x (5e-5 to 5e-6) + ReduceLROnPlateau resolves training instability. AUC improves 0.930 to 0.976. F1=0.974.</span>
@@ -328,9 +375,6 @@ Description
 <a href="./posts/2026-03-06_stage2-district-validation.html" class="title listing-title">Stage 2: District Validation + Error Analysis</a>
 </td>
 <td>
-<span class="listing-categories">Project A, GDP Mapping</span>
-</td>
-<td>
 <span class="listing-description">Project A — Full-country inference on Rwanda (20 chunks, 11.5M building pixels). District-level correlation with census establishments: Pearson r = 0.38. Error analysis reveals FPs are urban fabric, not model failures — NDVI is the key missing band.</span>
 </td>
 
@@ -344,9 +388,6 @@ Description
 <a href="./posts/2026-03-03_stage1-building-detection.html" class="title listing-title">Stage 1: Building Detection, Rwanda</a>
 </td>
 <td>
-<span class="listing-categories">Project A, GDP Mapping</span>
-</td>
-<td>
 <span class="listing-description">Project A — Binary building detection with U-Net (unet_tiny, LR=5e-5). AUC=0.93, F1=0.97. LR instability diagnosed.</span>
 </td>
 
@@ -355,7 +396,152 @@ Description
 </tbody>
 </table>
 <div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+</section>
+<section id="project-b-dark-shipping-validation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="project-b-dark-shipping-validation"><span class="header-section-number">2</span> Project B — Dark Shipping Validation</h2>
+<div id="listing-project-b" class="quarto-listing quarto-listing-container-table">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-project-b-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-project-b'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-date-sort" data-direction="asc">
+        Date - Oldest
+      </option>
+      <option value="listing-date-sort" data-direction="desc">
+        Date - Newest
+      </option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
+</th>
+
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+
+<th>
+Description
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-categories="UHJvamVjdCUyMEIlMkNEYXJrJTIwU2hpcHBpbmc=" data-listing-date-sort="1772776800000" data-listing-file-modified-sort="1772826360285" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="876" data-listing-title-sort="Dark Shipping Pipeline" data-listing-filename-sort="2026-03-06_dark-shipping-pipeline.qmd">
+<td>
+<span class="listing-date">2026-03-06</span>
+</td>
+<td>
+<a href="./posts/2026-03-06_dark-shipping-pipeline.html" class="title listing-title">Dark Shipping Pipeline</a>
+</td>
+<td>
+<span class="listing-description">Project B — SAR download, ocean grid, preprocessing, and CFAR ship detection PoC validated. 1,299 ship candidates at Lagos port. Awaiting AIS data + ship labels.</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+</section>
+<section id="project-c-ghana-mine-detection" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="project-c-ghana-mine-detection"><span class="header-section-number">3</span> Project C — Ghana Mine Detection</h2>
+<div id="listing-project-c" class="quarto-listing quarto-listing-container-table">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-project-c-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-project-c'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-date-sort" data-direction="asc">
+        Date - Oldest
+      </option>
+      <option value="listing-date-sort" data-direction="desc">
+        Date - Newest
+      </option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
+</th>
+
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+
+<th>
+Description
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-categories="UHJvamVjdCUyMEMlMkNHaGFuYSUyME1pbmVzJTJDQWxwaGElMjBFYXJ0aA==" data-listing-date-sort="1778130000000" data-listing-file-modified-sort="1778176951158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1021" data-listing-title-sort="Ghana Mines: AE-16 PCA Experiment" data-listing-filename-sort="2026-05-07_ghana-mines-ae16-pca.qmd">
+<td>
+<span class="listing-date">2026-05-07</span>
+</td>
+<td>
+<a href="./posts/2026-05-07_ghana-mines-ae16-pca.html" class="title listing-title">Ghana Mines: AE-16 PCA Experiment</a>
+</td>
+<td>
+<span class="listing-description">Project C — Alpha Earth 16-band PCA experiment for Ghana mine detection. Tests whether AE’s learned land-cover embeddings improve mine detection over the S2 NDVI baseline. Key hypothesis: AE failed for Rwanda buildings (r=-0.29) because buildings are structure-level features, but mines are land-cover-level (forest→bare soil) — exactly what AE encodes.</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-categories="UHJvamVjdCUyMEMlMkNHaGFuYSUyME1pbmVz" data-listing-date-sort="1778043600000" data-listing-file-modified-sort="1778181424331" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1663" data-listing-title-sort="Ghana Mine Detection Pipeline" data-listing-filename-sort="2026-05-06_ghana-mines-pipeline.qmd">
+<td>
+<span class="listing-date">2026-05-06</span>
+</td>
+<td>
+<a href="./posts/2026-05-06_ghana-mines-pipeline.html" class="title listing-title">Ghana Mine Detection Pipeline</a>
+</td>
+<td>
+<span class="listing-description">Project C — Galamsey (illegal artisanal gold mine) detection in Ghana. S2 imagery downloaded (70 tiles, 57 GB), Hansen forest-loss filtered (601k mining candidate patches), 79 mine site coordinates compiled. Preprocessing on Quest.</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

@@ -2,12 +2,15 @@
   {
     "listing": "/reports.html",
     "items": [
+      "/posts/2026-03-17_seed-seed-420.html",
       "/posts/2026-03-09_stage1c-alpha-earth.html",
       "/posts/2026-03-09_stage2b-district-comparison.html",
-      "/posts/2026-03-06_dark-shipping-pipeline.html",
       "/posts/2026-03-06_stage1b-lr-fix.html",
       "/posts/2026-03-06_stage2-district-validation.html",
-      "/posts/2026-03-03_stage1-building-detection.html"
+      "/posts/2026-03-03_stage1-building-detection.html",
+      "/posts/2026-03-06_dark-shipping-pipeline.html",
+      "/posts/2026-05-07_ghana-mines-ae16-pca.html",
+      "/posts/2026-05-06_ghana-mines-pipeline.html"
     ]
   }
 ]
