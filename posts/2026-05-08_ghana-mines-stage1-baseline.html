@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,6 +12,9 @@
 
 <title>Ghana Mines Stage 1: Baseline Training – Africa Econ Satellite</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -70,15 +73,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -108,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -203,10 +205,11 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#spectral-label-filtering-w1" id="toc-spectral-label-filtering-w1" class="nav-link" data-scroll-target="#spectral-label-filtering-w1"><span class="header-section-number">4.1</span> Spectral Label Filtering (W1)</a></li>
   </ul></li>
-  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">5</span> Known Issues</a></li>
-  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">6</span> Updated Project Status</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">7</span> Next Steps</a></li>
-  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">8</span> Code and Reproducibility</a></li>
+  <li><a href="#mine-timestamps-w3" id="toc-mine-timestamps-w3" class="nav-link" data-scroll-target="#mine-timestamps-w3"><span class="header-section-number">5</span> Mine Timestamps (W3)</a></li>
+  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">6</span> Known Issues</a></li>
+  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">7</span> Updated Project Status</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">8</span> Next Steps</a></li>
+  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</a></li>
   </ul>
 </nav>
     </div>
@@ -439,8 +442,99 @@ window.Quarto = {
 <hr>
 </section>
 </section>
-<section id="known-issues" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">5</span> Known Issues</h2>
+<section id="mine-timestamps-w3" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="mine-timestamps-w3"><span class="header-section-number">5</span> Mine Timestamps (W3)</h2>
+<p>With the 4,309 spectrally-filtered patches in hand, we extracted the opening year of each mine from the Hansen lossyear raster (<code>12_timestamp_mines_hansen.py</code>). For each connected patch, the modal lossyear value gives the year of dominant forest clearance.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 27%">
+<col style="width: 33%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Year</th>
+<th>Patches</th>
+<th>Area (ha)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2015</td>
+<td>380</td>
+<td>310</td>
+<td>First year in filtered range</td>
+</tr>
+<tr class="even">
+<td>2016</td>
+<td>616</td>
+<td>532</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>2017</td>
+<td>487</td>
+<td>456</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>2018</td>
+<td>407</td>
+<td>416</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>2019</strong></td>
+<td><strong>271</strong></td>
+<td><strong>277</strong></td>
+<td><strong>Dip — Operation Vanguard crackdown?</strong></td>
+</tr>
+<tr class="even">
+<td>2020</td>
+<td>556</td>
+<td>604</td>
+<td>Rebound — crackdown lapsed</td>
+</tr>
+<tr class="odd">
+<td>2021</td>
+<td>439</td>
+<td>556</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>2022</strong></td>
+<td><strong>730</strong></td>
+<td><strong>1,040</strong></td>
+<td><strong>Peak year — galamsey surge</strong></td>
+</tr>
+<tr class="odd">
+<td>2023</td>
+<td>423</td>
+<td>514</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td><strong>4,309</strong></td>
+<td><strong>4,705</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../diagnostics/mines-ghana/timestamps/mines_by_year.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Mining patches by opening year</figcaption>
+</figure>
+</div>
+<p><strong>Key finding:</strong> The 2019 dip (271 patches, lowest year) coincides with Ghana’s “Operation Vanguard” military crackdown on galamsey. The sharp 2020 rebound (2<span class="math inline">\(\times\)</span> increase) followed by the 2022 surge (peak at 730 patches, 1,040 ha) suggests the crackdown was temporary. This temporal pattern provides <strong>free causal identification</strong> for impact estimation: mine opening date serves as a treatment event for diff-in-diff / event study designs without requiring any manual date annotation.</p>
+<p><strong>Outputs:</strong> <code>data/ghana/labels/mine_timestamps.gpkg</code> (4,309 features with geometry, <code>opening_year</code>, <code>area_ha</code>) and <code>mine_timestamps.csv</code>.</p>
+<hr>
+</section>
+<section id="known-issues" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">6</span> Known Issues</h2>
 <ol type="1">
 <li><p><strong>pos_weight override:</strong> Runtime calculation sampled zero positives from TFRecord start, defaulted to 1.0 instead of configured 30. Likely slowed early convergence.</p></li>
 <li><p><strong>No spatial inference validation yet.</strong> Reported metrics are from <code>model.evaluate()</code>, not sliding-window inference over full chunks. Scripts ready (<code>03_predict_ghana.py</code>, <code>04_validate_ghana_mines.py</code>).</p></li>
@@ -448,8 +542,8 @@ window.Quarto = {
 </ol>
 <hr>
 </section>
-<section id="updated-project-status" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">6</span> Updated Project Status</h2>
+<section id="updated-project-status" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">7</span> Updated Project Status</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -491,25 +585,30 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>W3: Mine timestamps</td>
-<td>Ready</td>
-<td>Script + lossyear downloaded</td>
+<td>Done</td>
+<td>4,309 patches → 2015–2023, peak 2022 (4,705 ha)</td>
 </tr>
 <tr class="odd">
-<td>Retrain with filtered labels</td>
-<td>Next</td>
-<td>Expect precision improvement</td>
+<td>W6: External labels</td>
+<td>Sources identified</td>
+<td>8 sources, all need human action</td>
 </tr>
 <tr class="even">
+<td>Retrain with filtered labels</td>
+<td>Next</td>
+<td>Re-rasterize W1 labels, expect precision improvement</td>
+</tr>
+<tr class="odd">
 <td>Inference + GPS validation</td>
 <td>Next</td>
 <td>03/04 scripts ready</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Phase 2 experiments (AE-16, W2–W5)</td>
 <td>Planned</td>
 <td>After retrain</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Impact estimation</td>
 <td>Future</td>
 <td>DHS, water quality, night lights</td>
@@ -518,18 +617,19 @@ window.Quarto = {
 </table>
 <hr>
 </section>
-<section id="next-steps" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">7</span> Next Steps</h2>
+<section id="next-steps" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">8</span> Next Steps</h2>
 <ol type="1">
-<li><strong>Retrain with W1-filtered labels</strong> — 4,309 clean patches instead of 601k noisy ones. Primary lever for precision improvement.</li>
+<li><strong>Re-rasterize W1-filtered labels</strong> — align 4,309 filtered patches to S2 imagery grid via <code>08_make_labels_ghana.py</code>, producing <code>Ghana_Mines_binary_filtered.tif</code> for retraining.</li>
+<li><strong>Retrain with filtered labels</strong> — expect precision improvement from 0.44 to ~0.60+ as cocoa/logging contamination is removed.</li>
 <li><strong>Run inference</strong> (<code>03_predict_ghana.py --all</code>) and <strong>validate against 79 GPS sites</strong> (<code>04_validate_ghana_mines.py</code>) — the independent ground truth that avoids Hansen circularity.</li>
-<li><strong>Run W3</strong> (mine timestamps from Hansen lossyear) — gives mine opening dates for causal identification.</li>
+<li><strong>W6: External labels</strong> — 8 sources identified (Snapir polygons, Sebastian GPRL, Ghana Minerals Commission, OSM, GLAD alerts, Planet NICFI, Delve/artisanalGold). All need human action (emails, downloads). Long lead time.</li>
 <li><strong>AE-16 experiment</strong> — most ready Phase 2 entry: 314 GB on Drive, PCA script written. Tests whether Alpha Earth reverses its Rwanda failure for mine detection.</li>
 </ol>
 <hr>
 </section>
-<section id="code-and-reproducibility" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">8</span> Code and Reproducibility</h2>
+<section id="code-and-reproducibility" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</h2>
 <p><strong>Training:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> scripts/quest/train_ghana_mines.sbatch   <span class="co"># Quest job 7459404, 7h31m</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Post-training (ready to run):</strong></p>
@@ -537,7 +637,9 @@ window.Quarto = {
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/04_validate_ghana_mines.py <span class="at">--task</span> minesGH-Ghana</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Spectral filtering (completed):</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/11_spectral_label_filter.py <span class="at">--plot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Outputs:</strong> - <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> - <code>data/ghana/labels/gfw_mining_loss_filtered.shp</code> (4,309 mine-like patches) - <code>diagnostics/mines-ghana/spectral_filtering/spectral_distributions.png</code></p>
+<p><strong>Mine timestamps (completed):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/12_timestamp_mines_hansen.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Outputs:</strong> - <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> - <code>data/ghana/labels/gfw_mining_loss_filtered.shp</code> (4,309 mine-like patches) - <code>data/ghana/labels/mine_timestamps.gpkg</code> (4,309 timestamped polygons) - <code>data/ghana/labels/mine_timestamps.csv</code> (flat CSV for causal analysis) - <code>diagnostics/mines-ghana/spectral_filtering/spectral_distributions.png</code> - <code>diagnostics/mines-ghana/timestamps/mines_by_year.png</code></p>
 
 
 </section>
