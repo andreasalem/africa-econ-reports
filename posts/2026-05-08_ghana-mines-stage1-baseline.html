@@ -184,8 +184,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#task-scaffolding" id="toc-task-scaffolding" class="nav-link" data-scroll-target="#task-scaffolding"><span class="header-section-number">3.1</span> Task Scaffolding</a></li>
   <li><a href="#architecture-and-hyperparameters" id="toc-architecture-and-hyperparameters" class="nav-link" data-scroll-target="#architecture-and-hyperparameters"><span class="header-section-number">3.2</span> Architecture and Hyperparameters</a></li>
-  <li><a href="#train-validation-split" id="toc-train-validation-split" class="nav-link" data-scroll-target="#train-validation-split"><span class="header-section-number">3.3</span> Train / Validation Split</a></li>
-  <li><a href="#training-run" id="toc-training-run" class="nav-link" data-scroll-target="#training-run"><span class="header-section-number">3.4</span> Training run</a></li>
+  <li><a href="#what-the-model-sees-example-patch" id="toc-what-the-model-sees-example-patch" class="nav-link" data-scroll-target="#what-the-model-sees-example-patch"><span class="header-section-number">3.3</span> What the Model Sees — Example Patch</a></li>
+  <li><a href="#coverage-of-local-s2-tiles" id="toc-coverage-of-local-s2-tiles" class="nav-link" data-scroll-target="#coverage-of-local-s2-tiles"><span class="header-section-number">3.4</span> Coverage of Local S2 Tiles</a></li>
+  <li><a href="#train-validation-split" id="toc-train-validation-split" class="nav-link" data-scroll-target="#train-validation-split"><span class="header-section-number">3.5</span> Train / Validation Split</a></li>
+  <li><a href="#training-run" id="toc-training-run" class="nav-link" data-scroll-target="#training-run"><span class="header-section-number">3.6</span> Training run</a></li>
   </ul></li>
   <li><a href="#stage-1-results" id="toc-stage-1-results" class="nav-link" data-scroll-target="#stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</a>
   <ul class="collapse">
@@ -199,17 +201,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#w1-spectral-label-filtering" id="toc-w1-spectral-label-filtering" class="nav-link" data-scroll-target="#w1-spectral-label-filtering"><span class="header-section-number">5.1</span> W1: Spectral Label Filtering</a></li>
   </ul></li>
   <li><a href="#w3-mine-timestamps-from-hansen-lossyear" id="toc-w3-mine-timestamps-from-hansen-lossyear" class="nav-link" data-scroll-target="#w3-mine-timestamps-from-hansen-lossyear"><span class="header-section-number">6</span> W3: Mine Timestamps from Hansen Lossyear</a></li>
-  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">7</span> Known Issues</a></li>
-  <li><a href="#anticipated-questions" id="toc-anticipated-questions" class="nav-link" data-scroll-target="#anticipated-questions"><span class="header-section-number">8</span> Anticipated Questions</a></li>
-  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">9</span> Updated Project Status</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">10</span> Next Steps</a></li>
-  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">11</span> Code and Reproducibility</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">12</span> References</a>
+  <li><a href="#error-analysis-deferred-pending-spatial-inference" id="toc-error-analysis-deferred-pending-spatial-inference" class="nav-link" data-scroll-target="#error-analysis-deferred-pending-spatial-inference"><span class="header-section-number">7</span> Error Analysis (Deferred — Pending Spatial Inference)</a></li>
+  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">8</span> Known Issues</a></li>
+  <li><a href="#anticipated-questions" id="toc-anticipated-questions" class="nav-link" data-scroll-target="#anticipated-questions"><span class="header-section-number">9</span> Anticipated Questions</a></li>
+  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">10</span> Updated Project Status</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">11</span> Next Steps</a></li>
+  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">12</span> Code and Reproducibility</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">13</span> References</a>
   <ul class="collapse">
-  <li><a href="#detection-remote-sensing-of-mines" id="toc-detection-remote-sensing-of-mines" class="nav-link" data-scroll-target="#detection-remote-sensing-of-mines"><span class="header-section-number">12.1</span> Detection (remote sensing of mines)</a></li>
-  <li><a href="#environmental-and-development-economics-enforcement-and-remote-sensing" id="toc-environmental-and-development-economics-enforcement-and-remote-sensing" class="nav-link" data-scroll-target="#environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">12.2</span> Environmental and development economics — enforcement and remote sensing</a></li>
-  <li><a href="#trade-firms-and-environment-pse-ollivier-line" id="toc-trade-firms-and-environment-pse-ollivier-line" class="nav-link" data-scroll-target="#trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">12.3</span> Trade, firms, and environment (PSE / Ollivier line)</a></li>
-  <li><a href="#galamsey-mercury-and-ghana-specific" id="toc-galamsey-mercury-and-ghana-specific" class="nav-link" data-scroll-target="#galamsey-mercury-and-ghana-specific"><span class="header-section-number">12.4</span> Galamsey, mercury, and Ghana-specific</a></li>
+  <li><a href="#detection-remote-sensing-of-mines" id="toc-detection-remote-sensing-of-mines" class="nav-link" data-scroll-target="#detection-remote-sensing-of-mines"><span class="header-section-number">13.1</span> Detection (remote sensing of mines)</a></li>
+  <li><a href="#environmental-and-development-economics-enforcement-and-remote-sensing" id="toc-environmental-and-development-economics-enforcement-and-remote-sensing" class="nav-link" data-scroll-target="#environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">13.2</span> Environmental and development economics — enforcement and remote sensing</a></li>
+  <li><a href="#trade-firms-and-environment-pse-ollivier-line" id="toc-trade-firms-and-environment-pse-ollivier-line" class="nav-link" data-scroll-target="#trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">13.3</span> Trade, firms, and environment (PSE / Ollivier line)</a></li>
+  <li><a href="#galamsey-mercury-and-ghana-specific" id="toc-galamsey-mercury-and-ghana-specific" class="nav-link" data-scroll-target="#galamsey-mercury-and-ghana-specific"><span class="header-section-number">13.4</span> Galamsey, mercury, and Ghana-specific</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -671,9 +674,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>NDVI was added as the 4th band based on Rwanda Stage 2 error analysis: in the 3-band feature space (NIR/Blue/SWIR2), false-positive and true-positive pixels were spectrally indistinguishable, but NDVI clearly separated them. For mines the same logic applies in reverse — NDVI is the strongest forest→mine contrast, so adding it as an explicit input rather than letting the model derive it from Red+NIR is the cheapest available improvement.</p>
 </section>
-<section id="train-validation-split" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="train-validation-split"><span class="header-section-number">3.3</span> Train / Validation Split</h3>
-<p>The split is <strong>spatial</strong> (every-5th-chunk interleave), preventing geographic leakage between train and val. Of 117 preprocessed S2 chunks:</p>
+<section id="what-the-model-sees-example-patch" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="what-the-model-sees-example-patch"><span class="header-section-number">3.3</span> What the Model Sees — Example Patch</h3>
+<p>A representative 256×256 patch (2.56 × 2.56 km at 10 m) from the densest local tile. The mine cluster is invisible in true colour but pops sharply in the false-colour composite (magenta = bare lateritic soil; teal = turbid water ponds), which is exactly the contrast NDVI captures.</p>
+<div id="fig-sample-patch" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sample-patch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ghana_mines_sample_patch.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sample-patch-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Sample patch from the central Ghana gold belt. Panels: (1) true colour — visually ambiguous; (2) NIR — vegetation bright, mines + water dark; (3) false colour (NIR/SWIR2/Blue) — bare soil and ore-washing ponds light up; (4) W1-filtered mine label overlaid in red. The model receives panel 2’s NIR + Blue + SWIR2 + NDVI as input.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="coverage-of-local-s2-tiles" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="coverage-of-local-s2-tiles"><span class="header-section-number">3.4</span> Coverage of Local S2 Tiles</h3>
+<p>Only 38 of the 70 GEE-exported S2 tiles are mirrored locally (the rest live on Quest scratch). Critically, the local mirror is biased toward <strong>central / northern Ghana</strong>, while most galamsey activity — and most of the <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/galamsey_sites.csv">79 GPS validation sites</a> — sits in the <strong>south-western gold belt</strong> (Ashanti, Western, Western North). Quest has the full 70-tile coverage; this report’s local-only diagnostics underestimate W1 yield and label density accordingly.</p>
+<div id="fig-tile-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tile-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ghana_mines_tile_overview.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tile-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Local S2 tile coverage and W1-filtered mine label density. Numbers are mine-label pixels per tile (after W1 spectral filter). Navy ×: 79 GPS-coded galamsey sites. Note the clustering of validation sites in the south-west, only partially covered by local tiles.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="train-validation-split" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="train-validation-split"><span class="header-section-number">3.5</span> Train / Validation Split</h3>
+<p>The split is <strong>spatial</strong> (every-5th-chunk interleave), preventing geographic leakage between train and val. Of 117 preprocessed S2 chunks (Quest):</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -697,8 +728,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The high positive fraction (vs ~1 % for Rwanda buildings) reflects two effects: (i) only gold-belt chunks are in the dataset, where positive density is concentrated, and (ii) Hansen polygons are dilated to capture the full disturbance footprint, not just the mine pit.</p>
 </section>
-<section id="training-run" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="training-run"><span class="header-section-number">3.4</span> Training run</h3>
+<section id="training-run" class="level3" data-number="3.6">
+<h3 data-number="3.6" class="anchored" data-anchor-id="training-run"><span class="header-section-number">3.6</span> Training run</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -737,7 +768,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="4" class="anchored" data-anchor-id="stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</h2>
 <section id="headline-metrics" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="headline-metrics"><span class="header-section-number">4.1</span> Headline metrics</h3>
-<div id="012a409e" class="cell" data-execution_count="2">
+<div id="406c40e5" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display cell-output-markdown">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -817,34 +848,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="learning-curve" class="level3" data-number="4.4">
 <h3 data-number="4.4" class="anchored" data-anchor-id="learning-curve"><span class="header-section-number">4.4</span> Learning curve</h3>
-<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-panel" data-layout="[56,44]">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-layout-cell" style="flex-basis: 56.0%;justify-content: flex-start;">
 <div id="fig-train" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/ghana_mines_training_progress.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../figures/ghana_mines_training_progress.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Training and validation metrics — val AUC plateaus at ~0.86 by epoch 13, ReduceLROnPlateau fires at epochs 11/16/21
+Figure&nbsp;3: Training and validation metrics — val AUC plateaus at ~0.86 by epoch 13; ReduceLROnPlateau fires at epochs 11/16/21.
 </figcaption>
 </figure>
 </div>
 </div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-layout-cell" style="flex-basis: 44.0%;justify-content: flex-start;">
 <div id="fig-roc" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/ghana_mines_roc_curve.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../figures/ghana_mines_roc_curve.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: ROC curve — AUC = 0.861
+Figure&nbsp;4: ROC curve — AUC = 0.861.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
+<p>(Layout widths chosen so the two figures render at the same height despite differing native aspect ratios — 1.65 vs 1.32.)</p>
 <p>The convergence pattern matches Rwanda Stage 1b (LR-fixed): monotonic improvement to a plateau, no overshoot, three adaptive LR halvings squeezing the final 0.005 AUC out of the model. The diagnostic from Rwanda — train and val curves moving together — confirms the optimizer is converging rather than overshooting.</p>
 <hr>
 </section>
@@ -886,7 +918,7 @@ Figure&nbsp;2: ROC curve — AUC = 0.861
 <img src="../figures/ghana_mines_spectral_distributions.png" class="img-fluid figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Spectral distributions — mine-like patches (red) vs removed (gray). NDVI clearly separates the two populations; BSI provides additional discrimination at high values.
+Figure&nbsp;5: Spectral distributions — mine-like patches (red) vs removed (gray). NDVI clearly separates the two populations; BSI provides additional discrimination at high values.
 </figcaption>
 </figure>
 </div>
@@ -983,7 +1015,7 @@ Figure&nbsp;3: Spectral distributions — mine-like patches (red) vs removed (gr
 <img src="../../diagnostics/mines-ghana/timestamps/mines_by_year.png" class="img-fluid figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timestamps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation Vanguard) followed by 2020 rebound and 2022 peak.
+Figure&nbsp;6: Mining patches by opening year — clear dip in 2019 (Operation Vanguard) followed by 2020 rebound and 2022 peak.
 </figcaption>
 </figure>
 </div>
@@ -991,8 +1023,69 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 <p><strong>Timestamp script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/12_timestamp_mines_hansen.py"><code>src/preprocessing/12_timestamp_mines_hansen.py</code></a> <strong>Outputs:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/mine_timestamps.gpkg"><code>data/ghana/labels/mine_timestamps.gpkg</code></a> (4,309 features with <code>opening_year</code>, <code>area_ha</code>) and <code>mine_timestamps.csv</code>.</p>
 <hr>
 </section>
-<section id="known-issues" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">7</span> Known Issues</h2>
+<section id="error-analysis-deferred-pending-spatial-inference" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="error-analysis-deferred-pending-spatial-inference"><span class="header-section-number">7</span> Error Analysis (Deferred — Pending Spatial Inference)</h2>
+<blockquote class="blockquote">
+<p>“Show me concrete examples of where the model makes mistakes. Visualize performance, then come up with clever fixes.” — Sebastian, 2026-03-06 (Rwanda Stage 2)</p>
+</blockquote>
+<p>For Rwanda Stage 2 the Sebastian-style error gallery (FP/FN patches, spectral profiles by error class, NDVI-binned confusion) was the single most useful diagnostic — it revealed that Rwanda FPs were urban fabric outside Open Buildings polygons rather than model failures, and that NDVI was the missing discriminant. The same exercise for Ghana is the <strong>highest-priority Stage 2 deliverable</strong>, but it requires sliding-window inference output that does not yet exist:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Visualization</th>
+<th>Status</th>
+<th>Blocker</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sample patch (NIR / SWIR2 / false-colour / label)</td>
+<td><strong>Done</strong> — see <a href="#fig-sample-patch" class="quarto-xref">Figure&nbsp;1</a> above</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Local tile coverage + label density</td>
+<td><strong>Done</strong> — see <a href="#fig-tile-overview" class="quarto-xref">Figure&nbsp;2</a> above</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>Top-16 false-positive gallery</td>
+<td>Pending</td>
+<td>Need <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/03_predict_ghana.py"><code>03_predict_ghana.py</code></a> inference output</td>
+</tr>
+<tr class="even">
+<td>Top-16 false-negative gallery</td>
+<td>Pending</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Spectral profiles by error class (TP / FP / FN)</td>
+<td>Pending</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Confusion binned by NDVI and BSI</td>
+<td>Pending</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Choropleth: predicted vs Hansen mine density per district</td>
+<td>Pending</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Predictions vs 79 GPS sites — hit-rate map</td>
+<td>Pending</td>
+<td>Same + <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/04_validate_ghana_mines.py"><code>04_validate_ghana_mines.py</code></a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why deferred.</strong> Stage 1 metrics (AUC, precision, recall) come from <code>model.evaluate()</code> on val patches — a per-patch metric. The Sebastian-style gallery requires sliding-window predictions over full chunks, picking the patches with the worst FP / FN counts, and re-extracting their S2 + label arrays. The two scripts above are written; the output is the next compute step on Quest. Expected runtime: ~2 h on A100 for all 70 tiles.</p>
+<p><strong>What we expect to find.</strong> Based on the W1 spectral filter result (92.5 % of Hansen patches are spectrally inconsistent with mining), the dominant FP class will be <strong>cocoa farm clearings on the Birimian belt</strong> — same size, same geography, no bare-soil signature. The dominant FN class will be <strong>small heavily vegetated mines</strong> (regrowth in 1–2 years after pit abandonment) where NDVI partially recovers. The Stage 1b retrain on W1-filtered labels should compress both error classes; the gallery is the way to verify this rather than read it off a single AUC number.</p>
+<hr>
+</section>
+<section id="known-issues" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">8</span> Known Issues</h2>
 <ol type="1">
 <li><strong><code>pos_weight</code> override at runtime.</strong> The runtime auto-calculation sampled zero positives from the TFRecord start and defaulted to 1.0 instead of the configured 30. Likely slowed early convergence; will re-test with explicit override in Stage 1b.</li>
 <li><strong>No spatial inference yet.</strong> Reported metrics are from <code>model.evaluate()</code> on val patches, not sliding-window inference over full chunks. Scripts ready: <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/03_predict_ghana.py"><code>03_predict_ghana.py</code></a>, <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/04_validate_ghana_mines.py"><code>04_validate_ghana_mines.py</code></a>.</li>
@@ -1000,8 +1093,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 </ol>
 <hr>
 </section>
-<section id="anticipated-questions" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="anticipated-questions"><span class="header-section-number">8</span> Anticipated Questions</h2>
+<section id="anticipated-questions" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="anticipated-questions"><span class="header-section-number">9</span> Anticipated Questions</h2>
 <p><em>Pre-empting likely PI review questions.</em></p>
 <p><strong>Q: AUC 0.861 beats Christensen 0.75 — are we comparing apples to apples?</strong> Same metric (pixel-level AUC), same sensor family (Sentinel-2), same continent. Differences: Christensen used random convolutional features (an older method), trained continent-wide rather than country-specific, and targeted <em>all</em> mine types (industrial + artisanal) in semi-arid Tanzania. Our setting is country-specific and targets artisanal mines in tropical forest, which has stronger spectral contrast. We expect the AUC gap to <em>grow</em> once W1-filtered labels are used, then <em>narrow somewhat</em> if we apply the model out-of-domain to Tanzania for a true apples-to-apples replication.</p>
 <p><strong>Q: Precision 0.437 sounds bad — is the model unusable?</strong> Against Hansen labels, yes precision is poor — but Hansen mislabels cocoa as mining, so the precision number is contaminated from below. The W1 spectral filter shows that 92.5 % of the Hansen “mining” patches are not spectrally consistent with mining. The model is correctly <em>not</em> responding to those false labels; precision against W1-filtered ground truth is mechanically much higher. The clean test is Stage 2 hit-rate validation against the 79 GPS sites, which are independent of Hansen.</p>
@@ -1015,8 +1108,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 <p><strong>Q: What’s the realistic ceiling for this project?</strong> Christensen got into NBER; Arezki is at Oxford. Detection alone is publishable in a field journal (JEBO, JAERE, <em>Land Economics</em>). The top-5 path (or <em>JEEM</em> / <em>REEP</em> under Ollivier’s editorship) requires the <em>causal impact</em> layer: mine opening dates × DHS health × water quality × night lights, exploiting Operation Vanguard for identification. The detection model is the measurement instrument; the environmental and welfare impact estimation is the contribution.</p>
 <hr>
 </section>
-<section id="updated-project-status" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">9</span> Updated Project Status</h2>
+<section id="updated-project-status" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">10</span> Updated Project Status</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1085,8 +1178,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 </table>
 <hr>
 </section>
-<section id="next-steps" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">10</span> Next Steps</h2>
+<section id="next-steps" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">11</span> Next Steps</h2>
 <ol type="1">
 <li><strong>Re-rasterize W1-filtered labels.</strong> Align 4,309 filtered patches to the S2 imagery grid via <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/08_make_labels_ghana.py"><code>08_make_labels_ghana.py</code></a>, producing <code>Ghana_Mines_binary_filtered.tif</code> for retraining.</li>
 <li><strong>Stage 1b: Retrain on filtered labels.</strong> Same architecture and hyperparameters as Stage 1; expect precision 0.44 → ≥ 0.60.</li>
@@ -1096,8 +1189,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 </ol>
 <hr>
 </section>
-<section id="code-and-reproducibility" class="level2" data-number="11">
-<h2 data-number="11" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">11</span> Code and Reproducibility</h2>
+<section id="code-and-reproducibility" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">12</span> Code and Reproducibility</h2>
 <p><strong>Best model:</strong> <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> <strong>Config entry:</strong> <code>minesGH-Ghana</code> in <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/config/config.yaml"><code>config/config.yaml</code></a> <strong>Quest job:</strong> 7459404 (7 h 31 m on A100, allocation <code>p32315</code>)</p>
 <p><strong>Reproduce training:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> scripts/quest/train_ghana_mines.sbatch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1118,10 +1211,10 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 </ul>
 <hr>
 </section>
-<section id="references" class="level2" data-number="12">
-<h2 data-number="12" class="anchored" data-anchor-id="references"><span class="header-section-number">12</span> References</h2>
-<section id="detection-remote-sensing-of-mines" class="level3" data-number="12.1">
-<h3 data-number="12.1" class="anchored" data-anchor-id="detection-remote-sensing-of-mines"><span class="header-section-number">12.1</span> Detection (remote sensing of mines)</h3>
+<section id="references" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="references"><span class="header-section-number">13</span> References</h2>
+<section id="detection-remote-sensing-of-mines" class="level3" data-number="13.1">
+<h3 data-number="13.1" class="anchored" data-anchor-id="detection-remote-sensing-of-mines"><span class="header-section-number">13.1</span> Detection (remote sensing of mines)</h3>
 <ul>
 <li>Arezki, R., et al.&nbsp;(2025). <em>Detecting mines in Africa with Alpha Earth and CNNs</em>. Oxford CSAE working paper.</li>
 <li>Christensen, P., et al.&nbsp;(2025). <em>Detecting mining activity from space across Africa</em>. NBER Working Paper.</li>
@@ -1129,8 +1222,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 <li>Hansen, M. C., et al.&nbsp;(2013). High-resolution global maps of 21st-century forest cover change. <em>Science</em>, 342(6160), 850–853. (GFC v1.13 used here.)</li>
 </ul>
 </section>
-<section id="environmental-and-development-economics-enforcement-and-remote-sensing" class="level3" data-number="12.2">
-<h3 data-number="12.2" class="anchored" data-anchor-id="environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">12.2</span> Environmental and development economics — enforcement and remote sensing</h3>
+<section id="environmental-and-development-economics-enforcement-and-remote-sensing" class="level3" data-number="13.2">
+<h3 data-number="13.2" class="anchored" data-anchor-id="environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">13.2</span> Environmental and development economics — enforcement and remote sensing</h3>
 <ul>
 <li>Burgess, R., Hansen, M., Olken, B. A., Potapov, P., &amp; Sieber, S. (2012). The political economy of deforestation in the tropics. <em>Quarterly Journal of Economics</em>, 127(4), 1707–1754.</li>
 <li>Balboni, C., Burgess, R., &amp; Olken, B. A. (2025). The origins and control of forest fires in the tropics. <em>Review of Economic Studies</em> (forthcoming). VoxDev summary: <a href="https://voxdev.org/topic/energy-environment/climate-politics-understanding-political-inaction-climate-change">“Climate politics: Understanding political inaction on climate change”</a>.</li>
@@ -1139,8 +1232,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 <li>Jayachandran, S. (2009). Air quality and early-life mortality: Evidence from Indonesia’s wildfires. <em>Journal of Human Resources</em>, 44(4), 916–954.</li>
 </ul>
 </section>
-<section id="trade-firms-and-environment-pse-ollivier-line" class="level3" data-number="12.3">
-<h3 data-number="12.3" class="anchored" data-anchor-id="trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">12.3</span> Trade, firms, and environment (PSE / Ollivier line)</h3>
+<section id="trade-firms-and-environment-pse-ollivier-line" class="level3" data-number="13.3">
+<h3 data-number="13.3" class="anchored" data-anchor-id="trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">13.3</span> Trade, firms, and environment (PSE / Ollivier line)</h3>
 <ul>
 <li>Ollivier, H. (2012). Growth, deforestation and the efficiency of the REDD mechanism. <em>Journal of Environmental Economics and Management</em>, 64(3), 312–327.</li>
 <li>Barrows, G., &amp; Ollivier, H. (2018). Cleaner firms or cleaner products? How product mix shapes emission intensity from manufacturing. <em>Journal of Environmental Economics and Management</em>, 88, 134–158.</li>
@@ -1148,8 +1241,8 @@ Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation V
 <li>See also: <a href="https://www.parisschoolofeconomics.eu/en/people/helene-ollivier/">Hélène Ollivier (PSE)</a> — Co-Editor <em>JEEM</em> (2025–) and <em>REEP</em> (2026–).</li>
 </ul>
 </section>
-<section id="galamsey-mercury-and-ghana-specific" class="level3" data-number="12.4">
-<h3 data-number="12.4" class="anchored" data-anchor-id="galamsey-mercury-and-ghana-specific"><span class="header-section-number">12.4</span> Galamsey, mercury, and Ghana-specific</h3>
+<section id="galamsey-mercury-and-ghana-specific" class="level3" data-number="13.4">
+<h3 data-number="13.4" class="anchored" data-anchor-id="galamsey-mercury-and-ghana-specific"><span class="header-section-number">13.4</span> Galamsey, mercury, and Ghana-specific</h3>
 <ul>
 <li>Owusu-Nimo, F., Mantey, J., Nyarko, K. B., Appiah-Effah, E., &amp; Aubynn, A. (2018). Spatial distribution patterns of illegal artisanal small scale gold mining (Galamsey) operations in Ghana. <em>Environmental Science &amp; Policy</em>, 85, 64–76.</li>
 <li>Bansah, K. J., Yalley, A. B., &amp; Dumakor-Dupey, N. (2018). The hazardous nature of small scale underground mining in Ghana. <em>Journal of Sustainable Mining</em>, 17, 196–207.</li>
