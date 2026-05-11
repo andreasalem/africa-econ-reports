@@ -268,84 +268,50 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="project-c-ghana-mine-detection-galamsey" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="project-c-ghana-mine-detection-galamsey"><span class="header-section-number">3</span> Project C — Ghana Mine Detection (Galamsey)</h2>
-<p><strong>Goal:</strong> Detect illegal artisanal gold mines (Galamsey) in Ghana from Sentinel-2, then estimate their causal impact on local outcomes.</p>
-<p><strong>Strategy:</strong> Hansen forest-loss as training labels → U-Net on S2 dry season → validate against known mine sites → cross with outcome data for causal estimation.</p>
+<p><strong>Goal:</strong> Detect illegal artisanal gold mines (Galamsey) in Ghana from Sentinel-2 to support <strong>environmental enforcement</strong> and estimate the <strong>causal impact of illegal extraction on health, water quality, and local welfare</strong> — beating the Christensen et al.&nbsp;(2025) Africa-wide AUC of 0.75.</p>
+<p><strong>Why this is environmental economics.</strong> Galamsey is the largest single source of mercury pollution in Ghana and the proximate cause of contamination in roughly 60 % of the country’s water bodies (Ghana Water Resources Commission, 2024). It is also the canonical case of a developing-country state failing to enforce existing environmental law over a diffuse, mobile extractive sector — the regulatory gap that Burgess, Olken, and co-authors document for Indonesian deforestation (Burgess et al.&nbsp;2012; Balboni–Burgess–Olken 2025) and that Hélène Ollivier (PSE) studies for trade-driven pollution. Remote-sensing detection at 10 m resolution turns a previously invisible offence into an actionable map.</p>
+<p><strong>Strategy:</strong> Hansen forest-loss + spectral filtering as training labels → U-Net on S2 dry season → validate against <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/galamsey_sites.csv">79 GPS-coded Galamsey sites</a> → cross with DHS health, water-quality panels, and night lights for causal estimation, exploiting the 2017–2019 Operation Vanguard military crackdown as a natural experiment.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Component</th>
+<th>Stage</th>
 <th>Status</th>
 <th>Report</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Pipeline scaffolding + GEE downloads</td>
-<td>Done — 70 S2 tiles, 57 GB + Hansen</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
+<td>Stage 1: Pipeline + baseline training (S2 NDVI, W1 filtering, W3 timestamps)</td>
+<td>Done — AUC = 0.861 (beats Christensen 0.75)</td>
+<td><a href="./posts/2026-05-08_ghana-mines-stage1-baseline.html">View →</a></td>
 </tr>
 <tr class="even">
-<td>Hansen filtering → 601k mining patches</td>
-<td>Done</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
+<td>Stage 1b: Retrain with W1-filtered labels (4,309 patches)</td>
+<td>Next — re-rasterize → retrain</td>
+<td>—</td>
 </tr>
 <tr class="odd">
-<td>79 mine site coordinates (validation)</td>
-<td>Done</td>
-<td><a href="./posts/2026-05-06_ghana-mines-pipeline.html">View →</a></td>
+<td>Stage 2: Sliding-window inference + GPS validation</td>
+<td>Next — scripts ready</td>
+<td>—</td>
 </tr>
 <tr class="even">
-<td>Spectral label filtering — W1 (NDVI/BSI/NDWI)</td>
-<td>Done — 601k → 4,309 patches</td>
-<td><a href="./posts/2026-05-08_ghana-mines-stage1-baseline.html">Baseline →</a></td>
+<td>AE-16: Alpha Earth PCA experiment (16 bands)</td>
+<td>Data downloaded — awaiting baseline</td>
+<td><a href="./posts/2026-05-07_ghana-mines-ae16-pca.html">View →</a></td>
 </tr>
 <tr class="odd">
-<td>External label upgrade — W6 (Snapir, GPRL, EPA)</td>
+<td>W6: External label upgrade (Snapir, GPRL, EPA, OSM, NICFI)</td>
 <td>Sources identified — all need human action</td>
 <td>—</td>
 </tr>
 <tr class="even">
-<td>Mine timestamps — W3 (Hansen lossyear)</td>
-<td>Done — 4,309 patches timestamped (2015–2023), peak 2022</td>
-<td><a href="./posts/2026-05-08_ghana-mines-stage1-baseline.html">Baseline →</a></td>
-</tr>
-<tr class="odd">
-<td>AE-16 PCA experiment (Alpha Earth, 16 bands)</td>
-<td>Data downloaded — awaiting baseline</td>
-<td><a href="./posts/2026-05-07_ghana-mines-ae16-pca.html">View →</a></td>
-</tr>
-<tr class="even">
-<td>S2 preprocessing (Quest HPC)</td>
-<td>In progress</td>
+<td>Phase 2 spectral experiments (W2: indices; W4: multi-temporal; W5: SAR fusion)</td>
+<td>Planned — after Stage 1b</td>
 <td>—</td>
 </tr>
 <tr class="odd">
-<td>U-Net baseline training (Quest GPU)</td>
-<td>Done — AUC 0.861</td>
-<td><a href="./posts/2026-05-08_ghana-mines-stage1-baseline.html">View →</a></td>
-</tr>
-<tr class="even">
-<td>Mine spectral indices — W2 (BSI/NDWI/FMF)</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="odd">
-<td>Multi-temporal — W4 (2018 + 2023)</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td>SAR fusion — W5 (S2 + S1 VV)</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="odd">
-<td>Validation against known sites</td>
-<td>Pending</td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td>Impact estimation (DHS, water, NTL)</td>
+<td>Stage 3: Impact estimation (DHS, water quality, night lights)</td>
 <td>Future</td>
 <td>—</td>
 </tr>

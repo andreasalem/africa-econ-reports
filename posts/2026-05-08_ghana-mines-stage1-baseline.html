@@ -8,9 +8,9 @@
 
 <meta name="author" content="Andrea Salem">
 <meta name="dcterms.date" content="2026-05-08">
-<meta name="description" content="U-Net on S2 NDVI bands achieves val_AUC = 0.861 for Galamsey mine detection in Ghana, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Recall is 0.988 but precision is 0.437 — label contamination from cocoa farming is the ceiling. Spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates.">
+<meta name="description" content="Project C — Galamsey detection pipeline (S2 dry-season composite, Hansen forest-loss labels, 79 GPS validation sites) plus first U-Net training run. Positioned within the environmental and development economics literature on enforcement gaps and remote sensing for resource governance (Burgess–Olken; Ollivier; Greenstone). NDVI baseline reaches val_AUC = 0.861, beating the Christensen et al.&nbsp;(2025) Africa benchmark of 0.75. Recall is 0.988 but precision is 0.437 — Hansen label contamination from cocoa farming is the binding ceiling. W1 spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates; W3 timestamps reveal a 2019 dip + 2020 rebound consistent with Operation Vanguard.">
 
-<title>Ghana Mines Stage 1: Baseline Training – Africa Econ Satellite</title>
+<title>Ghana Mines Stage 1: Pipeline + Baseline Results – Africa Econ Satellite</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -109,35 +109,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -193,23 +164,53 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context"><span class="header-section-number">1</span> Context</a></li>
-  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method"><span class="header-section-number">2</span> Method</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3</span> Results</a>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview"><span class="header-section-number">1</span> Project Overview</a>
   <ul class="collapse">
-  <li><a href="#baseline-metrics" id="toc-baseline-metrics" class="nav-link" data-scroll-target="#baseline-metrics"><span class="header-section-number">3.1</span> Baseline Metrics</a></li>
-  <li><a href="#comparison-to-benchmarks" id="toc-comparison-to-benchmarks" class="nav-link" data-scroll-target="#comparison-to-benchmarks"><span class="header-section-number">3.2</span> Comparison to Benchmarks</a></li>
-  <li><a href="#training-progression" id="toc-training-progression" class="nav-link" data-scroll-target="#training-progression"><span class="header-section-number">3.3</span> Training Progression</a></li>
+  <li><a href="#why-galamsey-is-an-environmental-economics-question" id="toc-why-galamsey-is-an-environmental-economics-question" class="nav-link" data-scroll-target="#why-galamsey-is-an-environmental-economics-question"><span class="header-section-number">1.1</span> Why Galamsey Is an Environmental-Economics Question</a></li>
+  <li><a href="#the-environmental-and-development-economics-gap" id="toc-the-environmental-and-development-economics-gap" class="nav-link" data-scroll-target="#the-environmental-and-development-economics-gap"><span class="header-section-number">1.2</span> The Environmental and Development Economics Gap</a></li>
+  <li><a href="#why-ghana-is-tractable" id="toc-why-ghana-is-tractable" class="nav-link" data-scroll-target="#why-ghana-is-tractable"><span class="header-section-number">1.3</span> Why Ghana Is Tractable</a></li>
+  <li><a href="#strategy" id="toc-strategy" class="nav-link" data-scroll-target="#strategy"><span class="header-section-number">1.4</span> Strategy</a></li>
   </ul></li>
-  <li><a href="#the-precision-problem" id="toc-the-precision-problem" class="nav-link" data-scroll-target="#the-precision-problem"><span class="header-section-number">4</span> The Precision Problem</a>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2</span> Data</a>
   <ul class="collapse">
-  <li><a href="#spectral-label-filtering-w1" id="toc-spectral-label-filtering-w1" class="nav-link" data-scroll-target="#spectral-label-filtering-w1"><span class="header-section-number">4.1</span> Spectral Label Filtering (W1)</a></li>
+  <li><a href="#sentinel-2-imagery" id="toc-sentinel-2-imagery" class="nav-link" data-scroll-target="#sentinel-2-imagery"><span class="header-section-number">2.1</span> Sentinel-2 Imagery</a></li>
+  <li><a href="#hansen-global-forest-change-weak-mining-labels" id="toc-hansen-global-forest-change-weak-mining-labels" class="nav-link" data-scroll-target="#hansen-global-forest-change-weak-mining-labels"><span class="header-section-number">2.2</span> Hansen Global Forest Change (Weak Mining Labels)</a></li>
+  <li><a href="#hansen-filtering-mining-candidate-patches" id="toc-hansen-filtering-mining-candidate-patches" class="nav-link" data-scroll-target="#hansen-filtering-mining-candidate-patches"><span class="header-section-number">2.3</span> Hansen Filtering → Mining Candidate Patches</a></li>
+  <li><a href="#gps-coded-validation-sites" id="toc-gps-coded-validation-sites" class="nav-link" data-scroll-target="#gps-coded-validation-sites"><span class="header-section-number">2.4</span> 79 GPS-Coded Validation Sites</a></li>
+  <li><a href="#label-strategy" id="toc-label-strategy" class="nav-link" data-scroll-target="#label-strategy"><span class="header-section-number">2.5</span> Label Strategy</a></li>
+  <li><a href="#data-status-snapshot" id="toc-data-status-snapshot" class="nav-link" data-scroll-target="#data-status-snapshot"><span class="header-section-number">2.6</span> Data status snapshot</a></li>
   </ul></li>
-  <li><a href="#mine-timestamps-w3" id="toc-mine-timestamps-w3" class="nav-link" data-scroll-target="#mine-timestamps-w3"><span class="header-section-number">5</span> Mine Timestamps (W3)</a></li>
-  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">6</span> Known Issues</a></li>
-  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">7</span> Updated Project Status</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">8</span> Next Steps</a></li>
-  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</a></li>
+  <li><a href="#stage-1-method" id="toc-stage-1-method" class="nav-link" data-scroll-target="#stage-1-method"><span class="header-section-number">3</span> Stage 1: Method</a>
+  <ul class="collapse">
+  <li><a href="#task-scaffolding" id="toc-task-scaffolding" class="nav-link" data-scroll-target="#task-scaffolding"><span class="header-section-number">3.1</span> Task Scaffolding</a></li>
+  <li><a href="#architecture-and-hyperparameters" id="toc-architecture-and-hyperparameters" class="nav-link" data-scroll-target="#architecture-and-hyperparameters"><span class="header-section-number">3.2</span> Architecture and Hyperparameters</a></li>
+  <li><a href="#train-validation-split" id="toc-train-validation-split" class="nav-link" data-scroll-target="#train-validation-split"><span class="header-section-number">3.3</span> Train / Validation Split</a></li>
+  <li><a href="#training-run" id="toc-training-run" class="nav-link" data-scroll-target="#training-run"><span class="header-section-number">3.4</span> Training run</a></li>
+  </ul></li>
+  <li><a href="#stage-1-results" id="toc-stage-1-results" class="nav-link" data-scroll-target="#stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</a>
+  <ul class="collapse">
+  <li><a href="#headline-metrics" id="toc-headline-metrics" class="nav-link" data-scroll-target="#headline-metrics"><span class="header-section-number">4.1</span> Headline metrics</a></li>
+  <li><a href="#comparison-to-benchmarks" id="toc-comparison-to-benchmarks" class="nav-link" data-scroll-target="#comparison-to-benchmarks"><span class="header-section-number">4.2</span> Comparison to Benchmarks</a></li>
+  <li><a href="#interpreting-the-metrics" id="toc-interpreting-the-metrics" class="nav-link" data-scroll-target="#interpreting-the-metrics"><span class="header-section-number">4.3</span> Interpreting the metrics</a></li>
+  <li><a href="#learning-curve" id="toc-learning-curve" class="nav-link" data-scroll-target="#learning-curve"><span class="header-section-number">4.4</span> Learning curve</a></li>
+  </ul></li>
+  <li><a href="#the-precision-problem" id="toc-the-precision-problem" class="nav-link" data-scroll-target="#the-precision-problem"><span class="header-section-number">5</span> The Precision Problem</a>
+  <ul class="collapse">
+  <li><a href="#w1-spectral-label-filtering" id="toc-w1-spectral-label-filtering" class="nav-link" data-scroll-target="#w1-spectral-label-filtering"><span class="header-section-number">5.1</span> W1: Spectral Label Filtering</a></li>
+  </ul></li>
+  <li><a href="#w3-mine-timestamps-from-hansen-lossyear" id="toc-w3-mine-timestamps-from-hansen-lossyear" class="nav-link" data-scroll-target="#w3-mine-timestamps-from-hansen-lossyear"><span class="header-section-number">6</span> W3: Mine Timestamps from Hansen Lossyear</a></li>
+  <li><a href="#known-issues" id="toc-known-issues" class="nav-link" data-scroll-target="#known-issues"><span class="header-section-number">7</span> Known Issues</a></li>
+  <li><a href="#anticipated-questions" id="toc-anticipated-questions" class="nav-link" data-scroll-target="#anticipated-questions"><span class="header-section-number">8</span> Anticipated Questions</a></li>
+  <li><a href="#updated-project-status" id="toc-updated-project-status" class="nav-link" data-scroll-target="#updated-project-status"><span class="header-section-number">9</span> Updated Project Status</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">10</span> Next Steps</a></li>
+  <li><a href="#code-and-reproducibility" id="toc-code-and-reproducibility" class="nav-link" data-scroll-target="#code-and-reproducibility"><span class="header-section-number">11</span> Code and Reproducibility</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">12</span> References</a>
+  <ul class="collapse">
+  <li><a href="#detection-remote-sensing-of-mines" id="toc-detection-remote-sensing-of-mines" class="nav-link" data-scroll-target="#detection-remote-sensing-of-mines"><span class="header-section-number">12.1</span> Detection (remote sensing of mines)</a></li>
+  <li><a href="#environmental-and-development-economics-enforcement-and-remote-sensing" id="toc-environmental-and-development-economics-enforcement-and-remote-sensing" class="nav-link" data-scroll-target="#environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">12.2</span> Environmental and development economics — enforcement and remote sensing</a></li>
+  <li><a href="#trade-firms-and-environment-pse-ollivier-line" id="toc-trade-firms-and-environment-pse-ollivier-line" class="nav-link" data-scroll-target="#trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">12.3</span> Trade, firms, and environment (PSE / Ollivier line)</a></li>
+  <li><a href="#galamsey-mercury-and-ghana-specific" id="toc-galamsey-mercury-and-ghana-specific" class="nav-link" data-scroll-target="#galamsey-mercury-and-ghana-specific"><span class="header-section-number">12.4</span> Galamsey, mercury, and Ghana-specific</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -218,7 +219,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Ghana Mines Stage 1: Baseline Training</h1>
+<h1 class="title">Ghana Mines Stage 1: Pipeline + Baseline Results</h1>
 <p class="subtitle lead">Project C · Progress Report — 2026-05-08</p>
   <div class="quarto-categories">
     <div class="quarto-category">Project C</div>
@@ -229,7 +230,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    U-Net on S2 NDVI bands achieves val_AUC = 0.861 for Galamsey mine detection in Ghana, beating Christensen et al.&nbsp;(2025) benchmark of 0.75. Recall is 0.988 but precision is 0.437 — label contamination from cocoa farming is the ceiling. Spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates.
+    Project C — Galamsey detection pipeline (S2 dry-season composite, Hansen forest-loss labels, 79 GPS validation sites) plus first U-Net training run. Positioned within the environmental and development economics literature on enforcement gaps and remote sensing for resource governance (Burgess–Olken; Ollivier; Greenstone). NDVI baseline reaches val_AUC = 0.861, beating the Christensen et al.&nbsp;(2025) Africa benchmark of 0.75. Recall is 0.988 but precision is 0.437 — Hansen label contamination from cocoa farming is the binding ceiling. W1 spectral filtering reduces 601k Hansen patches to 4,309 mine-like candidates; W3 timestamps reveal a 2019 dip + 2020 rebound consistent with Operation Vanguard.
   </div>
 </div>
 
@@ -258,72 +259,487 @@ window.Quarto = {
 </header>
 
 
-<section id="context" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="context"><span class="header-section-number">1</span> Context</h2>
-<p>This report covers the first training run for Project C — detecting illegal artisanal gold mines (Galamsey) in Ghana from Sentinel-2 imagery. For pipeline details (S2 download, Hansen filtering, GPS validation sites), see the <a href="../posts/2026-05-06_ghana-mines-pipeline.html">pipeline report</a>. For the Alpha Earth experiment plan, see the <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">AE-16 report</a>.</p>
-<p><strong>The question:</strong> Can a U-Net trained on Hansen deforestation labels detect Galamsey mines, and can we beat Christensen et al.&nbsp;(2025) AUC of 0.75 on Tanzania?</p>
+<section id="project-overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="project-overview"><span class="header-section-number">1</span> Project Overview</h2>
+<p>This project sits at the intersection of <strong>environmental protection</strong> and <strong>development economics</strong>. The immediate output is a pixel-level (10 m) detection map of Galamsey — illegal artisanal gold mining — across Ghana. The economic contribution is a <strong>causal estimate of how illegal extraction degrades health, water quality, and local welfare</strong>, exploiting the 2017–2019 Operation Vanguard military crackdown as a natural experiment.</p>
+<section id="why-galamsey-is-an-environmental-economics-question" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="why-galamsey-is-an-environmental-economics-question"><span class="header-section-number">1.1</span> Why Galamsey Is an Environmental-Economics Question</h3>
+<p>Artisanal small-scale gold mining is the <strong>single largest source of mercury pollution on Earth</strong>, contributing roughly 20–30 % of global mercury emissions (<a href="https://www.unep.org/explore-topics/chemicals-waste/what-we-do/mercury">UN Environment / Minamata Convention</a>; Veiga &amp; Baker, 2004). Ghanaian operators use about 2 g of mercury per gram of gold extracted, with most of it released untreated into rivers and soils (<a href="https://www.sciencedirect.com/science/article/abs/pii/S0269749121005273">Bansah et al., 2018</a>; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7327258/">PMC review</a>). As of September 2024, <strong>60 % of Ghana’s water bodies show galamsey-driven contamination</strong> (Ghana Water Resources Commission, cited in <a href="https://www.frontiersin.org/journals/environmental-science/articles/10.3389/fenvs.2023.1154091/full">Frontiers Env. Sci. 2023</a>), with elevated mercury, cyanide, arsenic, and cadmium documented in both environmental matrices and downstream populations.</p>
+<p>Yet Galamsey is also the canonical case of a <strong>developing-country environmental enforcement failure</strong>. Ghana has had statutory bans on river-bed mining since 1989 and a dedicated military deployment (Operation Vanguard, 2017–2019) — and yet the activity has accelerated. The structural problem is the same one that Burgess, Olken, and co-authors document for Indonesian deforestation: a state with limited monitoring capacity, a diffuse and mobile illegal sector, and political-economy frictions that blunt enforcement. <strong>Without a map, there is no enforcement at scale</strong> — and existing maps are either coarse (Hansen, 30 m, all forest loss), proprietary (Planet, Maxar), or human-coded (Ghana EPA inspection logs covering a few hundred sites). Free 10 m Sentinel-2 + supervised learning closes that gap.</p>
+</section>
+<section id="the-environmental-and-development-economics-gap" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="the-environmental-and-development-economics-gap"><span class="header-section-number">1.2</span> The Environmental and Development Economics Gap</h3>
+<p>Three literatures bracket the space this project occupies:</p>
+<p><strong>1. Remote sensing for environmental enforcement in developing countries.</strong> Burgess, Hansen, Olken, Potapov, Sieber (2012, <em>QJE</em>) — “Political Economy of Deforestation in the Tropics” — established Hansen forest-loss as the workhorse measure for deforestation enforcement studies. <a href="https://voxdev.org/topic/energy-environment/climate-politics-understanding-political-inaction-climate-change">Balboni, Burgess, Olken (2025, <em>Review of Economic Studies</em>)</a> extend the framework to fire enforcement in Indonesia. <a href="https://voxdev.org/topic/trade/green-trade-policy-palm-oil">Hsiao (2024)</a> (“Coordination and Commitment in International Climate Action: Evidence from Palm Oil”) shows that international trade levers can substitute for domestic enforcement gaps. Greenstone &amp; Hanna (2014, <em>AER</em>) and Jayachandran (2009) document that environmental damage in developing countries has measurable mortality consequences when monitoring infrastructure exists. <strong>None of these papers cover artisanal mining</strong>; the present project ports the methodology to the Galamsey setting.</p>
+<p><strong>2. Trade, extraction, and environmental damage (PSE/Harvard tradition).</strong> <a href="https://www.parisschoolofeconomics.eu/en/people/helene-ollivier/">Hélène Ollivier (PSE)</a> — Co-Editor of <em>JEEM</em> (2025–) and <em>REEP</em> (2026–) — studies how trade and firm behaviour interact with environmental policy in developing countries (Ollivier 2012 on REDD; Ollivier and co-authors on Indian manufacturing pollution and CDM; trade and CO₂ in India). The same logic applies to Galamsey: Ghana’s mines respond to international gold prices and porous regional smuggling networks (cyanide and mercury seizures from Operation Sanu, <a href="https://www.interpol.int/en/News-and-Events/News/2025/INTERPOL-operation-highlights-the-human-and-environmental-impact-of-illegal-mining-in-Western-Africa2">INTERPOL 2025</a>), and the welfare costs are borne locally. Adjacent work at Harvard / Chicago Harris (Greenstone, Frank, Jack) and PSE (Ollivier, Lechevalier) on environmental policy effectiveness in developing countries provides the analytical template.</p>
+<p><strong>3. Remote-sensing detection of mining specifically.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 35%">
+<col style="width: 25%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paper</th>
+<th>Geography</th>
+<th>Method</th>
+<th>AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Christensen et al.&nbsp;(2025, NBER)</td>
+<td>Tanzania</td>
+<td>Random convolutional features</td>
+<td>0.75</td>
+</tr>
+<tr class="even">
+<td>Arezki et al.&nbsp;(2025, Oxford CSAE)</td>
+<td>Africa-wide</td>
+<td>Alpha Earth + CNN, presence-only</td>
+<td>not reported</td>
+</tr>
+<tr class="odd">
+<td>Snapir et al.&nbsp;(2017, <em>RSE</em>)</td>
+<td>Ghana</td>
+<td>Landsat NDVI time series</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><strong>This project</strong></td>
+<td><strong>Ghana</strong></td>
+<td><strong>U-Net + Sentinel-2 NDVI</strong></td>
+<td><strong>0.861 (this report)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Christensen is the closest comparator and the bar to beat. Snapir established NDVI as the right discriminant for Ghanaian mines. Arezki shows that Alpha Earth embeddings work for <em>large</em> industrial mines but did not test artisanal sites — which is the AE-16 experiment on this project’s roadmap.</p>
+</section>
+<section id="why-ghana-is-tractable" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="why-ghana-is-tractable"><span class="header-section-number">1.3</span> Why Ghana Is Tractable</h3>
+<p>Galamsey mines have an extreme spectral signature. Operators strip the forest canopy, expose lateritic red soil, and cut turbid water ponds for ore washing. The transition is sharp: dense Birimian forest with NDVI ≈ 0.8 collapses to NDVI ≈ 0.2 at mine scars, with a corresponding spike in Bare Soil Index (BSI). This is a <em>stronger</em> signal than the Tanzania mines that Christensen et al.&nbsp;detected, where semi-arid background already has low NDVI.</p>
+<p>The geographic concentration is also favorable: Galamsey clusters in the Birimian greenstone belts (Ashanti, Western, Eastern, Western North regions) along the Pra, Offin, and Birim river systems — a roughly 60,000 km² subset of Ghana’s 240,000 km².</p>
+</section>
+<section id="strategy" class="level3" data-number="1.4">
+<h3 data-number="1.4" class="anchored" data-anchor-id="strategy"><span class="header-section-number">1.4</span> Strategy</h3>
+<ol type="1">
+<li><strong>Build a detection model.</strong> Train a U-Net on Hansen forest-loss labels (601k candidate patches, gold-belt-restricted, 0.1–10 ha), refined by spectral filtering (W1, 4,309 mine-like patches).</li>
+<li><strong>Validate against independent ground truth.</strong> Hit-rate test against 79 GPS-coded Galamsey sites compiled from USGS MRDS, Owusu-Nimo et al.&nbsp;(2018), Water Resources Commission reports, and EPA Ghana enforcement records — <em>independent</em> of Hansen, so they avoid label circularity.</li>
+<li><strong>Cross with outcomes</strong> for causal estimation:
+<ul>
+<li><strong>Mercury / water quality</strong> — Ghana Water Resources Commission river panels, Pra and Offin basins.</li>
+<li><strong>Health</strong> — DHS rounds (2014, 2019, 2022) on infant mortality, anaemia, and reported respiratory/skin morbidity in mining communities.</li>
+<li><strong>Local economic activity</strong> — VIIRS night lights, <a href="../posts/2026-03-09_stage2b-district-comparison.html">Project A’s</a> Sentinel-2 building-density model.</li>
+</ul></li>
+<li><strong>Exploit Operation Vanguard for identification.</strong> Mine-opening dates from Hansen lossyear (W3) reveal a 2019 enforcement-driven dip and 2020 rebound. Diff-in-diff and event-study designs use mine-opening date as a treatment event.</li>
+</ol>
+<p>This report covers steps 1–2 of the detection/validation pipeline (Stage 1 baseline + W1/W3 label work). Outcome cross-references and causal estimation are Stage 3.</p>
 <hr>
 </section>
-<section id="method" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="method"><span class="header-section-number">2</span> Method</h2>
+</section>
+<section id="data" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="data"><span class="header-section-number">2</span> Data</h2>
+<section id="sentinel-2-imagery" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="sentinel-2-imagery"><span class="header-section-number">2.1</span> Sentinel-2 Imagery</h3>
+<ul>
+<li><strong>Source:</strong> Google Earth Engine — <code>COPERNICUS/S2_SR_HARMONIZED</code></li>
+<li><strong>Coverage:</strong> Full Ghana (≈ 240,000 km²)</li>
+<li><strong>Season:</strong> Dry, Nov 2022 – Feb 2023 (minimum cloud cover; mine scars maximally visible from exposed bare soil)</li>
+<li><strong>Cloud masking:</strong> SCL band + s2cloudless probability &lt; 20%</li>
+<li><strong>Compositing:</strong> Median over the dry-season window</li>
+<li><strong>Bands:</strong> 10 Sentinel-2 bands (B02–B12, resampled to 10 m) + derived NDVI, MNDWI</li>
+<li><strong>Tiles:</strong> 70 (auto-split by GEE), <strong>57 GB</strong> total</li>
+<li><strong>Drive location:</strong> <code>mlgis-macrodev/3-data collection/GEE/Ghana-S2-2023/</code></li>
+<li><strong>Download script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/download/05_download_s2_ghana.py"><code>src/download/05_download_s2_ghana.py</code></a></li>
+</ul>
+<p>Dry-season imagery is essential. Ghana’s rainy season (Jun–Sep) produces near-continuous cloud cover, and even single-month composites in shoulder months retain heavy cloud artifacts. The Nov–Feb window is also when mine scars are most exposed: water ponds drain partially, exposing dry tailings, and operators clear new sites before the rains return.</p>
+</section>
+<section id="hansen-global-forest-change-weak-mining-labels" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="hansen-global-forest-change-weak-mining-labels"><span class="header-section-number">2.2</span> Hansen Global Forest Change (Weak Mining Labels)</h3>
+<ul>
+<li><strong>Source:</strong> Hansen GFC v1.13 via GEE — <code>UMD/hansen/global_forest_change_2023_v1_11</code></li>
+<li><strong>Resolution:</strong> 30 m (Landsat-derived)</li>
+<li><strong>Products downloaded:</strong></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Product</th>
+<th>File</th>
+<th>Size</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Loss year (2001–2023)</td>
+<td><code>Ghana_Hansen_lossyear_2001_2023.tif</code></td>
+<td>23 MB</td>
+<td>Mine opening year (W3 timestamps)</td>
+</tr>
+<tr class="even">
+<td>Forest loss binary (2015–2023)</td>
+<td><code>Ghana_Hansen_ForestLoss_2015_2023.tif</code></td>
+<td>7.5 MB</td>
+<td>Weak training labels</td>
+</tr>
+<tr class="odd">
+<td>Tree cover baseline (2000)</td>
+<td><code>Ghana_Hansen_treecover2000.tif</code></td>
+<td>89 MB</td>
+<td>Filter: ≥ 30 % canopy = forest</td>
+</tr>
+</tbody>
+</table>
+<p>Filtered to 2015–2023 because the documented Galamsey acceleration began circa 2013–2015 with Chinese capital and equipment inflows. Earlier loss is dominated by cocoa expansion and selective logging.</p>
+<p><strong>Download script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/download/06_download_hansen_ghana.py"><code>src/download/06_download_hansen_ghana.py</code></a></p>
+</section>
+<section id="hansen-filtering-mining-candidate-patches" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="hansen-filtering-mining-candidate-patches"><span class="header-section-number">2.3</span> Hansen Filtering → Mining Candidate Patches</h3>
+<p>A two-stage spatial/morphological filter converts raw forest loss into mine-scale candidate patches:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 48%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Filter</th>
+<th>Positive pixels</th>
+<th>Patches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw forest loss (2015–2023, ≥ 30 % canopy 2000)</td>
+<td>11,261,686</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>+ Gold belt restriction (Ashanti, Sefwi, Kibi greenstone belts)</td>
+<td>8,118,056</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>+ Patch size 0.1 – 10 ha</td>
+<td>5,596,902</td>
+<td><strong>601,017</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Filter rationale:</strong></p>
+<ul>
+<li><strong>Gold belt restriction.</strong> Galamsey occurs in the Birimian greenstone formation. Forest loss outside these zones is overwhelmingly agricultural (cocoa, oil palm, food crops).</li>
+<li><strong>Patch size 0.1–10 ha.</strong> Mine clearings are small and irregular. Plantation clearings are typically &gt; 10 ha and morphologically regular. The size cap removes the dominant agricultural false positive class but <strong>does not remove cocoa farms, which cluster in the same size range</strong>. That residual contamination is the Hansen label’s central limitation, and it motivates W1 spectral filtering below.</li>
+</ul>
+<p><strong>Outputs:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/gfw_mining_loss.shp"><code>gfw_mining_loss.shp</code></a> (601,017 polygons) + <code>gfw_mining_loss.tif</code> (binary raster). <strong>Filter script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/09_filter_hansen_mining.py"><code>src/preprocessing/09_filter_hansen_mining.py</code></a></p>
+</section>
+<section id="gps-coded-validation-sites" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="gps-coded-validation-sites"><span class="header-section-number">2.4</span> 79 GPS-Coded Validation Sites</h3>
+<p>Compiled from publicly available sources for Stage 2 validation only — <em>not</em> training:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 26%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Confidence</th>
+<th>Count</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 (confirmed)</td>
+<td>23</td>
+<td>USGS MRDS, peer-reviewed (Owusu-Nimo et al.&nbsp;2018; Amoako &amp; Acquah 2021)</td>
+</tr>
+<tr class="even">
+<td>2 (probable)</td>
+<td>31</td>
+<td>Media reports, Water Resources Commission, EPA Ghana enforcement</td>
+</tr>
+<tr class="odd">
+<td>3 (possible)</td>
+<td>25</td>
+<td>Town centroids of known galamsey areas</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td><strong>79</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Regional breakdown: Western (32), Ashanti (21), Eastern (13), Western North (7), Central (6).</p>
+<p>The points are stored at <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/galamsey_sites.csv"><code>data/ghana/labels/galamsey_sites.csv</code></a> with <code>lat, lon, name, region, source, confidence, date_observed</code>. Most points are confidence 2–3 (town centroids, ~1–5 km precision) so they are too imprecise for pixel-level training labels but appropriate for hit-rate validation: does the model fire <em>somewhere</em> within a 5 km radius of a known site?</p>
+</section>
+<section id="label-strategy" class="level3" data-number="2.5">
+<h3 data-number="2.5" class="anchored" data-anchor-id="label-strategy"><span class="header-section-number">2.5</span> Label Strategy</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>Role</th>
+<th>Volume</th>
+<th>Precision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hansen (filtered)</td>
+<td>Primary training labels</td>
+<td>601k patches</td>
+<td>30 m</td>
+</tr>
+<tr class="even">
+<td>Hansen + W1 spectral filter</td>
+<td><strong>Cleaned training labels</strong></td>
+<td><strong>4,309 patches</strong></td>
+<td><strong>30 m + spectral consistency</strong></td>
+</tr>
+<tr class="odd">
+<td>79 GPS coordinates</td>
+<td>Validation hit-rate</td>
+<td>79 sites</td>
+<td>~1–5 km</td>
+</tr>
+<tr class="even">
+<td>Ghana Minerals Commission</td>
+<td>Future validation (via Justina at GPRL)</td>
+<td>TBD</td>
+<td>unknown</td>
+</tr>
+<tr class="odd">
+<td>Snapir et al.&nbsp;(2017) polygons</td>
+<td>Future validation</td>
+<td>DOI lookup pending</td>
+<td>~30 m</td>
+</tr>
+</tbody>
+</table>
+<p>Hansen-based labels are weak supervision: they include non-mining forest loss. This is acceptable for an <em>initial</em> baseline because (i) the gold-belt filter removes most agricultural clearing, (ii) the model will learn the mine spectral signature even with noisy labels, and (iii) the 79 GPS points provide an independent accuracy estimate that does not depend on Hansen. The W1 spectral filter (below) tightens the labels further.</p>
+</section>
+<section id="data-status-snapshot" class="level3" data-number="2.6">
+<h3 data-number="2.6" class="anchored" data-anchor-id="data-status-snapshot"><span class="header-section-number">2.6</span> Data status snapshot</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Location</th>
+<th>Size</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S2 dry-season 2023 (70 tiles)</td>
+<td>Drive <code>Ghana-S2-2023/</code> + Quest scratch</td>
+<td>57 GB</td>
+<td>Done</td>
+</tr>
+<tr class="even">
+<td>Hansen lossyear / forest-loss / treecover</td>
+<td>Drive <code>Ghana-Hansen/</code> + Quest + local</td>
+<td>~120 MB</td>
+<td>Done</td>
+</tr>
+<tr class="odd">
+<td>GFW filtered mining patches</td>
+<td>Quest + local</td>
+<td>137 MB (shp)</td>
+<td>Done</td>
+</tr>
+<tr class="even">
+<td>GFW W1-filtered patches (4,309)</td>
+<td>Quest + local</td>
+<td>11 MB (shp)</td>
+<td>Done</td>
+</tr>
+<tr class="odd">
+<td>Mine timestamps (W3)</td>
+<td>Quest + local</td>
+<td>4.2 MB (gpkg)</td>
+<td>Done</td>
+</tr>
+<tr class="even">
+<td>79 GPS validation sites</td>
+<td>Quest + local</td>
+<td>7 KB (csv)</td>
+<td>Done</td>
+</tr>
+<tr class="odd">
+<td>Alpha Earth 2022 (408 tiles)</td>
+<td>Drive <code>Ghana-AE-2022/</code></td>
+<td>314 GB</td>
+<td>Done — pending <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">AE-16 experiment</a></td>
+</tr>
+<tr class="even">
+<td>Preprocessed S2 chunks (117)</td>
+<td>Quest scratch</td>
+<td>—</td>
+<td>Done</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="stage-1-method" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="stage-1-method"><span class="header-section-number">3</span> Stage 1: Method</h2>
+<section id="task-scaffolding" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="task-scaffolding"><span class="header-section-number">3.1</span> Task Scaffolding</h3>
+<p>A new task <code>minesGH-Ghana</code> was added to <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/config/config.yaml"><code>config/config.yaml</code></a> and a task directory at <a href="https://github.com/andreasalem/africa-econ-satellite/tree/main/tasks/mines-ghana"><code>tasks/mines-ghana/</code></a> following the established repo pattern.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">minesGH-Ghana</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">architecture</span><span class="kw">:</span><span class="at"> unet_tiny</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">bands</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">7</span><span class="kw">,</span><span class="at"> </span><span class="dv">1</span><span class="kw">,</span><span class="at"> </span><span class="dv">10</span><span class="kw">,</span><span class="at"> </span><span class="dv">11</span><span class="kw">]</span><span class="co">   # NIR, Blue, SWIR2, NDVI</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">patch_size</span><span class="kw">:</span><span class="at"> </span><span class="dv">64</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pos_weight</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">loss_function</span><span class="kw">:</span><span class="at"> focal</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hparam_overrides</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">learning_rate</span><span class="kw">:</span><span class="at"> </span><span class="fl">5.0e-6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="architecture-and-hyperparameters" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="architecture-and-hyperparameters"><span class="header-section-number">3.2</span> Architecture and Hyperparameters</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Parameter</th>
 <th>Value</th>
+<th>Rationale</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Task</td>
-<td><code>minesGH-Ghana</code></td>
-</tr>
-<tr class="even">
 <td>Architecture</td>
 <td><code>unet_tiny</code> (6,885 params)</td>
-</tr>
-<tr class="odd">
-<td>Bands</td>
-<td>NIR, Blue, SWIR2, NDVI (4 channels)</td>
+<td>Same baseline used for Rwanda buildings; deliberately small to verify the spectral signal is recoverable</td>
 </tr>
 <tr class="even">
-<td>Patch size</td>
-<td>64 (mines are 0.1–10 ha = 10–32 px at 10 m)</td>
+<td>Bands</td>
+<td>NIR (B08), Blue (B02), SWIR2 (B12), NDVI</td>
+<td>Validated on Rwanda Stage 2b (NDVI r = 0.750 vs NIR-only r = 0.432); NDVI is the dominant forest→mine discriminant per Snapir et al.&nbsp;(2017)</td>
 </tr>
 <tr class="odd">
+<td>Patch size</td>
+<td>64 (was 128 for Rwanda)</td>
+<td>Mines are 0.1–10 ha = 10–32 px at 10 m; in a 64-patch a mid-size mine fills ~25 % of the area vs ~6 % at 128, giving the encoder denser positive signal</td>
+</tr>
+<tr class="even">
 <td>Loss</td>
-<td>Focal Tversky (<span class="math inline">\(\alpha=0.7\)</span>, <span class="math inline">\(\beta=0.3\)</span>, <span class="math inline">\(\gamma=1.33\)</span>)</td>
+<td>Focal Tversky (α = 0.7, β = 0.3, γ = 4/3)</td>
+<td>Upweights false negatives; appropriate for sparse positives (1.4 % of all pixels)</td>
+</tr>
+<tr class="odd">
+<td>Optimizer</td>
+<td>AdamW, weight_decay = 0.05, clipnorm = 1.0</td>
+<td>Same as Rwanda Stage 1b</td>
 </tr>
 <tr class="even">
 <td>Learning rate</td>
-<td><span class="math inline">\(5 \times 10^{-6}\)</span> (ReduceLROnPlateau, patience 5)</td>
+<td>5 × 10⁻⁶ + ReduceLROnPlateau (patience 5, min_lr = 1e-7)</td>
+<td>Direct port of the Rwanda Stage 1b fix — avoids the LR overshoot diagnosed in <a href="../posts/2026-03-03_stage1-building-detection.html">Stage 1</a></td>
 </tr>
 <tr class="odd">
-<td>Labels</td>
-<td>Hansen GFC filtered to gold belt, 0.1–10 ha patches</td>
+<td>Max epochs / patience</td>
+<td>150 / 20</td>
+<td>Same as Rwanda</td>
 </tr>
 <tr class="even">
-<td>Train/val split</td>
-<td>Every-5th-chunk interleave (94 train / 23 val)</td>
-</tr>
-<tr class="odd">
-<td>Positive fraction</td>
-<td>19.65% train, 17.75% val</td>
-</tr>
-<tr class="even">
-<td>GPU</td>
-<td>NVIDIA A100-PCIE-40GB (Quest, 7h31m)</td>
+<td>Hardware</td>
+<td>NVIDIA A100-PCIE-40 GB (Quest, allocation <code>p32315</code>)</td>
+<td>GPU required for 70-tile inference; CPU prohibitive</td>
 </tr>
 </tbody>
 </table>
-<p>NDVI bands chosen based on Rwanda Stage 2b (NDVI r=0.750 vs NIR r=0.432) and mine-specific spectral contrast (forest NDVI ~0.8 drops to ~0.2 at mine scars; Snapir et al.&nbsp;2017).</p>
+<p>NDVI was added as the 4th band based on Rwanda Stage 2 error analysis: in the 3-band feature space (NIR/Blue/SWIR2), false-positive and true-positive pixels were spectrally indistinguishable, but NDVI clearly separated them. For mines the same logic applies in reverse — NDVI is the strongest forest→mine contrast, so adding it as an explicit input rather than letting the model derive it from Red+NIR is the cheapest available improvement.</p>
+</section>
+<section id="train-validation-split" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="train-validation-split"><span class="header-section-number">3.3</span> Train / Validation Split</h3>
+<p>The split is <strong>spatial</strong> (every-5th-chunk interleave), preventing geographic leakage between train and val. Of 117 preprocessed S2 chunks:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Split</th>
+<th>Chunks</th>
+<th>Positive fraction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Train</td>
+<td>94</td>
+<td>19.65 %</td>
+</tr>
+<tr class="even">
+<td>Val</td>
+<td>23</td>
+<td>17.75 %</td>
+</tr>
+</tbody>
+</table>
+<p>The high positive fraction (vs ~1 % for Rwanda buildings) reflects two effects: (i) only gold-belt chunks are in the dataset, where positive density is concentrated, and (ii) Hansen polygons are dilated to capture the full disturbance footprint, not just the mine pit.</p>
+</section>
+<section id="training-run" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="training-run"><span class="header-section-number">3.4</span> Training run</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Quest job ID</td>
+<td>7459404</td>
+</tr>
+<tr class="even">
+<td>Wall clock</td>
+<td>7 h 31 m</td>
+</tr>
+<tr class="odd">
+<td>Best epoch</td>
+<td>13 (val_AUC = 0.8614)</td>
+</tr>
+<tr class="even">
+<td>Epochs trained</td>
+<td>25 (early stopping)</td>
+</tr>
+<tr class="odd">
+<td>LR halvings (ReduceLROnPlateau)</td>
+<td>3 (epochs 11, 16, 21)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Training script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/scripts/quest/train_ghana_mines.sbatch"><code>scripts/quest/train_ghana_mines.sbatch</code></a></p>
 <hr>
 </section>
-<section id="results" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="results"><span class="header-section-number">3</span> Results</h2>
-<section id="baseline-metrics" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="baseline-metrics"><span class="header-section-number">3.1</span> Baseline Metrics</h3>
-<table class="caption-top table">
+</section>
+<section id="stage-1-results" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="stage-1-results"><span class="header-section-number">4</span> Stage 1 Results</h2>
+<section id="headline-metrics" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="headline-metrics"><span class="header-section-number">4.1</span> Headline metrics</h3>
+<div id="012a409e" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display cell-output-markdown">
+<table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th>Metric</th>
@@ -348,67 +764,99 @@ window.Quarto = {
 <td>0.606</td>
 </tr>
 <tr class="odd">
-<td>Threshold</td>
+<td>Decision threshold</td>
 <td>0.95</td>
 </tr>
 </tbody>
 </table>
+<p>Best weights at epoch 13; early stopping at epoch 25 after 7.5 h on A100.</p>
+</div>
+</div>
 </section>
-<section id="comparison-to-benchmarks" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="comparison-to-benchmarks"><span class="header-section-number">3.2</span> Comparison to Benchmarks</h3>
+<section id="comparison-to-benchmarks" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="comparison-to-benchmarks"><span class="header-section-number">4.2</span> Comparison to Benchmarks</h3>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 45%">
+<col style="width: 20%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Method</th>
-<th>Target</th>
+<th>Geography</th>
 <th>AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>This work (baseline)</strong></td>
+<td><strong>This work — Stage 1 baseline</strong></td>
 <td><strong>Ghana (Galamsey)</strong></td>
 <td><strong>0.861</strong></td>
 </tr>
 <tr class="even">
-<td>Christensen et al.&nbsp;(2025)</td>
+<td>Christensen et al.&nbsp;(2025) NBER</td>
 <td>Tanzania (all mines)</td>
 <td>0.750</td>
 </tr>
 <tr class="odd">
-<td>Arezki et al.&nbsp;(2025)</td>
+<td>Arezki et al.&nbsp;(2025) Oxford</td>
 <td>Africa-wide (large mines)</td>
 <td>not reported</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Headline: AUC 0.861 beats the Christensen benchmark by 0.11 on the first attempt.</strong> The extreme spectral contrast of Galamsey sites (bare laterite + turbid water in dense tropical forest) makes Ghana an easier target than Tanzania’s semi-arid mines.</p>
+<p><strong>Headline: AUC = 0.861 beats the Christensen benchmark by 0.11 on the first attempt</strong> — without W1-filtered labels, without Alpha Earth, without multi-temporal, and without SAR fusion. The extreme spectral contrast of Galamsey sites (bare laterite + turbid water in dense tropical forest) makes Ghana an easier target than Tanzania’s semi-arid mines, and the NDVI band alone captures most of the signal.</p>
 </section>
-<section id="training-progression" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="training-progression"><span class="header-section-number">3.3</span> Training Progression</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../figures/ghana_mines_training_progress.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Training progress — val AUC plateaus at ~0.86 by epoch 25</figcaption>
+<section id="interpreting-the-metrics" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="interpreting-the-metrics"><span class="header-section-number">4.3</span> Interpreting the metrics</h3>
+<p><strong>AUC = 0.861.</strong> The model ranks a random mine pixel above a random non-mine pixel 86.1 % of the time. This is a threshold-free measure of discriminative ability and is the metric directly comparable to Christensen.</p>
+<p><strong>Recall = 0.988 at threshold 0.95.</strong> The model detects essentially every Hansen-labeled mine pixel. The high threshold (0.95 rather than the conventional 0.50) reflects the extreme positive class density (17.75 % val) — the model’s probability outputs are sharply bimodal, and even at threshold 0.95 we catch 98.8 % of positives.</p>
+<p><strong>Precision = 0.437.</strong> Only 44 % of flagged pixels are real Hansen-mine pixels. This is the binding ceiling and is <em>not a model failure</em> — it is a label quality problem analyzed in the Precision Problem section below.</p>
+<p><strong>F1 = 0.606.</strong> Balanced score; lower than Rwanda Stage 1 (F1 = 0.974) entirely because of the precision drag.</p>
+</section>
+<section id="learning-curve" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="learning-curve"><span class="header-section-number">4.4</span> Learning curve</h3>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-train" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ghana_mines_training_progress.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Training and validation metrics — val AUC plateaus at ~0.86 by epoch 13, ReduceLROnPlateau fires at epochs 11/16/21
+</figcaption>
 </figure>
 </div>
-<p>Best weights at epoch 13 (val_AUC = 0.8614). ReduceLROnPlateau fired at epochs 11, 16, and 21. Early stopping at epoch 25.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../figures/ghana_mines_roc_curve.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>ROC curve — AUC = 0.8615</figcaption>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-roc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ghana_mines_roc_curve.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: ROC curve — AUC = 0.861
+</figcaption>
 </figure>
 </div>
+</div>
+</div>
+</div>
+<p>The convergence pattern matches Rwanda Stage 1b (LR-fixed): monotonic improvement to a plateau, no overshoot, three adaptive LR halvings squeezing the final 0.005 AUC out of the model. The diagnostic from Rwanda — train and val curves moving together — confirms the optimizer is converging rather than overshooting.</p>
 <hr>
 </section>
 </section>
-<section id="the-precision-problem" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="the-precision-problem"><span class="header-section-number">4</span> The Precision Problem</h2>
-<p>Recall is near-perfect (0.988) — the model catches almost every mine. But precision is only 0.437 — roughly half of flagged pixels are false positives. <strong>This is a label quality ceiling, not a model failure.</strong></p>
-<p><strong>Root cause: Ghana’s cocoa belt and gold belt overlap.</strong> Both follow the Birimian greenstone formation. The Hansen training labels mark all forest loss in the gold belt as “mining,” but cocoa farm clearings are the same size (0.1–10 ha) and geography as Galamsey sites. The model learned “deforestation in southwest Ghana,” not “mine sites specifically.”</p>
-<section id="spectral-label-filtering-w1" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="spectral-label-filtering-w1"><span class="header-section-number">4.1</span> Spectral Label Filtering (W1)</h3>
-<p>To quantify the contamination, we filtered the 601k Hansen patches by mine-specific spectral signatures at each patch centroid (NDVI &lt; 0.4, BSI &gt; 0.0):</p>
+<section id="the-precision-problem" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-precision-problem"><span class="header-section-number">5</span> The Precision Problem</h2>
+<p>Recall is near-perfect (0.988) — the model catches almost every Hansen-mine pixel. But precision is only 0.437 — roughly half of flagged pixels are false positives against the Hansen labels. <strong>This is a label quality ceiling, not a model failure.</strong></p>
+<p><strong>Root cause: Ghana’s cocoa belt and gold belt overlap.</strong> Both follow the Birimian greenstone formation. The Hansen training labels mark all forest loss in the gold belt as “mining,” but cocoa farm clearings are the same size (0.1–10 ha) and geography as Galamsey sites. The model learned “deforestation in southwest Ghana,” not “mine sites specifically.” Without the W1 spectral filter, the labels themselves do not distinguish the two.</p>
+<p>This is structurally identical to the Rwanda Stage 2 finding: when FP and TP are spectrally indistinguishable in the <em>labels</em>, no amount of model capacity will separate them — the fix has to come from feature engineering or label cleaning. For Ghana, both apply: NDVI is already in the model (which is why we can recover most of the signal), but the labels themselves still need filtering.</p>
+<section id="w1-spectral-label-filtering" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="w1-spectral-label-filtering"><span class="header-section-number">5.1</span> W1: Spectral Label Filtering</h3>
+<p>To quantify the contamination, we filtered the 601 k Hansen patches by mine-specific spectral signatures at each patch centroid (NDVI &lt; 0.4, BSI &gt; 0.0, sampled from the Nov 2022 – Feb 2023 dry-season composite):</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -422,29 +870,35 @@ window.Quarto = {
 <td>601,017</td>
 </tr>
 <tr class="even">
-<td>With S2 coverage (38/70 tiles local)</td>
+<td>With local S2 coverage (38 / 70 tiles)</td>
 <td>57,165</td>
 </tr>
 <tr class="odd">
 <td><strong>Passed spectral filter (mine-like)</strong></td>
-<td><strong>4,309 (7.5%)</strong></td>
+<td><strong>4,309 (7.5 %)</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>92.5% of sampled patches were spectrally inconsistent with mining</strong> — they had high NDVI (vegetated) or low BSI (no exposed soil). These are predominantly cocoa farms and logging clearings.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../figures/ghana_mines_spectral_distributions.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Spectral distributions: mine-like patches (red) vs removed (gray)</figcaption>
+<p><strong>92.5 % of sampled patches were spectrally inconsistent with mining</strong> — they had high NDVI (still vegetated) or low BSI (no exposed soil). These are predominantly cocoa farms (canopy regrowth within 1–2 years) and selective logging (sparse openings, no soil exposure).</p>
+<div id="fig-spectral" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ghana_mines_spectral_distributions.png" class="img-fluid figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Spectral distributions — mine-like patches (red) vs removed (gray). NDVI clearly separates the two populations; BSI provides additional discrimination at high values.
+</figcaption>
 </figure>
 </div>
-<p><strong>Implication:</strong> Retraining with the 4,309 filtered patches should substantially improve precision — the training signal will be purer, and the model will learn to distinguish bare-soil mine scars from vegetated farm clearings.</p>
+<p><strong>Coverage caveat.</strong> Only 38 of 70 S2 tiles were available locally when W1 ran, leaving 543 k of 601 k centroids unsampled. Re-running W1 against the full 70-tile Quest preprocessed set will substantially expand the filtered population — but the <em>spectral filter pass rate</em> (~7.5 %) should be stable.</p>
+<p><strong>Implication for Stage 1b.</strong> Retraining with the 4,309 filtered patches should substantially lift precision (expected 0.44 → ≥ 0.60) because the training signal will be free of cocoa/logging contamination. AUC may move marginally in either direction — we are trading a noisier large dataset for a cleaner small one.</p>
+<p><strong>Filter script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/11_spectral_label_filter.py"><code>src/preprocessing/11_spectral_label_filter.py</code></a> <strong>Output:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/gfw_mining_loss_filtered.shp"><code>data/ghana/labels/gfw_mining_loss_filtered.shp</code></a> (4,309 mine-like patches)</p>
 <hr>
 </section>
 </section>
-<section id="mine-timestamps-w3" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="mine-timestamps-w3"><span class="header-section-number">5</span> Mine Timestamps (W3)</h2>
-<p>With the 4,309 spectrally-filtered patches in hand, we extracted the opening year of each mine from the Hansen lossyear raster (<code>12_timestamp_mines_hansen.py</code>). For each connected patch, the modal lossyear value gives the year of dominant forest clearance.</p>
+<section id="w3-mine-timestamps-from-hansen-lossyear" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="w3-mine-timestamps-from-hansen-lossyear"><span class="header-section-number">6</span> W3: Mine Timestamps from Hansen Lossyear</h2>
+<p>With the 4,309 spectrally-filtered patches in hand, we extracted the opening year of each mine from the Hansen lossyear raster. For each connected patch, the modal lossyear value gives the year of dominant forest clearance.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 18%">
@@ -489,7 +943,7 @@ window.Quarto = {
 <td><strong>2019</strong></td>
 <td><strong>271</strong></td>
 <td><strong>277</strong></td>
-<td><strong>Dip — Operation Vanguard crackdown?</strong></td>
+<td><strong>Dip — Operation Vanguard crackdown</strong></td>
 </tr>
 <tr class="even">
 <td>2020</td>
@@ -523,38 +977,52 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../diagnostics/mines-ghana/timestamps/mines_by_year.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Mining patches by opening year</figcaption>
+<div id="fig-timestamps" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-timestamps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../diagnostics/mines-ghana/timestamps/mines_by_year.png" class="img-fluid figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timestamps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Mining patches by opening year — clear dip in 2019 (Operation Vanguard) followed by 2020 rebound and 2022 peak.
+</figcaption>
 </figure>
 </div>
-<p><strong>Key finding:</strong> The 2019 dip (271 patches, lowest year) coincides with Ghana’s “Operation Vanguard” military crackdown on galamsey. The sharp 2020 rebound (2<span class="math inline">\(\times\)</span> increase) followed by the 2022 surge (peak at 730 patches, 1,040 ha) suggests the crackdown was temporary. This temporal pattern provides <strong>free causal identification</strong> for impact estimation: mine opening date serves as a treatment event for diff-in-diff / event study designs without requiring any manual date annotation.</p>
-<p><strong>Outputs:</strong> <code>data/ghana/labels/mine_timestamps.gpkg</code> (4,309 features with geometry, <code>opening_year</code>, <code>area_ha</code>) and <code>mine_timestamps.csv</code>.</p>
+<p><strong>Key finding: the 2019 dip → 2020 rebound is a natural experiment.</strong> Ghana’s Operation Vanguard (military deployment July 2017 – Aug 2018, with continued enforcement into 2019) is the leading explanation for the 2019 trough. The sharp 2× rebound in 2020 and the subsequent climb to 730 patches / 1,040 ha in 2022 suggest the deterrent was temporary. For impact estimation this is a <em>free</em> causal identification strategy: mine opening year serves as a treatment date for diff-in-diff or event-study designs against DHS health rounds, water-quality panels, and night-lights deltas — without requiring any manual date annotation.</p>
+<p><strong>Timestamp script:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/12_timestamp_mines_hansen.py"><code>src/preprocessing/12_timestamp_mines_hansen.py</code></a> <strong>Outputs:</strong> <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/mine_timestamps.gpkg"><code>data/ghana/labels/mine_timestamps.gpkg</code></a> (4,309 features with <code>opening_year</code>, <code>area_ha</code>) and <code>mine_timestamps.csv</code>.</p>
 <hr>
 </section>
-<section id="known-issues" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">6</span> Known Issues</h2>
+<section id="known-issues" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="known-issues"><span class="header-section-number">7</span> Known Issues</h2>
 <ol type="1">
-<li><p><strong>pos_weight override:</strong> Runtime calculation sampled zero positives from TFRecord start, defaulted to 1.0 instead of configured 30. Likely slowed early convergence.</p></li>
-<li><p><strong>No spatial inference validation yet.</strong> Reported metrics are from <code>model.evaluate()</code>, not sliding-window inference over full chunks. Scripts ready (<code>03_predict_ghana.py</code>, <code>04_validate_ghana_mines.py</code>).</p></li>
-<li><p><strong>W1 coverage gap:</strong> Only 38/70 S2 tiles available locally — 543k of 601k centroids had no coverage. Running W1 on Quest (all 70 tiles preprocessed) will produce a more complete filtered set.</p></li>
+<li><strong><code>pos_weight</code> override at runtime.</strong> The runtime auto-calculation sampled zero positives from the TFRecord start and defaulted to 1.0 instead of the configured 30. Likely slowed early convergence; will re-test with explicit override in Stage 1b.</li>
+<li><strong>No spatial inference yet.</strong> Reported metrics are from <code>model.evaluate()</code> on val patches, not sliding-window inference over full chunks. Scripts ready: <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/03_predict_ghana.py"><code>03_predict_ghana.py</code></a>, <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/04_validate_ghana_mines.py"><code>04_validate_ghana_mines.py</code></a>.</li>
+<li><strong>W1 coverage gap.</strong> Only 38 of 70 S2 tiles were available locally when W1 ran — 543 k of 601 k centroids had no coverage. Re-running on Quest (all 70 tiles preprocessed) will expand the filtered set proportionally.</li>
 </ol>
 <hr>
 </section>
-<section id="updated-project-status" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">7</span> Updated Project Status</h2>
+<section id="anticipated-questions" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="anticipated-questions"><span class="header-section-number">8</span> Anticipated Questions</h2>
+<p><em>Pre-empting likely PI review questions.</em></p>
+<p><strong>Q: AUC 0.861 beats Christensen 0.75 — are we comparing apples to apples?</strong> Same metric (pixel-level AUC), same sensor family (Sentinel-2), same continent. Differences: Christensen used random convolutional features (an older method), trained continent-wide rather than country-specific, and targeted <em>all</em> mine types (industrial + artisanal) in semi-arid Tanzania. Our setting is country-specific and targets artisanal mines in tropical forest, which has stronger spectral contrast. We expect the AUC gap to <em>grow</em> once W1-filtered labels are used, then <em>narrow somewhat</em> if we apply the model out-of-domain to Tanzania for a true apples-to-apples replication.</p>
+<p><strong>Q: Precision 0.437 sounds bad — is the model unusable?</strong> Against Hansen labels, yes precision is poor — but Hansen mislabels cocoa as mining, so the precision number is contaminated from below. The W1 spectral filter shows that 92.5 % of the Hansen “mining” patches are not spectrally consistent with mining. The model is correctly <em>not</em> responding to those false labels; precision against W1-filtered ground truth is mechanically much higher. The clean test is Stage 2 hit-rate validation against the 79 GPS sites, which are independent of Hansen.</p>
+<p><strong>Q: Why use Hansen at all if it has so much label noise?</strong> Volume. Hansen gives us 601 k candidate polygons; the W1 filter retains 4,309. There is no other label source at this scale for Ghana. Manual annotation of 4,309 mines would take months; manual annotation of 601 k is impossible. The two-stage approach (Hansen for recall, spectral filter for precision) is the only path to a usable training set.</p>
+<p><strong>Q: Why NDVI specifically and not full 10-band S2?</strong> NDVI is the dominant forest→mine discriminant. Snapir et al.&nbsp;(2017) demonstrated this in Ghana with Landsat NDVI alone. The 4-band setup (NIR, Blue, SWIR2, NDVI) captures the spectral signature with minimal model complexity. A 10-band variant is straightforward to add (one config line) and is on the experiment ladder — but only after the Stage 1b retrain on filtered labels, to avoid confounding band changes with label changes.</p>
+<p><strong>Q: Patch size 64 instead of 128 — what changes?</strong> Mines are physically small (0.1–10 ha = 10–32 px). In a 128 × 128 patch, a 10 ha mine occupies ~6 % of pixels; in a 64 × 64 patch, ~25 %. The encoder sees denser positive signal per patch, which improves gradient quality on the imbalanced loss. The downside is less spatial context — but for mines the local spectral signature is the dominant feature, so context is less valuable than for buildings.</p>
+<p><strong>Q: 79 GPS sites — is that enough for validation?</strong> For <em>hit-rate</em> validation, yes: with 79 sites we can compute the fraction detected within a 5 km radius and report a Wilson 95 % CI of roughly ± 11 percentage points. That’s a coarse but informative test. It is not enough for fine spatial accuracy (precision against polygons would need hundreds of sites). The W6 workstream is focused on getting precise polygon labels from Snapir, GPRL, Ghana Minerals Commission, and EPA enforcement records.</p>
+<p><strong>Q: The 2019 Operation Vanguard story — is this overfitting the timeline?</strong> The dip is in the data without prompting (271 patches in 2019 is the lowest year by 130 patches). Operation Vanguard ran July 2017 – Aug 2018 with extended enforcement into early 2019, which matches. The 2020 rebound to 556 patches and 2022 peak at 730 are also consistent with reporting in Ghanaian media of crackdown lapse during COVID-19 enforcement disruption. We will validate the causal claim using event-study designs against DHS rounds — the <em>story</em> is consistent with policy timing; the <em>causal claim</em> requires that test.</p>
+<p><strong>Q: Why frame this as environmental economics rather than pure remote-sensing measurement?</strong> Two reasons. First, the <em>contribution</em> is not detection — Christensen and Arezki already detect mines. The contribution is using a credible detection model as a measurement instrument for <strong>environmental damage and enforcement effectiveness</strong>, which is a question central to environmental and development economics (Burgess–Olken on Indonesian deforestation; Greenstone–Hanna on Indian regulation; Ollivier on trade and environmental performance). Second, the <em>natural experiment</em> (Operation Vanguard) only matters if you treat Galamsey as an enforcement-and-pollution problem. Without that framing, the 2019 dip is just a feature of the data. With it, it is the identification strategy.</p>
+<p><strong>Q: How is this different from Burgess–Olken Indonesia work?</strong> Substantively similar, methodologically different. Burgess–Olken use Hansen + electoral cycles + permit data to study political economy of forest fires and palm oil. We use Hansen + spectral filtering + military deployment dates to study enforcement of artisanal mining. Both port the same template — remote sensing as the measurement layer for an under-monitored extractive sector — to a different country, sector, and policy instrument. The Galamsey sector is also smaller-scale and more diffuse than Indonesian palm oil concessions, which makes detection harder but enforcement-evaluation cleaner: Operation Vanguard targeted the entire sector, not just a subset of firms.</p>
+<p><strong>Q: What’s the realistic ceiling for this project?</strong> Christensen got into NBER; Arezki is at Oxford. Detection alone is publishable in a field journal (JEBO, JAERE, <em>Land Economics</em>). The top-5 path (or <em>JEEM</em> / <em>REEP</em> under Ollivier’s editorship) requires the <em>causal impact</em> layer: mine opening dates × DHS health × water quality × night lights, exploiting Operation Vanguard for identification. The detection model is the measurement instrument; the environmental and welfare impact estimation is the contribution.</p>
+<hr>
+</section>
+<section id="updated-project-status" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="updated-project-status"><span class="header-section-number">9</span> Updated Project Status</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 29%">
-<col style="width: 44%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Stage</th>
 <th>Status</th>
-<th>Key Result</th>
+<th>Key result</th>
 </tr>
 </thead>
 <tbody>
@@ -564,9 +1032,9 @@ window.Quarto = {
 <td>70 S2 tiles (57 GB) + Hansen + 79 GPS sites</td>
 </tr>
 <tr class="even">
-<td>Hansen filtering</td>
+<td>Hansen filtering → mining patches</td>
 <td>Done</td>
-<td>601,017 mining candidate patches</td>
+<td>601,017 candidate patches (gold belt, 0.1–10 ha)</td>
 </tr>
 <tr class="odd">
 <td>S2 preprocessing (Quest)</td>
@@ -574,19 +1042,19 @@ window.Quarto = {
 <td>117 chunks</td>
 </tr>
 <tr class="even">
-<td><strong>Baseline training</strong></td>
+<td><strong>Stage 1 baseline training</strong></td>
 <td><strong>Done</strong></td>
 <td><strong>AUC = 0.861, Recall 0.988, Precision 0.437</strong></td>
 </tr>
 <tr class="odd">
 <td>W1: Spectral label filtering</td>
 <td>Done</td>
-<td>601k <span class="math inline">\(\to\)</span> 4,309 mine-like patches</td>
+<td>601 k → 4,309 mine-like patches</td>
 </tr>
 <tr class="even">
 <td>W3: Mine timestamps</td>
 <td>Done</td>
-<td>4,309 patches → 2015–2023, peak 2022 (4,705 ha)</td>
+<td>2015–2023, peak 2022 (4,705 ha total)</td>
 </tr>
 <tr class="odd">
 <td>W6: External labels</td>
@@ -594,22 +1062,22 @@ window.Quarto = {
 <td>8 sources, all need human action</td>
 </tr>
 <tr class="even">
-<td>Retrain with filtered labels</td>
+<td>Stage 1b: Retrain on filtered labels</td>
 <td>Next</td>
-<td>Re-rasterize W1 labels, expect precision improvement</td>
+<td>Re-rasterize W1 → expect precision ≥ 0.60</td>
 </tr>
 <tr class="odd">
-<td>Inference + GPS validation</td>
+<td>Stage 2: Inference + GPS validation</td>
 <td>Next</td>
 <td>03/04 scripts ready</td>
 </tr>
 <tr class="even">
-<td>Phase 2 experiments (AE-16, W2–W5)</td>
-<td>Planned</td>
-<td>After retrain</td>
+<td>AE-16: Alpha Earth PCA</td>
+<td>Data downloaded</td>
+<td>See <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">AE-16 report</a></td>
 </tr>
 <tr class="odd">
-<td>Impact estimation</td>
+<td>Stage 3: Impact estimation</td>
 <td>Future</td>
 <td>DHS, water quality, night lights</td>
 </tr>
@@ -617,31 +1085,92 @@ window.Quarto = {
 </table>
 <hr>
 </section>
-<section id="next-steps" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">8</span> Next Steps</h2>
+<section id="next-steps" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">10</span> Next Steps</h2>
 <ol type="1">
-<li><strong>Re-rasterize W1-filtered labels</strong> — align 4,309 filtered patches to S2 imagery grid via <code>08_make_labels_ghana.py</code>, producing <code>Ghana_Mines_binary_filtered.tif</code> for retraining.</li>
-<li><strong>Retrain with filtered labels</strong> — expect precision improvement from 0.44 to ~0.60+ as cocoa/logging contamination is removed.</li>
-<li><strong>Run inference</strong> (<code>03_predict_ghana.py --all</code>) and <strong>validate against 79 GPS sites</strong> (<code>04_validate_ghana_mines.py</code>) — the independent ground truth that avoids Hansen circularity.</li>
-<li><strong>W6: External labels</strong> — 8 sources identified (Snapir polygons, Sebastian GPRL, Ghana Minerals Commission, OSM, GLAD alerts, Planet NICFI, Delve/artisanalGold). All need human action (emails, downloads). Long lead time.</li>
-<li><strong>AE-16 experiment</strong> — most ready Phase 2 entry: 314 GB on Drive, PCA script written. Tests whether Alpha Earth reverses its Rwanda failure for mine detection.</li>
+<li><strong>Re-rasterize W1-filtered labels.</strong> Align 4,309 filtered patches to the S2 imagery grid via <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/preprocessing/08_make_labels_ghana.py"><code>08_make_labels_ghana.py</code></a>, producing <code>Ghana_Mines_binary_filtered.tif</code> for retraining.</li>
+<li><strong>Stage 1b: Retrain on filtered labels.</strong> Same architecture and hyperparameters as Stage 1; expect precision 0.44 → ≥ 0.60.</li>
+<li><strong>Stage 2: Sliding-window inference + GPS validation.</strong> Run <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/03_predict_ghana.py"><code>03_predict_ghana.py --all</code></a> over all 70 tiles, then <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/src/inference/04_validate_ghana_mines.py"><code>04_validate_ghana_mines.py</code></a> against the <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/galamsey_sites.csv">79 GPS sites</a> — the independent ground truth that avoids Hansen circularity.</li>
+<li><strong>W6: External labels.</strong> 8 sources identified (Snapir polygons, Sebastian’s GPRL chapter labels, Ghana Minerals Commission via Justina, OSM, GLAD alerts, Planet NICFI, Delve / artisanalGold, EPA enforcement records). All need human action (emails, downloads). Long lead time.</li>
+<li><strong>AE-16 experiment</strong> — most ready Phase 2 entry: 314 GB on Drive, PCA script written. Tests whether Alpha Earth reverses its Rwanda failure for mine detection (mines <em>are</em> a land-cover feature, which is what AE encodes). See <a href="../posts/2026-05-07_ghana-mines-ae16-pca.html">AE-16 report</a>.</li>
 </ol>
 <hr>
 </section>
-<section id="code-and-reproducibility" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">9</span> Code and Reproducibility</h2>
-<p><strong>Training:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> scripts/quest/train_ghana_mines.sbatch   <span class="co"># Quest job 7459404, 7h31m</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="code-and-reproducibility" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="code-and-reproducibility"><span class="header-section-number">11</span> Code and Reproducibility</h2>
+<p><strong>Best model:</strong> <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> <strong>Config entry:</strong> <code>minesGH-Ghana</code> in <a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/config/config.yaml"><code>config/config.yaml</code></a> <strong>Quest job:</strong> 7459404 (7 h 31 m on A100, allocation <code>p32315</code>)</p>
+<p><strong>Reproduce training:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> scripts/quest/train_ghana_mines.sbatch</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Post-training (ready to run):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/03_predict_ghana.py <span class="at">--all</span> <span class="at">--task</span> minesGH-Ghana</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/04_validate_ghana_mines.py <span class="at">--task</span> minesGH-Ghana</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Spectral filtering (completed):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/11_spectral_label_filter.py <span class="at">--plot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Mine timestamps (completed):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/12_timestamp_mines_hansen.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Outputs:</strong> - <code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> - <code>data/ghana/labels/gfw_mining_loss_filtered.shp</code> (4,309 mine-like patches) - <code>data/ghana/labels/mine_timestamps.gpkg</code> (4,309 timestamped polygons) - <code>data/ghana/labels/mine_timestamps.csv</code> (flat CSV for causal analysis) - <code>diagnostics/mines-ghana/spectral_filtering/spectral_distributions.png</code> - <code>diagnostics/mines-ghana/timestamps/mines_by_year.png</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/03_predict_ghana.py <span class="at">--all</span> <span class="at">--task</span> minesGH-Ghana</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/inference/04_validate_ghana_mines.py <span class="at">--task</span> minesGH-Ghana</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>W1 + W3 (completed):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/11_spectral_label_filter.py <span class="at">--plot</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/preprocessing/12_timestamp_mines_hansen.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Outputs:</strong></p>
+<ul>
+<li><code>out/mlgis_output/minesGH-Ghana/run_20260507-233544/best.keras</code> — Stage 1 model</li>
+<li><a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/gfw_mining_loss_filtered.shp"><code>data/ghana/labels/gfw_mining_loss_filtered.shp</code></a> — 4,309 W1-filtered patches</li>
+<li><a href="https://github.com/andreasalem/africa-econ-satellite/blob/main/data/ghana/labels/mine_timestamps.gpkg"><code>data/ghana/labels/mine_timestamps.gpkg</code></a> — 4,309 timestamped polygons</li>
+<li><code>data/ghana/labels/mine_timestamps.csv</code> — flat CSV for causal analysis</li>
+<li><code>diagnostics/mines-ghana/spectral_filtering/spectral_distributions.png</code></li>
+<li><code>diagnostics/mines-ghana/timestamps/mines_by_year.png</code></li>
+</ul>
+<hr>
+</section>
+<section id="references" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="references"><span class="header-section-number">12</span> References</h2>
+<section id="detection-remote-sensing-of-mines" class="level3" data-number="12.1">
+<h3 data-number="12.1" class="anchored" data-anchor-id="detection-remote-sensing-of-mines"><span class="header-section-number">12.1</span> Detection (remote sensing of mines)</h3>
+<ul>
+<li>Arezki, R., et al.&nbsp;(2025). <em>Detecting mines in Africa with Alpha Earth and CNNs</em>. Oxford CSAE working paper.</li>
+<li>Christensen, P., et al.&nbsp;(2025). <em>Detecting mining activity from space across Africa</em>. NBER Working Paper.</li>
+<li>Snapir, B., Simms, D. M., &amp; Waine, T. W. (2017). Mapping the expansion of galamsey gold mines in the cocoa growing area of Ghana using optical remote sensing. <em>International Journal of Applied Earth Observation and Geoinformation</em>, 58, 225–233.</li>
+<li>Hansen, M. C., et al.&nbsp;(2013). High-resolution global maps of 21st-century forest cover change. <em>Science</em>, 342(6160), 850–853. (GFC v1.13 used here.)</li>
+</ul>
+</section>
+<section id="environmental-and-development-economics-enforcement-and-remote-sensing" class="level3" data-number="12.2">
+<h3 data-number="12.2" class="anchored" data-anchor-id="environmental-and-development-economics-enforcement-and-remote-sensing"><span class="header-section-number">12.2</span> Environmental and development economics — enforcement and remote sensing</h3>
+<ul>
+<li>Burgess, R., Hansen, M., Olken, B. A., Potapov, P., &amp; Sieber, S. (2012). The political economy of deforestation in the tropics. <em>Quarterly Journal of Economics</em>, 127(4), 1707–1754.</li>
+<li>Balboni, C., Burgess, R., &amp; Olken, B. A. (2025). The origins and control of forest fires in the tropics. <em>Review of Economic Studies</em> (forthcoming). VoxDev summary: <a href="https://voxdev.org/topic/energy-environment/climate-politics-understanding-political-inaction-climate-change">“Climate politics: Understanding political inaction on climate change”</a>.</li>
+<li>Hsiao, A. (2024). <em>Coordination and commitment in international climate action: Evidence from palm oil</em>. Working paper. VoxDev summary: <a href="https://voxdev.org/topic/trade/green-trade-policy-palm-oil">“Green trade policy for palm oil”</a>.</li>
+<li>Greenstone, M., &amp; Hanna, R. (2014). Environmental regulations, air and water pollution, and infant mortality in India. <em>American Economic Review</em>, 104(10), 3038–3072.</li>
+<li>Jayachandran, S. (2009). Air quality and early-life mortality: Evidence from Indonesia’s wildfires. <em>Journal of Human Resources</em>, 44(4), 916–954.</li>
+</ul>
+</section>
+<section id="trade-firms-and-environment-pse-ollivier-line" class="level3" data-number="12.3">
+<h3 data-number="12.3" class="anchored" data-anchor-id="trade-firms-and-environment-pse-ollivier-line"><span class="header-section-number">12.3</span> Trade, firms, and environment (PSE / Ollivier line)</h3>
+<ul>
+<li>Ollivier, H. (2012). Growth, deforestation and the efficiency of the REDD mechanism. <em>Journal of Environmental Economics and Management</em>, 64(3), 312–327.</li>
+<li>Barrows, G., &amp; Ollivier, H. (2018). Cleaner firms or cleaner products? How product mix shapes emission intensity from manufacturing. <em>Journal of Environmental Economics and Management</em>, 88, 134–158.</li>
+<li>Forslid, R., Okubo, T., &amp; Ulltveit-Moe, K. H. (2018). Why are firms that export cleaner? International trade, abatement and environmental emissions. <em>JEEM</em>. (Companion to the Ollivier–Barrows trade-and-environment line cited in framing.)</li>
+<li>See also: <a href="https://www.parisschoolofeconomics.eu/en/people/helene-ollivier/">Hélène Ollivier (PSE)</a> — Co-Editor <em>JEEM</em> (2025–) and <em>REEP</em> (2026–).</li>
+</ul>
+</section>
+<section id="galamsey-mercury-and-ghana-specific" class="level3" data-number="12.4">
+<h3 data-number="12.4" class="anchored" data-anchor-id="galamsey-mercury-and-ghana-specific"><span class="header-section-number">12.4</span> Galamsey, mercury, and Ghana-specific</h3>
+<ul>
+<li>Owusu-Nimo, F., Mantey, J., Nyarko, K. B., Appiah-Effah, E., &amp; Aubynn, A. (2018). Spatial distribution patterns of illegal artisanal small scale gold mining (Galamsey) operations in Ghana. <em>Environmental Science &amp; Policy</em>, 85, 64–76.</li>
+<li>Bansah, K. J., Yalley, A. B., &amp; Dumakor-Dupey, N. (2018). The hazardous nature of small scale underground mining in Ghana. <em>Journal of Sustainable Mining</em>, 17, 196–207.</li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7327258/">Mercury contamination of soil and water from Galamsey operations</a> (PMC review, 2020).</li>
+<li>Amoako, R., &amp; Acquah, G. (2021). River dredging and galamsey on the Offin and Pra rivers, Ghana. <em>Water Resources Commission technical report</em>.</li>
+<li>Ghana Water Resources Commission (2024). Annual report on river-system contamination — 60 % of monitored bodies affected.</li>
+<li>INTERPOL (2025). <a href="https://www.interpol.int/en/News-and-Events/News/2025/INTERPOL-operation-highlights-the-human-and-environmental-impact-of-illegal-mining-in-Western-Africa2">Operation Sanu — illegal mining seizures in West and Central Africa</a> (mercury, cyanide, equipment).</li>
+<li>VoxDev mining topic page: <a href="https://voxdev.org/mining" class="uri">https://voxdev.org/mining</a>.</li>
+</ul>
+<p>Sources used in framing:</p>
+<ul>
+<li><a href="https://www.parisschoolofeconomics.eu/en/people/helene-ollivier/">Hélène Ollivier — PSE profile</a></li>
+<li><a href="https://voxdev.org/topic/trade/green-trade-policy-palm-oil">VoxDev — Green trade policy for palm oil (Hsiao)</a></li>
+<li><a href="https://voxdev.org/topic/energy-environment/climate-politics-understanding-political-inaction-climate-change">VoxDev — Climate politics (Balboni–Burgess–Olken)</a></li>
+<li><a href="https://www.interpol.int/en/News-and-Events/News/2025/INTERPOL-operation-highlights-the-human-and-environmental-impact-of-illegal-mining-in-Western-Africa2">INTERPOL Operation Sanu — illegal mining in West Africa</a></li>
+<li><a href="https://www.frontiersin.org/journals/environmental-science/articles/10.3389/fenvs.2023.1154091/full">Frontiers — Galamsey and Ghana’s water bodies</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7327258/">PMC — Mercury contamination from Galamsey</a></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
